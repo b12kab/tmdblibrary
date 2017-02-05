@@ -1,0 +1,59 @@
+/*
+ * Copyright 2013 Uwe Trottmann
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ */
+
+package com.b12kab.tmdblibrary.entities;
+
+import java.util.List;
+
+public class CreditResults {
+    Integer id;
+    List<CastMember> cast;
+    List<CrewMember> crew;
+    List<CastMember> guest_stars;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<CastMember> getCast() {
+        return cast;
+    }
+
+    public void setCast(List<CastMember> cast) {
+        this.cast = cast;
+    }
+
+    public List<CrewMember> getCrew() {
+        return crew;
+    }
+
+    public void setCrew(List<CrewMember> crew) {
+        this.crew = crew;
+    }
+
+    public List<CastMember> getGuest_stars() {
+        return guest_stars;
+    }
+
+    public void setGuest_stars(List<CastMember> guest_stars) {
+        this.guest_stars = guest_stars;
+    }
+}
