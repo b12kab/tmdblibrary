@@ -64,7 +64,6 @@ public class MovieFull {
     public VideoResults videos;
     public ReviewResultsPage reviews;
     public MovieResultsPage similar;
-    public ExternalIds external_ids;
     public AccountState account_states;
 
     public boolean isAdult() {
@@ -321,13 +320,5 @@ public class MovieFull {
 
     public void setAccount_states(AccountState account_states) {
         this.account_states = account_states;
-    }
-
-    public ExternalIds getExternal_ids() {
-        return external_ids;
-    }
-
-    public void setExternal_ids(ExternalIds external_ids) {
-        this.external_ids = external_ids;
     }
 }
