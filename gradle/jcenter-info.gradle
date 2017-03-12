@@ -1,0 +1,80 @@
+def siteUrl = 'https://github.com/b12kab/tmdblibrary'      // Homepage URL of the library
+def gitUrl = 'https://github.com/b12kab/tmdblibrary.git'   // Git repository URL
+def libraryDescription = 'An Android library for themoviedb.org (TMDb) API v3 using retrofit1'
+def jcenterLibraryName = "tmdblibrary"
+def group = "com.b12kab.tmdblibrary"                           // Maven Group ID for the artifact
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom.project {
+            // Add your description here
+            name libraryDescription
+            url siteUrl
+
+            packaging 'aar'
+            groupId group
+            artifactId jcenterLibraryName
+            version getLibVersionName()
+
+            // Set your license
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+            developers {
+                developer {
+                    id 'b12kab'
+                    name 'Keith Beatty'
+                }
+            }
+            scm {
+                connection gitUrl
+                url siteUrl
+            }
+        }
+    }
+}
+
+//task sourcesJar(type: Jar) {
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
+//}
+//
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+//
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//    options.encoding = 'UTF-8'
+//}
+//
+//artifacts {
+//    archives javadocJar
+//    archives sourcesJar
+//}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = 'maven'
+        name = jcenterLibraryName
+        licenses = ['Apache-2.0']
+        vcsUrl = gitUrl
+        websiteUrl = siteUrl
+//        publish = true
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2'
+}
