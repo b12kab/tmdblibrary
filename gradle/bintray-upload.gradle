@@ -41,27 +41,30 @@ artifacts {
 String siteUrl = 'https://github.com/b12kab/tmdblibrary'      // Homepage URL of the library
 String gitUrl = 'https://github.com/b12kab/tmdblibrary.git'   // Git repository URL
 String libraryDescription = 'An Android library for themoviedb.org (TMDb) API v3 using retrofit1'
-String jcenterLibraryName = 'tmdblibrary'
-String mavenGroupId = "com.b12kab.tmdblibrary"                // Maven Group ID for the artifact
-group = mavenGroupId
-println "\nMaven group Id>>>" + mavenGroupId + "<<<\n"
-String jcenterVersion = getLibVersionName()
-println "\nVersion number>>>" + jcenterVersion + "<<<\n"
-version = jcenterVersion
+String bintrayLibraryName = 'tmdblibrary'
+String bintrayGroupId = 'com.b12kab.tmdblibrary'              // Maven Group ID for the artifact
+String bintrayVersion = getLibVersionName()
+//println "\ngroup Id>>>" + bintrayGroupId + "<<<\n"
+//println "\nVersion number>>>" + bintrayVersion + "<<<\n"
+
+// These are required and must not have assignments such as String group/version
+// or odd things will happen.
+group = bintrayGroupId
+version = bintrayVersion
 
 install {
     repositories.mavenInstaller {
         // This generates POM.xml with proper parameters
         pom.project {
             // Add your description here
-            name jcenterLibraryName
+            name bintrayLibraryName
             description libraryDescription
             url siteUrl
 
             packaging 'aar'
-            groupId mavenGroupId
-            artifactId jcenterLibraryName
-            version jcenterVersion
+            groupId bintrayGroupId
+            artifactId bintrayLibraryName
+            version bintrayVersion
 
             // Set your license
             licenses {
@@ -84,21 +87,21 @@ install {
     }
 }
 
-String jcenterTextVers = getLibTextVersionName()
-String jcenterUser = bintrayUser
-String jcenterApiKey = bintrayApikey
-//println "\nVersion text name>>>" + jcenterTextVers + "<<<"
-//println "name >>>" + jcenterLibraryName + "<<<"
-//println "bintray User >>>" + jcenterUser + "<<<\n"
-//println "bintray Api Key >>>" + jcenterApiKey + "<<<\n"
+String bintrayTextVers = getLibTextVersionName()
+String bintrayUser = bintrayUser
+String bintrayApiKey = bintrayApikey
+//println "\nVersion text name>>>" + bintrayTextVers + "<<<"
+//println "name >>>" + bintrayLibraryName + "<<<"
+//println "bintray User >>>" + bintrayUser + "<<<"
+//println "bintray Api Key >>>" + bintrayApiKey + "<<<"
 
 bintray {
-    user = jcenterUser
-    key = jcenterApiKey
+    user = bintrayUser
+    key = bintrayApiKey
     configurations = ['archives']
     pkg {
         repo = 'maven'
-        name = jcenterLibraryName
+        name = bintrayLibraryName
 
         licenses = ['Apache-2.0']
         vcsUrl = gitUrl
@@ -106,9 +109,9 @@ bintray {
         publish = true
 
         version {
-            name = jcenterVersion
+            name = bintrayVersion
             released = new Date()
-            vcsTag = jcenterTextVers
+            vcsTag = bintrayTextVers
         }
     }
 }
