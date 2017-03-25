@@ -1,11 +1,31 @@
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
+//https://www.theguardian.com/technology/developer-blog/2016/dec/06/how-to-publish-an-android-library-a-mysterious-conversation
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//task sourcesJar(type: Jar) {
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
+//}
+//
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+
+if (project.hasProperty("android")) { // Android libraries
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+    }
+
+    task javadoc(type: Javadoc) {
+        options.addBooleanOption('Xdoclint:none', true)
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+} else { // Java libraries
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -21,8 +41,12 @@ artifacts {
 def siteUrl = 'https://github.com/b12kab/tmdblibrary'      // Homepage URL of the library
 def gitUrl = 'https://github.com/b12kab/tmdblibrary.git'   // Git repository URL
 def libraryDescription = 'An Android library for themoviedb.org (TMDb) API v3 using retrofit1'
-def jcenterLibraryName = "tmdblibrary"
-def group = "com.b12kab.tmdblibrary"                           // Maven Group ID for the artifact
+def jcenterLibraryName = 'tmdblibrary'
+def mavenGroupId = "com.b12kab.tmdblibrary"                       // Maven Group ID for the artifact
+group = mavenGroupId
+def jcenterVersion = getLibVersionName()
+//println "\nVersion number>>>" + jcenterVersion + "<<<\n"
+version = jcenterVersion
 
 install {
     repositories.mavenInstaller {
@@ -34,9 +58,9 @@ install {
             url siteUrl
 
             packaging 'aar'
-            groupId group
+            groupId mavenGroupId
             artifactId jcenterLibraryName
-            version getLibVersionName()
+            version jcenterVersion
 
             // Set your license
             licenses {
@@ -59,28 +83,35 @@ install {
     }
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def jcenterTextVers = getLibTextVersionName()
+def jcenterUser = bintrayUser
+def jcenterApiKey = bintrayApikey
+//println "\nVersion text name>>>" + jcenterTextVers + "<<<"
+//println "name >>>" + jcenterLibraryName + "<<<"
+//println "bintray User >>>" + jcenterUser + "<<<\n"
+//println "bintray Api Key >>>" + jcenterApiKey + "<<<\n"
 
 bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
+    user = jcenterUser
+    key = jcenterApiKey
     configurations = ['archives']
     pkg {
-        repo = 'android'
+        repo = 'maven'
         name = jcenterLibraryName
+
         licenses = ['Apache-2.0']
         vcsUrl = gitUrl
         websiteUrl = siteUrl
         publish = true
+
         version {
-            name = jcenterLibraryName
+            name = jcenterVersion
             released = new Date()
-            vcsTag = getLibTextVersionName()
+            vcsTag = jcenterTextVers
         }
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.2'
+    gradleVersion = '2.3'
 }

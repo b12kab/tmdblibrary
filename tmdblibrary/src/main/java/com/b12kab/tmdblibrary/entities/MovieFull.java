@@ -19,9 +19,6 @@ package com.b12kab.tmdblibrary.entities;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by itskeith on 7/5/16.
- */
 public class MovieFull {
     public int id;
 

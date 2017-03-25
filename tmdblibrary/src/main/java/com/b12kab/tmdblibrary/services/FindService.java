@@ -17,7 +17,7 @@ public interface FindService {
      * @param externalId
      * @param source
      * @param language <em>Optional.</em> ISO 639-1 code.
-     * @return
+     * @return FindResults
      */
     @GET("/find/{id}")
     FindResults find(

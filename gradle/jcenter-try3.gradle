@@ -1,0 +1,32 @@
+def myLibraryDescription = 'An Android library for themoviedb.org (TMDb) API v3 using retrofit1'
+def jcenterLibraryName = "tmdblibrary"
+def group = "com.b12kab.tmdblibrary"                           // Maven Group ID for the artifact
+
+ext {
+    bintrayRepo = jcenterLibraryName
+    bintrayName = jcenterLibraryName
+
+    publishedGroupId = group
+    libraryName = jcenterLibraryName
+    artifact = jcenterLibraryName
+
+    libraryDescription = myLibraryDescription
+
+    siteUrl = 'https://github.com/b12kab/tmdblibrary'      // Homepage URL of the library
+    gitUrl = 'https://github.com/b12kab/tmdblibrary.git'   // Git repository URL
+
+    libraryVersion = getLibVersionName()
+
+    developerId = 'b12kab'
+    developerName = 'Keith Beatty'
+    developerEmail = ''
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+//Add these lines to publish library to bintray. This is the readymade scripts made by github user nuuneoi to make uploading to bintray easy.
+//Place it at the end of the file
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

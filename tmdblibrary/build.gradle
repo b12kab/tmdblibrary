@@ -7,9 +7,8 @@ def getLibVersionName() {
 }
 
 def getLibTextVersionName() {
-    def vers = getLibVersionName()
-    def retVers = "v" + vers
-    return retVers
+    String vers = 'v' + getLibVersionName()
+    return vers
 }
 
 android {
@@ -29,7 +28,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 23
-//            versionCode '0.11.0'
+        versionCode 1
         versionName getLibVersionName()
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
