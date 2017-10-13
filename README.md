@@ -17,7 +17,7 @@ Usage
 Add the following dependency to your Gradle project:
 
 ```groovy
-compile 'com.b12kab:tmdblibrary:0.11.0'
+compile 'com.b12kab.tmdblibrary:tmdblibrary:0.11.0'
 ```
 
 
