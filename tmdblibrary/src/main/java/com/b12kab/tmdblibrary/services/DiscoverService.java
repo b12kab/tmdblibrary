@@ -20,10 +20,9 @@ import com.b12kab.tmdblibrary.entities.AppendToDiscoverResponse;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.TvResultsPage;
 import com.b12kab.tmdblibrary.enumerations.SortBy;
+
 import retrofit.http.GET;
 import retrofit.http.Query;
-
-import java.util.Date;
 
 public interface DiscoverService {
 
@@ -71,6 +70,7 @@ public interface DiscoverService {
      * member. Expected value is an integer (the id or ids of a person).
      * @param year <em>Optional.</em> Filter the results by all available release dates that have the specified value
      * added as a year. Expected value is an integer (year).
+     * @return MovieResultsPage
      */
     @GET("/discover/movie")
     MovieResultsPage discoverMovie(
@@ -118,6 +118,7 @@ public interface DiscoverService {
      * integer (the id of a network).
      * @param firstAirDateGte <em>Optional.</em> The minimum release to include. Expected format is YYYY-MM-DD.
      * @param firstAirDateLte <em>Optional.</em> The maximum release to include. Expected format is YYYY-MM-DD.
+     * @return TvResultsPage
      */
     @GET("/discover/tv")
     TvResultsPage discoverTv(

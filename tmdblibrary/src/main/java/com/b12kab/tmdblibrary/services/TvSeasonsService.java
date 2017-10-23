@@ -33,8 +33,10 @@ public interface TvSeasonsService {
      * Get the primary information about a TV season by its season number.
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @param appendToResponse <em>Optional.</em> extra requests to append to the result.
+     * @return TvSeason
      */
     @GET("/tv/{id}/season/{season_number}")
     TvSeason season(
@@ -48,6 +50,8 @@ public interface TvSeasonsService {
      * Get the cast and crew credits for a TV season by season number.
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
+     * @return CreditResults
      */
     @GET("/tv/{id}/season/{season_number}/credits")
     CreditResults credits(
@@ -59,7 +63,9 @@ public interface TvSeasonsService {
      * Get the external ids that we have stored for a TV season by season number.
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return ExternalIds
      */
     @GET("/tv/{id}/season/{season_number}/external_ids")
     ExternalIds externalIds(
@@ -72,7 +78,9 @@ public interface TvSeasonsService {
      * Get the images (posters) that we have stored for a TV season by season number.
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return Images
      */
     @GET("/tv/{id}/season/{season_number}/images")
     Images images(
@@ -85,7 +93,9 @@ public interface TvSeasonsService {
      * Get the videos that have been added to a TV season (trailers, teasers, etc...)
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return VideoResults
      */
     @GET("/tv/{id}/season/{season_number}/videos")
     VideoResults videos(

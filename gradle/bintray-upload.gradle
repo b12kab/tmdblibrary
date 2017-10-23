@@ -1,32 +1,38 @@
 //https://www.theguardian.com/technology/developer-blog/2016/dec/06/how-to-publish-an-android-library-a-mysterious-conversation
 
-//task sourcesJar(type: Jar) {
-//    from android.sourceSets.main.java.srcDirs
-//    classifier = 'sources'
-//}
-//
-//task javadoc(type: Javadoc) {
-//    source = android.sourceSets.main.java.srcDirs
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//}
-
-if (project.hasProperty("android")) { // Android libraries
-    task sourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.srcDirs
-    }
-
-    task javadoc(type: Javadoc) {
-        options.addBooleanOption('Xdoclint:none', true)
-        source = android.sourceSets.main.java.srcDirs
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    }
-} else { // Java libraries
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
 }
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+afterEvaluate {
+    javadoc.classpath += files(android.libraryVariants.collect { variant ->
+        variant.javaCompile.classpath.files
+    })
+}
+
+//if (project.hasProperty("android")) { // Android libraries
+//    task sourcesJar(type: Jar) {
+//        classifier = 'sources'
+//        from android.sourceSets.main.java.srcDirs
+//    }
+//
+//    task javadoc(type: Javadoc) {
+//        options.addBooleanOption('Xdoclint:none', true)
+//        source = android.sourceSets.main.java.srcDirs
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    }
+//} else { // Java libraries
+//    task sourcesJar(type: Jar, dependsOn: classes) {
+//        classifier = 'sources'
+//        from sourceSets.main.allSource
+//    }
+//}
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
@@ -99,6 +105,7 @@ bintray {
     user = bintrayUser
     key = bintrayApiKey
     configurations = ['archives']
+    dryRun = false
     pkg {
         repo = 'maven'
         name = bintrayLibraryName

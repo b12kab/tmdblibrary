@@ -33,6 +33,7 @@ public interface PeopleService {
      * Get the general person information for a specific id.
      *
      * @param tmdbId TMDb id.
+     * @return Person
      */
     @GET("/person/{id}")
     Person summary(
@@ -44,6 +45,7 @@ public interface PeopleService {
      *
      * @param tmdbId TMDb id.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return PersonCredits
      */
     @GET("/person/{id}/movie_credits")
     PersonCredits movieCredits(
@@ -56,6 +58,7 @@ public interface PeopleService {
      *
      * @param tmdbId TMDb id.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return PersonCredits
      */
     @GET("/person/{id}/tv_credits")
     PersonCredits tvCredits(
@@ -68,6 +71,7 @@ public interface PeopleService {
      *
      * @param tmdbId TMDb id.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return PersonCredits
      */
     @GET("/person/{id}/combined_credits")
     PersonCredits combinedCredits(
@@ -77,6 +81,8 @@ public interface PeopleService {
 
     /**
      * Get the external ids for a specific person id.
+     * @param tmdbId TMDb id.
+     * @return PersonIds
      */
     @GET("/person/{id}/external_ids")
     PersonIds externalIds(
@@ -85,6 +91,8 @@ public interface PeopleService {
 
     /**
      * Get the images for a specific person id.
+     * @param tmdbId TMDb id.
+     * @return PersonImages
      */
     @GET("/person/{id}/images")
     PersonImages images(
@@ -93,6 +101,8 @@ public interface PeopleService {
 
     /**
      * Get the list of popular people on The Movie Database. This list refreshes every day.
+     * @param page page
+     * @return PersonResultsPage
      */
     @GET("/person/popular")
     PersonResultsPage popular(
@@ -101,6 +111,7 @@ public interface PeopleService {
 
     /**
      * Get the latest person id.
+     * @return Person
      */
     @GET("/person/latest")
     Person latest();

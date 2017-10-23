@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+0.11.1
+----------------
+* Updated Tmdb object to add checkTmdbAPIKeyPopulated() method to check if the API key has been applied 
+* Updated BaseMember to add missing gender JSON object, added methods to access member variables
+* Updated CastMember to add missing cast_id JSON object, added methods to access member variables
+* Updated dependencies
+* Updated JavaDoc to fix various errors
+
 0.11.0
 -----------------
 Updated use to [retrofit][1] 1.9.0. This is the last version of Retrofit v1.

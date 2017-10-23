@@ -10,14 +10,10 @@ The partial addition of the Account calls allows the TMDb user to log in as well
 
 Usage
 -----
-<!---
- ![Maven Central version](https://img.shields.io/maven-central/v/com.uwetrottmann/tmdb-java.svg?style=flat-square)
- -->
-
 Add the following dependency to your Gradle project:
 
 ```groovy
-compile 'com.b12kab.tmdblibrary:tmdblibrary:0.11.0'
+compile 'com.b12kab.tmdblibrary:tmdblibrary:0.11.1'
 ```
 
 

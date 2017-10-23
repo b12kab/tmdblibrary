@@ -22,6 +22,7 @@ public interface TvService {
      * @param tmdbId A themoviedb id.
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @param appendToResponse <em>Optional.</em> extra requests to append to the result.
+     * @return TvShowComplete
      */
     @GET("/tv/{id}")
     TvShowComplete tv(
@@ -34,6 +35,7 @@ public interface TvService {
      * Get the alternative titles for a specific show ID.
      *
      * @param tmdbId A themoviedb id.
+     * @return TvAlternativeTitles
      */
     @GET("/tv/{id}/alternative_titles")
     TvAlternativeTitles alternativeTitles(
@@ -46,6 +48,7 @@ public interface TvService {
      *
      * @param tmdbId A themoviedb id.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return CreditResults
      */
     @GET("/tv/{id}/credits")
     CreditResults credits(
@@ -58,6 +61,7 @@ public interface TvService {
      *
      * @param tmdbId A themoviedb id.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return ExternalIds
      */
     @GET("/tv/{id}/external_ids")
     ExternalIds externalIds(
@@ -70,6 +74,7 @@ public interface TvService {
      *
      * @param tmdbId A themoviedb id.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return Images
      */
     @GET("/tv/{id}/images")
     Images images(
@@ -81,6 +86,7 @@ public interface TvService {
      * Get the plot keywords for a specific TV show id.
      *
      * @param tmdbId A themoviedb id.
+     * @return TvKeywords
      */
     @GET("/tv/{id}/keywords")
     TvKeywords keywords(
@@ -93,6 +99,7 @@ public interface TvService {
      * @param tmdbId A themoviedb id.
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return TvResultsPage
      */
     @GET("/tv/{id}/similar")
     TvResultsPage similar(
@@ -106,6 +113,7 @@ public interface TvService {
      *
      * @param tmdbId A themoviedb id.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return VideoResults
      */
     @GET("/tv/{id}/videos")
     VideoResults videos(
@@ -116,6 +124,7 @@ public interface TvService {
     /**
      * Get the latest TV show id.
      *
+     * @return TvShowComplete
      */
     @GET("/tv/latest")
     TvShowComplete latest();
@@ -126,6 +135,7 @@ public interface TvService {
      *
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return TvResultsPage
      */
     @GET("/tv/on_the_air")
     TvResultsPage onTheAir(
@@ -139,6 +149,7 @@ public interface TvService {
      *
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return TvResultsPage
      */
     @GET("/tv/airing_today")
     TvResultsPage airingToday(
@@ -152,6 +163,7 @@ public interface TvService {
      *
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return TvResultsPage
      */
     @GET("/tv/top_rated")
     TvResultsPage topRated(
@@ -164,6 +176,7 @@ public interface TvService {
      * 
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return TvResultsPage
      */
     @GET("/tv/popular")
     TvResultsPage popular(

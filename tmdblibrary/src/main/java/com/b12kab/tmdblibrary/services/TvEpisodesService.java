@@ -33,8 +33,11 @@ public interface TvEpisodesService {
      * Get the primary information about a TV episode by combination of a season and episode number.
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
+     * @param episodeNumber episode
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @param appendToResponse <em>Optional.</em> extra requests to append to the result.
+     * @return TvEpisode
      */
     @GET("/tv/{id}/season/{season_number}/episode/{episode_number}")
     TvEpisode episode(
@@ -49,6 +52,9 @@ public interface TvEpisodesService {
      * Get the TV episode credits by combination of season and episode number.
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
+     * @param episodeNumber episode
+     * @return CreditResults
      */
     @GET("/tv/{id}/season/{season_number}/episode/{episode_number}/credits")
     CreditResults credits(
@@ -61,6 +67,9 @@ public interface TvEpisodesService {
      * Get the external ids for a TV episode by combination of a season and episode number.
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
+     * @param episodeNumber episode
+     * @return ExternalIds
      */
     @GET("/tv/{id}/season/{season_number}/episode/{episode_number}/external_ids")
     ExternalIds externalIds(
@@ -74,6 +83,9 @@ public interface TvEpisodesService {
      * Since episode stills don't have a language, this call will always return all images.
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
+     * @param episodeNumber episode
+     * @return Images
      */
     @GET("/tv/{id}/season/{season_number}/episode/{episode_number}/images")
     Images images(
@@ -86,6 +98,9 @@ public interface TvEpisodesService {
      * Get the videos that have been added to a TV episode (teasers, clips, etc...)
      *
      * @param showId A themoviedb id.
+     * @param seasonNumber season
+     * @param episodeNumber episode
+     * @return VideoResults
      */
     @GET("/tv/{id}/season/{season_number}/episode/{episode_number}/videos")
     VideoResults videos(

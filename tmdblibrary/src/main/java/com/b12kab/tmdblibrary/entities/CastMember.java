@@ -22,4 +22,29 @@ public class CastMember extends BaseMember {
 
     public Integer order;
 
+    private Integer cast_id;
+
+    public String getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(String character) {
+        this.character = character;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    public Integer getCast_id() {
+        return cast_id;
+    }
+
+    public void setCast_id(Integer cast_id) {
+        this.cast_id = cast_id;
+    }
 }

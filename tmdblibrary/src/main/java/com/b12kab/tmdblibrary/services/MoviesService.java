@@ -134,7 +134,7 @@ public interface MoviesService {
      *
      * @param tmdbId TMDb id.
      * @param language <em>Optional.</em> ISO 639-1 code.
-     * @return Videos
+     * @return VideoResults
      */
     @GET("/movie/{id}/videos")
     VideoResults videos(

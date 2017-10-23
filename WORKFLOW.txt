@@ -1,0 +1,9 @@
+Workflow
+========
+
+1) Increment versionCode number in tmdblibrary-tmdblibrary (build.gradle)
+2) Update version function getLibVersionName in tmdblibrary-tmdblibrary (build.gradle)
+* Validate changes are as you wish
+3) In the project directory ./gradlew install bintrayUpload
+4) Fix errors, delete uploaded files (if any)
+5) add & commit

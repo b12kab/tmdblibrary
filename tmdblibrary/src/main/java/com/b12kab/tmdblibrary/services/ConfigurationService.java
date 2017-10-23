@@ -32,6 +32,7 @@ public interface ConfigurationService {
      * all and you will have a fully qualified URL. Here is an example URL:<br> <br> <a href=
      * "http://cf2.imgobject.com/t/p/w500/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg"
      * >http://cf2.imgobject.com/t/p/w500/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg</a>
+     * @return Configuration
      */
     @GET("/configuration")
     Configuration configuration();

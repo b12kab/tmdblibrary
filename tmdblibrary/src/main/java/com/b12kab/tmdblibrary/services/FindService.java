@@ -14,8 +14,8 @@ public interface FindService {
      * and return the results in a single response. TV season and TV episode searches
      * will be supported shortly.
      *
-     * @param externalId
-     * @param source
+     * @param externalId external Id
+     * @param source source
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return FindResults
      */

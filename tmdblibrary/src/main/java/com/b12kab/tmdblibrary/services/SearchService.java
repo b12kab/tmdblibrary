@@ -33,6 +33,7 @@ public interface SearchService {
      *
      * @param query CGI escaped string
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
+     * @return CompanyResultsPage
      */
     @GET("/search/company")
     CompanyResultsPage company(
@@ -46,6 +47,7 @@ public interface SearchService {
      * @param query CGI escaped string
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
      * @param language <em>Optional.</em> ISO 639-1 code.
+     * @return CollectionResultsPage
      */
     @GET("/search/collection")
     CollectionResultsPage collection(
@@ -59,6 +61,7 @@ public interface SearchService {
      *
      * @param query CGI escaped string
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
+     * @return KeywordResultsPage
      */
     @GET("/search/collection")
     KeywordResultsPage keyword(
@@ -79,6 +82,7 @@ public interface SearchService {
      * @param searchType <em>Optional.</em> By default, the search type is 'phrase'. This is almost guaranteed the
      * option you will want. It's a great all purpose search type and by far the most tuned for every day querying. For
      * those wanting more of an "autocomplete" type search, set this option to 'ngram'.
+     * @return MovieResultsPage
      */
     @GET("/search/movie")
     MovieResultsPage movie(
@@ -100,6 +104,7 @@ public interface SearchService {
      * @param searchType <em>Optional.</em> By default, the search type is 'phrase'. This is almost guaranteed the
      * option you will want. It's a great all purpose search type and by far the most tuned for every day querying. For
      * those wanting more of an "autocomplete" type search, set this option to 'ngram'.
+     * @return PersonResultsPage
      */
     @GET("/search/person")
     PersonResultsPage person(
@@ -119,6 +124,7 @@ public interface SearchService {
      * @param searchType By default, the search type is 'phrase'. This is almost guaranteed the option you will want.
      * It's a great all purpose search type and by far the most tuned for every day querying. For those wanting more of
      * an "autocomplete" type search, set this option to 'ngram'.
+     * @return TvResultsPage
      */
     @GET("/search/tv")
     TvResultsPage tv(

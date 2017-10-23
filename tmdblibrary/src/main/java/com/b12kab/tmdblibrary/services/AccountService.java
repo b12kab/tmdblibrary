@@ -96,9 +96,9 @@ public interface AccountService {
      *
      * @param userId Obtained from /account
      * @param sessionId Obtained with authenticateTokenValidateWithLoginSync
-     * @param page <Optional>Minimum 1, maximum 1000.</Optional>
-     * @param sortBy <Optional>Use only created_at.desc or created_at.asc</Optional>
-     * @param language <Optional>ISO 639-1 code.</Optional>
+     * @param page <em>Optional.</em> Minimum 1, maximum 1000.
+     * @param sortBy <em>Optional.</em> Use only created_at.desc or created_at.asc
+     * @param language <em>Optional.</em> ISO 639-1 code.
      * @return MovieResultPage
      */
     @GET("/account/{account_id}/rated/movies")
@@ -115,9 +115,9 @@ public interface AccountService {
      *
      * @param userId Obtained from /account
      * @param sessionId Obtained with authenticateTokenValidateWithLoginSync
-     * @param page <Optional>Minimum 1, maximum 1000.</Optional>
-     * @param sortBy <Optional>Use only created_at.desc or created_at.asc</Optional>
-     * @param language <Optional>ISO 639-1 code.</Optional>
+     * @param page <em>Optional.</em> Minimum 1, maximum 1000.
+     * @param sortBy <em>Optional.</em> Use only created_at.desc or created_at.asc
+     * @param language <em>Optional.</em> ISO 639-1 code.
      * @param callback MovieResultPage
      */
     @GET("/account/{account_id}/rated/movies")
@@ -135,9 +135,9 @@ public interface AccountService {
      *
      * @param userId Obtained from /account
      * @param sessionId Obtained with authenticateTokenValidateWithLoginSync
-     * @param page <Optional>Minimum 1, maximum 1000.</Optional>
-     * @param sortBy <Optional>Use only created_at.desc or created_at.asc</Optional>
-     * @param language <Optional>ISO 639-1 code.</Optional>
+     * @param page <em>Optional.</em> Minimum 1, maximum 1000.
+     * @param sortBy <em>Optional.</em> Use only created_at.desc or created_at.asc
+     * @param language <em>Optional.</em> ISO 639-1 code.
      * @param callback MovieResultPage
      */
     @GET("/account/{account_id}/favorite/movies")
@@ -154,9 +154,9 @@ public interface AccountService {
      *
      * @param userId Obtained from /account
      * @param sessionId Obtained with authenticateTokenValidateWithLoginSync
-     * @param page <Optional>Minimum 1, maximum 1000.</Optional>
-     * @param sortBy <Optional>Use only created_at.desc or created_at.asc</Optional>
-     * @param language <Optional>ISO 639-1 code.</Optional>
+     * @param page <em>Optional.</em> Minimum 1, maximum 1000.
+     * @param sortBy <em>Optional.</em> Use only created_at.desc or created_at.asc
+     * @param language <em>Optional.</em> ISO 639-1 code.
      * @return MovieResultPage
      */
     @GET("/account/{account_id}/favorite/movies")

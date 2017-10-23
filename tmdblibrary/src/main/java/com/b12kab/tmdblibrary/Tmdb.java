@@ -74,6 +74,7 @@ public class Tmdb {
      * service instances, get a new one from its service method.
      *
      * @param value Your TMDB API key.
+     * @return Tmdb
      */
     public Tmdb setApiKey(String value) {
         this.apiKey = value;
@@ -81,11 +82,27 @@ public class Tmdb {
         return this;
     }
 
+    /***
+     * Check to see if the TMDb API key is populated
+     * @return true - populated, false - not populated
+     */
+    public boolean checkTmdbAPIKeyPopulated() {
+        boolean apiPopulated = false;
+        if (apiKey != null) {
+            if (!apiKey.isEmpty()) {
+                apiPopulated = true;
+            }
+        }
+
+        return apiPopulated;
+    }
+
     /**
      * Set the {@link retrofit.RestAdapter} log level.
      *
      * @param isDebug If true, the log level is set to {@link retrofit.RestAdapter.LogLevel#FULL}.
      *                Otherwise {@link retrofit.RestAdapter.LogLevel#NONE}.
+     * @return Tmdb
      */
     public Tmdb setIsDebug(boolean isDebug) {
         this.isDebug = isDebug;
@@ -110,6 +127,7 @@ public class Tmdb {
      * <p>
      * When building, sets the endpoint, a custom converter ({@link TmdbHelper#getGsonBuilder()})
      * and a {@link retrofit.RequestInterceptor} which adds the API key as query param.
+     * @return RestAdapter
      */
     protected RestAdapter getRestAdapter() {
         if (restAdapter == null) {
