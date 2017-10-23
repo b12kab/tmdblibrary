@@ -18,32 +18,34 @@ package com.b12kab.tmdblibrary.services;
 
 import com.b12kab.tmdblibrary.BaseTestCase;
 import com.b12kab.tmdblibrary.TestData;
-
 import com.b12kab.tmdblibrary.entities.AppendToResponse;
 import com.b12kab.tmdblibrary.entities.CreditResults;
 import com.b12kab.tmdblibrary.entities.Images;
 import com.b12kab.tmdblibrary.entities.ListResultsPage;
+import com.b12kab.tmdblibrary.entities.MovieAbbreviated;
 import com.b12kab.tmdblibrary.entities.MovieAlternativeTitles;
 import com.b12kab.tmdblibrary.entities.MovieFull;
 import com.b12kab.tmdblibrary.entities.MovieKeywords;
-import com.b12kab.tmdblibrary.entities.MovieResult;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
-import com.b12kab.tmdblibrary.entities.ReleaseDateResults;
 import com.b12kab.tmdblibrary.entities.ReleaseResults;
 import com.b12kab.tmdblibrary.entities.ReviewResultsPage;
-import com.b12kab.tmdblibrary.entities.VideoResults;
 import com.b12kab.tmdblibrary.entities.Translations;
+import com.b12kab.tmdblibrary.entities.VideoResults;
 import com.b12kab.tmdblibrary.enumerations.AppendToResponseItem;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
+@RunWith(JUnit4.class)
 public class MoviesServiceTest extends BaseTestCase {
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
 
@@ -52,9 +54,9 @@ public class MoviesServiceTest extends BaseTestCase {
         final String funcName = "test_summary ";
         MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null, null);
         assertMovie(funcName, movie);
-        assertNotNull(funcName + "movie original_title is null", movie.original_title);
+        assertNotNull(funcName + "movie original_title is null", movie.getOriginal_title());
         assertTrue(funcName + "movie original_title is not " + TestData.MOVIE_TITLE,
-                movie.original_title.equals(TestData.MOVIE_TITLE));
+                movie.getOriginal_title().equals(TestData.MOVIE_TITLE));
     }
 
     @Test
@@ -64,9 +66,9 @@ public class MoviesServiceTest extends BaseTestCase {
         MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, "pt-BR", null);
         assertNotNull(funcName + "movie is null", movie);
 
-        assertNotNull(funcName + "movie title is null", movie.title);
+        assertNotNull(funcName + "movie title is null", movie.getTitle());
         assertEquals(funcName + "movie original_title is not " + movieTitle,
-                movie.title, movieTitle);
+                movie.getTitle(), movieTitle);
     }
 
     @Test
@@ -77,16 +79,16 @@ public class MoviesServiceTest extends BaseTestCase {
         MovieFull movie = this.getManager().moviesService().summary(TestData.MOVIE_WITH_COLLECTION_ID, null, null);
 
         assertNotNull(funcName + "movie is null", movie);
-        assertNotNull(funcName + "movie title is null", movie.title);
+        assertNotNull(funcName + "movie title is null", movie.getTitle());
         assertTrue(funcName + "movie title is not " + TestData.MOVIE_WITH_COLLECTION_TITLE,
-                movie.title.equals(TestData.MOVIE_WITH_COLLECTION_TITLE));
-        assertNotNull(funcName + "movie belongs_to_collection is null", movie.belongs_to_collection);
-        assertNotNull(funcName + "movie belongs_to_collection.id is null", movie.belongs_to_collection.id);
+                movie.getTitle().equals(TestData.MOVIE_WITH_COLLECTION_TITLE));
+        assertNotNull(funcName + "movie belongs_to_collection is null", movie.getBelongs_to_collection());
+        assertNotNull(funcName + "movie belongs_to_collection.id is null", movie.getBelongs_to_collection().id);
         assertTrue(funcName + "movie belongs_to_collection.id is not " + movieCollectionId,
-                movie.belongs_to_collection.id == movieCollectionId);
-        assertNotNull(funcName + "movie belongs_to_collection.name is null", movie.belongs_to_collection.name);
+                movie.getBelongs_to_collection().id == movieCollectionId);
+        assertNotNull(funcName + "movie belongs_to_collection.name is null", movie.getBelongs_to_collection().name);
         assertTrue(funcName + "movie belongs_to_collection.name is not "+ movieCollectionName,
-                movie.belongs_to_collection.name.equals(movieCollectionName));
+                movie.getBelongs_to_collection().name.equals(movieCollectionName));
     }
 
     private void assertMovie(String funcName, MovieFull movie) throws ParseException {
@@ -96,36 +98,35 @@ public class MoviesServiceTest extends BaseTestCase {
         final String movieReleaseDate = "1999-10-15";
 
         assertNotNull(funcName + "movie is null", movie);
-        assertNotNull(funcName + "movie id is null", movie.id);
-        assertTrue(funcName + "movie id is not " + TestData.MOVIE_ID, movie.id == TestData.MOVIE_ID);
-        assertNotNull(funcName + "movie title is null", movie.title);
+        assertNotNull(funcName + "movie id is null", movie.getId());
+        assertTrue(funcName + "movie id is not " + TestData.MOVIE_ID, movie.getId() == TestData.MOVIE_ID);
+        assertNotNull(funcName + "movie title is null", movie.getTitle());
         assertTrue(funcName + "movie title is not "+ TestData.MOVIE_TITLE,
-                movie.title.equals(TestData.MOVIE_TITLE));
-        assertNotNull(funcName + "movie overview is null", movie.overview);
-        assertFalse(funcName + "movie overview is empty", movie.overview.isEmpty());
-        assertNotNull(funcName + "movie tagline is null", movie.tagline);
-        assertFalse(funcName + "movie tagline is empty", movie.tagline.isEmpty());
-        assertTrue(funcName + "movie adult is false", movie.adult == false);
-        assertNotNull(funcName + "movie backdrop_path is null", movie.backdrop_path);
-        assertFalse(funcName + "movie backdrop_path is empty", movie.backdrop_path.isEmpty());
-        assertTrue(funcName + "movie budget is not equal to " + movieBudget, movie.budget == movieBudget);
-        assertNotNull(funcName + "movie imdb_id is null", movie.imdb_id);
+                movie.getTitle().equals(TestData.MOVIE_TITLE));
+        assertNotNull(funcName + "movie overview is null", movie.getOverview());
+        assertFalse(funcName + "movie overview is empty", movie.getOverview().isEmpty());
+        assertNotNull(funcName + "movie tagline is null", movie.getTagline());
+        assertFalse(funcName + "movie tagline is empty", movie.getTagline().isEmpty());
+        assertTrue(funcName + "movie adult is false", movie.isAdult() == false);
+        assertNotNull(funcName + "movie backdrop_path is null", movie.getBackdrop_path());
+        assertFalse(funcName + "movie backdrop_path is empty", movie.getBackdrop_path().isEmpty());
+        assertTrue(funcName + "movie budget is not equal to " + movieBudget, movie.getBudget() == movieBudget);
+        assertNotNull(funcName + "movie imdb_id is null", movie.getImdb_id());
         assertTrue(funcName + "movie imdb_id is not equal to " + TestData.MOVIE_IMDB,
-                movie.imdb_id.equals(TestData.MOVIE_IMDB));
-        assertNotNull(funcName + "movie poster_path is null", movie.poster_path);
-        assertNotNull(funcName + "movie release_date is null", movie.release_date);
+                movie.getImdb_id().equals(TestData.MOVIE_IMDB));
+        assertNotNull(funcName + "movie poster_path is null", movie.getPoster_path());
+        assertNotNull(funcName + "movie release_date is null", movie.getRelease_date());
         assertEquals(funcName + "movie release_date is not equal to " + movieReleaseDate,
-                movie.release_date, JSON_STRING_DATE.parse(movieReleaseDate));
+                movie.getRelease_date(), JSON_STRING_DATE.parse(movieReleaseDate));
         assertTrue(funcName + "movie revenue is not equal to " + movieRevenue,
-                movie.revenue == movieRevenue);
+                movie.getRevenue() == movieRevenue);
         assertTrue(funcName + "movie runtime is not equal to " + movieRuntime,
-                movie.runtime == movieRuntime);
+                movie.getRuntime() == movieRuntime);
 
-        assertNotNull(funcName + "movie vote_average is null", movie.vote_average);
-        assertTrue(funcName + "movie vote_average is < 1", movie.vote_average > 0);
-        assertNotNull(funcName + "movie vote_count is null", movie.vote_count);
-        assertTrue(funcName + "movie vote_count is < 1", movie.vote_count > 0);
-
+        assertNotNull(funcName + "movie vote_average is null", movie.getVote_average());
+        assertTrue(funcName + "movie vote_average is < 1", movie.getVote_average() > 0);
+        assertNotNull(funcName + "movie vote_count is null", movie.getVote_count());
+        assertTrue(funcName + "movie vote_count is < 1", movie.getVote_count() > 0);
     }
 
     @Test
@@ -267,11 +268,11 @@ public class MoviesServiceTest extends BaseTestCase {
         assertTrue(funcName + "images id is not equal to " + TestData.MOVIE_ID,
                 images.id.equals(TestData.MOVIE_ID));
         assertNotNull(funcName + "Images backdrops width is null", images.backdrops.get(0).width);
-        assertEquals(funcName + "Images backdrops width is not 1920",
-                (long) images.backdrops.get(0).width, (long) 1920);
+        assertTrue(funcName + "Images backdrops width not > 1200",
+                images.backdrops.get(0).width > 1200);
         assertNotNull(funcName + "Images backdrops height is null", images.backdrops.get(0).height);
-        assertEquals(funcName + "Images backdrops height is not 1080",
-                (long) images.backdrops.get(0).height, (long) 1080);
+        assertTrue(funcName + "Images backdrops height not > 600",
+                images.backdrops.get(0).height > 600);
 //        assertNotNull(funcName + "Images backdrops iso_639_1 is null", images.backdrops.get(0).iso_639_1);
 //        assertEquals(funcName + "Images backdrops iso_639_1 is not "+ "en",
 //                images.backdrops.get(0).iso_639_1.equals("en"));
@@ -289,11 +290,11 @@ public class MoviesServiceTest extends BaseTestCase {
         assertFalse(funcName + "images posters file_path is empty",
                 images.posters.get(0).file_path.isEmpty());
         assertNotNull(funcName + "Images posters width is null", images.posters.get(0).width);
-        assertEquals(funcName + "Images posters width is not 1200",
-                (long) images.posters.get(0).width, (long) 1200);
+        assertFalse(funcName + "Images posters width < 1200",
+                images.posters.get(0).width < 1200);
         assertNotNull(funcName + "Images posters height is null", images.posters.get(0).height);
-        assertEquals(funcName + "Images posters height is not 1800",
-                (long) images.posters.get(0).height, (long) 1800);
+        assertTrue(funcName + "Images posters height not > 1800",
+                images.posters.get(0).height > 1800);
         assertNotNull(funcName + "Images posters iso_639_1 is null", images.posters.get(0).iso_639_1);
         assertTrue(funcName + "Images posters iso_639_1 length is not 2",
                 images.posters.get(0).iso_639_1.length() == 2);
@@ -491,7 +492,7 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_latest() {
         final String funcName = "test_latest ";
-        MovieResult movie = getManager().moviesService().latest();
+        MovieAbbreviated movie = getManager().moviesService().latest();
 
         // Latest movie might not have a complete TMDb entry, but should at least some basic properties.
         assertNotNull(funcName + "movie is null", movie);

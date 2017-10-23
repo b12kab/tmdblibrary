@@ -20,12 +20,16 @@ package com.b12kab.tmdblibrary.services;
 
 import com.b12kab.tmdblibrary.BaseTestCase;
 import com.b12kab.tmdblibrary.entities.Configuration;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
+@RunWith(JUnit4.class)
 public class ConfigurationServiceTest extends BaseTestCase {
 
     @Test

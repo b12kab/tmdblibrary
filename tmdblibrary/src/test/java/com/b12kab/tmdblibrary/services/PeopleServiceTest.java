@@ -29,6 +29,8 @@ import com.b12kab.tmdblibrary.entities.PersonImages;
 import com.b12kab.tmdblibrary.entities.PersonResultsPage;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,6 +41,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(JUnit4.class)
 public class PeopleServiceTest extends BaseTestCase {
 
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");

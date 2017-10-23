@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 def getLibVersionName() {
-    return "0.11.1"
+    return "0.11.2"
 }
 
 def getLibTextVersionName() {
@@ -28,7 +28,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 2
+        versionCode 3
         versionName getLibVersionName()
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

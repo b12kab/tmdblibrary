@@ -29,15 +29,20 @@ import com.b12kab.tmdblibrary.entities.Image;
 import com.b12kab.tmdblibrary.entities.Images;
 import com.b12kab.tmdblibrary.entities.TvEpisode;
 import com.b12kab.tmdblibrary.entities.TvSeason;
+import com.b12kab.tmdblibrary.entities.Video;
 import com.b12kab.tmdblibrary.entities.VideoResults;
 import com.b12kab.tmdblibrary.enumerations.AppendToResponseItem;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(JUnit4.class)
 public class TvSeasonsServiceTest extends BaseTestCase {
 
     @Test
@@ -115,7 +120,7 @@ public class TvSeasonsServiceTest extends BaseTestCase {
         assertNotNull(funcName + "videoResults is null", videoResults);
         assertNotNull(funcName + "videoResults results is null", videoResults.results);
 
-        for (VideoResults.Video video : videoResults.results) {
+        for (Video video : videoResults.results) {
             assertNotNull(funcName + "video is null", video);
             assertNotNull(funcName + "video id is null", video.getId());
             assertNotNull(funcName + "video iso_639_1 is null", video.getIso_639_1());

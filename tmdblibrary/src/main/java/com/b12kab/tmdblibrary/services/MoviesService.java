@@ -22,10 +22,10 @@ import com.b12kab.tmdblibrary.entities.AppendToResponse;
 import com.b12kab.tmdblibrary.entities.CreditResults;
 import com.b12kab.tmdblibrary.entities.Images;
 import com.b12kab.tmdblibrary.entities.ListResultsPage;
+import com.b12kab.tmdblibrary.entities.MovieAbbreviated;
 import com.b12kab.tmdblibrary.entities.MovieAlternativeTitles;
 import com.b12kab.tmdblibrary.entities.MovieFull;
 import com.b12kab.tmdblibrary.entities.MovieKeywords;
-import com.b12kab.tmdblibrary.entities.MovieResult;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.ReleaseResults;
 import com.b12kab.tmdblibrary.entities.ReviewResultsPage;
@@ -203,10 +203,10 @@ public interface MoviesService {
     /**
      * Get the latest movie id.
      *
-     * @return MovieResult
+     * @return MovieAbbreviated
      */
     @GET("/movie/latest")
-    MovieResult latest();
+    MovieAbbreviated latest();
 
     /**
      * Get the list of upcoming movies. This list refreshes every day. The maximum number of items this list will

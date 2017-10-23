@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Uwe Trottmann
+ * Copyright (c) 2016 by Keith Beatty.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,22 +12,32 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
+ * 2017 Keith Beatty Refactored
  */
 
 package com.b12kab.tmdblibrary.entities;
 
 import java.util.List;
 
-public class MovieResultsPage extends BaseResultsPage {
+public class MovieAbbreviated extends MovieBase {
+    List<Integer> genre_ids;
 
-    public List<MovieAbbreviated> results;
+    Float rating;
 
-    public List<MovieAbbreviated> getResults() {
-        return results;
+    public List<Integer> getGenre_ids() {
+        return genre_ids;
     }
 
-    public void setResults(List<MovieAbbreviated> results) {
-        this.results = results;
+    public void setGenre_ids(List<Integer> genre_ids) {
+        this.genre_ids = genre_ids;
+    }
+
+    public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 }

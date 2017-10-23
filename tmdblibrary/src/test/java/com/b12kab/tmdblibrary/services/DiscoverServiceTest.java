@@ -24,7 +24,10 @@ import com.b12kab.tmdblibrary.entities.BaseResultsPage;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.TvResultsPage;
 import com.b12kab.tmdblibrary.enumerations.SortBy;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,6 +35,7 @@ import java.text.SimpleDateFormat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(JUnit4.class)
 public class DiscoverServiceTest extends BaseTestCase {
 
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");

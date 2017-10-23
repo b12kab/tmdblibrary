@@ -12,47 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * 2017 Keith Beatty - Refactored
  */
 
 package com.b12kab.tmdblibrary.entities;
 
-import java.util.Date;
 import java.util.List;
 
-public class MovieFull {
-    public int id;
-
-    public boolean adult;
-    public String backdrop_path;
-    public Collection belongs_to_collection;
-    /* not in MovieResult */
-    public int budget;
-    public List<Genre> genres;
-    /* not in MovieResult */
-    public String homepage;
-    /* not in MovieResult */
-    public String imdb_id;
-    public String original_language;
-    public String original_title;
-    public String overview;
-    public Double popularity;
-    public String poster_path;
-    public List<ProductionCompany> production_companies;
-    public List<ProductionCountry> production_countries;
-    public Date release_date;
-    /* not in MovieResult */
-    public int revenue;
-    /* not in MovieResult */
-    public int runtime;
-    public List<SpokenLanguage> spoken_languages;
-    /* not in MovieResult */
-    public String status;
-    /* not in MovieResult */
-    public String tagline;
-    public String title;
-    public boolean video;
-    public Double vote_average;
-    public int vote_count;
+public class MovieFull extends MovieBase {
+    Collection belongs_to_collection;
+    int budget;
+    List<Genre> genres;
+    String homepage;
+    String imdb_id;
+    List<ProductionCompany> production_companies;
+    List<ProductionCountry> production_countries;
+    int revenue;
+    int runtime;
+    List<SpokenLanguage> spoken_languages;
+    String status;
+    String tagline;
 
     // Following are used with append_to_response
     public CreditResults credits;
@@ -62,22 +42,6 @@ public class MovieFull {
     public ReviewResultsPage reviews;
     public MovieResultsPage similar;
     public AccountState account_states;
-
-    public boolean isAdult() {
-        return adult;
-    }
-
-    public void setAdult(boolean adult) {
-        this.adult = adult;
-    }
-
-    public String getBackdrop_path() {
-        return backdrop_path;
-    }
-
-    public void setBackdrop_path(String backdrop_path) {
-        this.backdrop_path = backdrop_path;
-    }
 
     public Collection getBelongs_to_collection() {
         return belongs_to_collection;
@@ -111,60 +75,12 @@ public class MovieFull {
         this.homepage = homepage;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getImdb_id() {
         return imdb_id;
     }
 
     public void setImdb_id(String imdb_id) {
         this.imdb_id = imdb_id;
-    }
-
-    public String getOriginal_language() {
-        return original_language;
-    }
-
-    public void setOriginal_language(String original_language) {
-        this.original_language = original_language;
-    }
-
-    public String getOriginal_title() {
-        return original_title;
-    }
-
-    public void setOriginal_title(String original_title) {
-        this.original_title = original_title;
-    }
-
-    public String getOverview() {
-        return overview;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
-    public Double getPopularity() {
-        return popularity;
-    }
-
-    public void setPopularity(Double popularity) {
-        this.popularity = popularity;
-    }
-
-    public String getPoster_path() {
-        return poster_path;
-    }
-
-    public void setPoster_path(String poster_path) {
-        this.poster_path = poster_path;
     }
 
     public List<ProductionCompany> getProduction_companies() {
@@ -181,14 +97,6 @@ public class MovieFull {
 
     public void setProduction_countries(List<ProductionCountry> production_countries) {
         this.production_countries = production_countries;
-    }
-
-    public Date getRelease_date() {
-        return release_date;
-    }
-
-    public void setRelease_date(Date release_date) {
-        this.release_date = release_date;
     }
 
     public int getRevenue() {
@@ -231,38 +139,6 @@ public class MovieFull {
         this.tagline = tagline;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public boolean isVideo() {
-        return video;
-    }
-
-    public void setVideo(boolean video) {
-        this.video = video;
-    }
-
-    public Double getVote_average() {
-        return vote_average;
-    }
-
-    public void setVote_average(Double vote_average) {
-        this.vote_average = vote_average;
-    }
-
-    public int getVote_count() {
-        return vote_count;
-    }
-
-    public void setVote_count(int vote_count) {
-        this.vote_count = vote_count;
-    }
-
     public CreditResults getCredits() {
         return credits;
     }
@@ -287,6 +163,14 @@ public class MovieFull {
         this.release_dates = release_dates;
     }
 
+    public VideoResults getVideos() {
+        return videos;
+    }
+
+    public void setVideos(VideoResults videos) {
+        this.videos = videos;
+    }
+
     public ReviewResultsPage getReviews() {
         return reviews;
     }
@@ -303,19 +187,12 @@ public class MovieFull {
         this.similar = similar;
     }
 
-    public VideoResults getVideos() {
-        return videos;
-    }
-
-    public void setVideos(VideoResults videos) {
-        this.videos = videos;
-    }
-
     public AccountState getAccount_states() {
-        return this.account_states;
+        return account_states;
     }
 
     public void setAccount_states(AccountState account_states) {
         this.account_states = account_states;
     }
+
 }

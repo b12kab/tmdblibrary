@@ -19,24 +19,26 @@ package com.b12kab.tmdblibrary.services;
 import com.b12kab.tmdblibrary.BaseTestCase;
 import com.b12kab.tmdblibrary.TestData;
 import com.b12kab.tmdblibrary.entities.FindResults;
-import com.b12kab.tmdblibrary.entities.MovieResult;
+import com.b12kab.tmdblibrary.entities.MovieAbbreviated;
 import com.b12kab.tmdblibrary.entities.Person;
 import com.b12kab.tmdblibrary.entities.TvEpisode;
 import com.b12kab.tmdblibrary.entities.TvSeason;
 import com.b12kab.tmdblibrary.entities.TvShow;
 import com.b12kab.tmdblibrary.enumerations.ExternalSource;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
+@RunWith(JUnit4.class)
 public class FindServiceTest extends BaseTestCase {
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
 
@@ -57,7 +59,7 @@ public class FindServiceTest extends BaseTestCase {
         assertNotNull(funcName + "results movie_results is null", results.movie_results);
         assertTrue(funcName + "results movie_results < 1", results.movie_results.size() > 0);
 
-        MovieResult movie = results.movie_results.get(0);
+        MovieAbbreviated movie = results.movie_results.get(0);
         assertNotNull(funcName + "movie is null", movie);
         assertFalse(funcName + "movie adult is not false", movie.isAdult());
 

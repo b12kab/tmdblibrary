@@ -26,18 +26,22 @@ import com.b12kab.tmdblibrary.entities.CreditResults;
 import com.b12kab.tmdblibrary.entities.CrewMember;
 import com.b12kab.tmdblibrary.entities.ExternalIds;
 import com.b12kab.tmdblibrary.entities.Image;
-import com.b12kab.tmdblibrary.entities.TvEpisode;
 import com.b12kab.tmdblibrary.entities.Images;
+import com.b12kab.tmdblibrary.entities.TvEpisode;
+import com.b12kab.tmdblibrary.entities.Video;
 import com.b12kab.tmdblibrary.entities.VideoResults;
-import com.b12kab.tmdblibrary.entities.VideoResults.Video;
 import com.b12kab.tmdblibrary.enumerations.AppendToResponseItem;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(JUnit4.class)
 public class TvEpisodesServiceTest extends BaseTestCase {
 
     @Test

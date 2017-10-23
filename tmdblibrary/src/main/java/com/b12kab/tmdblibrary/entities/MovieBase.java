@@ -1,5 +1,9 @@
+package com.b12kab.tmdblibrary.entities;
+
+import java.util.Date;
+
 /*
- * Copyright (c) 2016 by Keith Beatty.
+ * Copyright 2017 Keith Beatty
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,20 +16,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package com.b12kab.tmdblibrary.entities;
-
-import java.util.Date;
-import java.util.List;
-
-public class MovieResult {
+public abstract class MovieBase {
     int id;
 
     boolean adult;
     String backdrop_path;
-
-    List<Integer> genre_ids;
 
     String original_language;
     String original_title;
@@ -38,7 +36,14 @@ public class MovieResult {
     boolean video;
     Double vote_average;
     int vote_count;
-    Float rating;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public boolean isAdult() {
         return adult;
@@ -54,22 +59,6 @@ public class MovieResult {
 
     public void setBackdrop_path(String backdrop_path) {
         this.backdrop_path = backdrop_path;
-    }
-
-    public List<Integer> getGenre_ids() {
-        return genre_ids;
-    }
-
-    public void setGenre_ids(List<Integer> genre_ids) {
-        this.genre_ids = genre_ids;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getOriginal_language() {
@@ -150,13 +139,5 @@ public class MovieResult {
 
     public void setVote_count(int vote_count) {
         this.vote_count = vote_count;
-    }
-
-    public Float getRating() {
-        return rating;
-    }
-
-    public void setRating(Float rating) {
-        this.rating = rating;
     }
 }

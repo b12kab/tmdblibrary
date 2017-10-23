@@ -24,8 +24,8 @@ import com.b12kab.tmdblibrary.entities.Collection;
 import com.b12kab.tmdblibrary.entities.Images;
 
 import org.junit.Test;
-
-import java.text.ParseException;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -33,6 +33,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(JUnit4.class)
 public class CollectionServiceTest extends BaseTestCase {
   public CollectionServiceTest() {
   }

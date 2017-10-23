@@ -27,16 +27,16 @@ import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.PersonResultsPage;
 import com.b12kab.tmdblibrary.entities.TvResultsPage;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.text.ParseException;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(JUnit4.class)
 public class SearchServiceTest extends BaseTestCase {
 
     @Test

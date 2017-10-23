@@ -17,8 +17,8 @@ public abstract class BaseTestCase {
     @Before
     public void setUpOnce() {
         manager.setApiKey(API_KEY);
-        manager.setIsDebug(DEBUG);
     }
+//        manager.setIsDebug(DEBUG);
 
     protected final Tmdb getManager() {
         return manager;
