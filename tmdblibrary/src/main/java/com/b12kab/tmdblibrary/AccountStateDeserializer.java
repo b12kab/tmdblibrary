@@ -44,30 +44,36 @@ public class AccountStateDeserializer implements JsonDeserializer<AccountState> 
         try {
             convertVariable = "id";
             element = obj.get("id");
-            if (element.isJsonPrimitive()) {
-                if (element.getAsJsonPrimitive().isNumber()) {
-                    accountState.setId(element.getAsInt());
+            if (element != null) {
+                if (element.isJsonPrimitive()) {
+                    if (element.getAsJsonPrimitive().isNumber()) {
+                        accountState.setId(element.getAsInt());
+                    }
                 }
             }
 
             convertVariable = "favorite";
             element = obj.get("favorite");
-            if (element.isJsonPrimitive()) {
-                if (element.getAsJsonPrimitive().isBoolean()) {
-                    accountState.setFavorite(element.getAsBoolean());
+            if (element != null) {
+                if (element.isJsonPrimitive()) {
+                    if (element.getAsJsonPrimitive().isBoolean()) {
+                        accountState.setFavorite(element.getAsBoolean());
+                    }
                 }
             }
 
             accountState.setRated(null);
             convertVariable = "rated";
             element = obj.get("rated");
-            if (element.isJsonObject()) {
-                if (element.getAsJsonObject().has("value")) {
-                    ratingElement = element.getAsJsonObject().get("value");
-                    if (ratingElement.isJsonPrimitive()) {
+            if (element != null) {
+                if (element.isJsonObject()) {
+                    if (element.getAsJsonObject().has("value")) {
+                        ratingElement = element.getAsJsonObject().get("value");
+                        if (ratingElement.isJsonPrimitive()) {
 //                        rating
-                        if (ratingElement.getAsJsonPrimitive().isNumber()) {
-                            accountState.setRated(ratingElement.getAsFloat());
+                            if (ratingElement.getAsJsonPrimitive().isNumber()) {
+                                accountState.setRated(ratingElement.getAsFloat());
+                            }
                         }
                     }
                 }
@@ -75,14 +81,20 @@ public class AccountStateDeserializer implements JsonDeserializer<AccountState> 
 
             convertVariable = "watchlist";
             element = obj.get("watchlist");
-            if (element.isJsonPrimitive()) {
-                if (element.getAsJsonPrimitive().isBoolean()) {
-                    accountState.setWatchlist(element.getAsBoolean());
+            if (element != null) {
+                if (element.isJsonPrimitive()) {
+                    if (element.getAsJsonPrimitive().isBoolean()) {
+                        accountState.setWatchlist(element.getAsBoolean());
+                    }
                 }
             }
-        } catch (NumberFormatException e) {
+        } catch (NullPointerException npe) {
+            Log.e(TAG, "Processing " + convertVariable + " response from Tmdb, NullPointerException occurred" +
+                    npe.toString());
+            return null;
+        } catch (NumberFormatException npe) {
             Log.e(TAG, "Processing " + convertVariable + " response from Tmdb, NumberFormatException occurred" +
-                    e.toString());
+                    npe.toString());
             return null;
         } catch (IllegalStateException ise) {
             Log.e(TAG, "Processing " + convertVariable + " response from Tmdb, IllegalStateException occurred" +

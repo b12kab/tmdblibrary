@@ -17,7 +17,6 @@
 
 package com.b12kab.tmdblibrary.services;
 
-import com.b12kab.tmdblibrary.entities.AppendResponse;
 import com.b12kab.tmdblibrary.entities.AppendToResponse;
 import com.b12kab.tmdblibrary.entities.CreditResults;
 import com.b12kab.tmdblibrary.entities.Images;
@@ -29,8 +28,9 @@ import com.b12kab.tmdblibrary.entities.MovieKeywords;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.ReleaseResults;
 import com.b12kab.tmdblibrary.entities.ReviewResultsPage;
-import com.b12kab.tmdblibrary.entities.VideoResults;
 import com.b12kab.tmdblibrary.entities.Translations;
+import com.b12kab.tmdblibrary.entities.VideoResults;
+
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -67,7 +67,7 @@ public interface MoviesService {
             @Path("id") int tmdbId,
             @Query("language") String language,
             @Query("session_id") String session,
-            @Query("append_to_response") AppendResponse appendToResponse
+            @Query("append_to_response") AppendToResponse appendToResponse
     );
 
     /**

@@ -25,7 +25,8 @@ public enum AppendToResponseItem {
     SIMILAR("similar"),
     IMAGES("images"),
     REVIEWS("reviews"),
-    EXTERNAL_IDS("external_ids");
+    EXTERNAL_IDS("external_ids"),
+    STATES("account_states");
 
     private final String value;
 

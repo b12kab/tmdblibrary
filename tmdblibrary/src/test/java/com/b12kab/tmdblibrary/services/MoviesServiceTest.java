@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
@@ -190,6 +191,31 @@ public class MoviesServiceTest extends BaseTestCase {
     }
 
     @Test
+    public void test_summary_append_states_no_session() {
+        final String funcName = "test_summary_append_states_no_session ";
+        AppendToResponse atr = new AppendToResponse( AppendToResponseItem.STATES);
+        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                atr );
+
+        assertNotNull(funcName + "movie is null", movie);
+        assertNull(funcName + "movie similar is not null", movie.getAccount_states());
+    }
+
+    @Test
+    public void test_summary_append_states_session() {
+        final String funcName = "test_summary_append_states ";
+        AppendToResponse atr = new AppendToResponse( AppendToResponseItem.STATES);
+        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                TMDB_SESSION,
+                atr);
+
+        assertNotNull(funcName + "movie is null", movie);
+        if (!TMDB_SESSION.equals(TMDB_SESSION_INVALID)) {
+            assertNotNull(funcName + "movie similar is null", movie.getAccount_states());
+        }
+    }
+
+    @Test
     public void test_summary_append_all() {
         final String funcName = "test_summary_append_all ";
         MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
@@ -208,6 +234,34 @@ public class MoviesServiceTest extends BaseTestCase {
         assertNotNull(funcName + "movie reviews is null", movie.getReviews());
         assertNotNull(funcName + "movie similar is null", movie.getSimilar());
         assertNotNull(funcName + "movie release_dates is null", movie.getRelease_dates());
+    }
+
+    @Test
+    public void test_summary_append_all_session() {
+        final String funcName = "test_summary_append_all_session ";
+        AppendToResponse atr = new AppendToResponse(
+                AppendToResponseItem.CREDITS,
+                AppendToResponseItem.IMAGES,
+                AppendToResponseItem.RELEASES,
+                AppendToResponseItem.VIDEOS,
+                AppendToResponseItem.REVIEWS,
+                AppendToResponseItem.SIMILAR,
+                AppendToResponseItem.STATES);
+
+        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                TMDB_SESSION,
+                atr);
+
+        assertNotNull(funcName + "movie is null", movie);
+        assertNotNull(funcName + "movie credits is null", movie.getCredits());
+        assertNotNull(funcName + "movie images is null", movie.getImages());
+        assertNotNull(funcName + "movie videos is null", movie.getVideos());
+        assertNotNull(funcName + "movie reviews is null", movie.getReviews());
+        assertNotNull(funcName + "movie similar is null", movie.getSimilar());
+        assertNotNull(funcName + "movie release_dates is null", movie.getRelease_dates());
+        if (!TMDB_SESSION.equals(TMDB_SESSION_INVALID)) {
+            assertNotNull(funcName + "movie account states is null", movie.getAccount_states());
+        }
     }
 
     @Test
