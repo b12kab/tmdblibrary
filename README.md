@@ -13,7 +13,7 @@ Usage
 Add the following dependency to your Gradle project:
 
 ```groovy
-compile 'com.b12kab.tmdblibrary:tmdblibrary:0.11.1'
+compile 'com.b12kab.tmdblibrary:tmdblibrary:0.11.3'
 ```
 
 
