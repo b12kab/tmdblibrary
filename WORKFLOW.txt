@@ -6,6 +6,8 @@ Workflow
 * Validate changes are as you wish
 3) In the project directory ./gradlew install bintrayUpload
 4) Fix errors, delete uploaded files (if any)
+5) Update CHANGELOG.md
+6) Update README.md
 5) add & commit
 6) push to Github master
 7) Create Github release and push it

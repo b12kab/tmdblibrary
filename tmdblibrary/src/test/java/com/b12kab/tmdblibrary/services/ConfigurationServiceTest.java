@@ -56,6 +56,9 @@ public class ConfigurationServiceTest extends BaseTestCase {
         assertNotNull("Configuration images logo_sizes is null", config.images.logo_sizes);
         assertNotEquals("Configuration images logo_sizes List length is 0", config.images.logo_sizes.size(), 0);
 
+        assertNotNull("Configuration images still_sizes is null", config.images.still_sizes);
+        assertNotEquals("Configuration images still_sizes List length is 0", config.images.still_sizes.size(), 0);
+
         assertNotNull("Configuration images change_keys is null", config.change_keys);
         assertNotEquals("Configuration images change_keys List length is 0", config.change_keys.size(), 0);
     }

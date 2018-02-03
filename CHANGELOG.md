@@ -1,6 +1,20 @@
 Change Log
 ==========
 
+0.11.4
+----------------
+* Updated Configuration and Configuration test
+
+0.11.3
+----------------
+* Updated README.md to current version
+
+0.11.2
+----------------
+* Split VideoResult from Video
+* Created base class for MovieResult, MovieFull
+* Renamed MovieResult to MovieAbbreviated
+
 0.11.1
 ----------------
 * Updated Tmdb object to add checkTmdbAPIKeyPopulated() method to check if the API key has been applied 

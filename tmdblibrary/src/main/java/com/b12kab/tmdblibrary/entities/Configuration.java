@@ -25,10 +25,11 @@ public class Configuration {
 
         public String base_url;
         public String secure_base_url;
-        public List<String> poster_sizes;
         public List<String> backdrop_sizes;
-        public List<String> profile_sizes;
         public List<String> logo_sizes;
+        public List<String> poster_sizes;
+        public List<String> profile_sizes;
+        public List<String> still_sizes;
     }
 
     public ImagesConfiguration images;
