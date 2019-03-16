@@ -51,7 +51,7 @@ public class PeopleServiceTest extends BaseTestCase {
         Person person = getManager().personService().summary(TestData.PERSON_ID);
         assertNotNull("Result was null.", person);
         assertEquals("Person name does not match.", "Brad Pitt", person.name);
-        assertNotNull("Person homepage was null", person.homepage);
+        assertNull("Person homepage was not null", person.homepage);
         assertNotNull("Person TMDB ID was null.", person.id);
         assertNotNull("Person biography was null.", person.biography);
         assertEquals("Person birthday does not match.", JSON_STRING_DATE.parse("1963-12-18"),
@@ -167,23 +167,25 @@ public class PeopleServiceTest extends BaseTestCase {
         assertNotNull(funcName + "popular adult is null", popular.results.get(0).adult);
 
         for (Media media : popular.results.get(0).known_for) {
-            assertNotNull(funcName + "media is null", media);
+            if (media.vote_average > 0.0) {
+                assertNotNull(funcName + "media is null", media);
 //            assertNotNull(funcName + "media adult is null", media.adult); // This isn't on all entries
-            assertNotNull(funcName + "media backdrop_path is null", media.backdrop_path);
-            assertNotNull(funcName + "media id is null", media.id);
+                assertNotNull(funcName + "media backdrop_path is null", media.backdrop_path);
+                assertNotNull(funcName + "media id is null", media.id);
 //            assertNotNull(funcName + "media original_title is null", media.original_title); // This isn't on all entries
 //            assertNotNull(funcName + "media release_date is null", media.release_date); // This isn't on all entries
-            assertNotNull(funcName + "media poster_path is null", media.poster_path);
-            assertNotNull(funcName + "media popularity is null", media.popularity);
-            assertTrue(funcName + "media popularity size < 0", media.popularity >= 0);
+                assertNotNull(funcName + "media poster_path is null", media.poster_path);
+                assertNotNull(funcName + "media popularity is null", media.popularity);
+                assertTrue(funcName + "media popularity size < 0", media.popularity >= 0);
 //            assertNotNull(funcName + "media title is null", media.title);
 
-            assertNotNull(funcName + "media vote_average is null", media.vote_average);
-            assertTrue(funcName + "media vote_average is < 1", media.vote_average > 0);
-            assertNotNull(funcName + "media vote_count is null", media.vote_count);
-            assertTrue(funcName + "media vote_count is < 1", media.vote_count > 0);
+                assertNotNull(funcName + "media vote_average is null", media.vote_average);
+                assertTrue(funcName + "media vote_average is < 1", media.vote_average > 0);
+                assertNotNull(funcName + "media vote_count is null", media.vote_count);
+                assertTrue(funcName + "media vote_count is < 1", media.vote_count > 0);
 
-            assertNotNull(funcName + "media media_type is null", media.media_type);
+                assertNotNull(funcName + "media media_type is null", media.media_type);
+            }
         }
     }
     

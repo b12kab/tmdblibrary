@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+0.11.5
+----------------
+* Updated gradle, API 26 to API 27
+
 0.11.4
 ----------------
 * Updated Configuration and Configuration test

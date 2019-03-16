@@ -3,17 +3,18 @@ tmdblibrary
 
 A Java wrapper around the [TMDb v3 API][1] using [retrofit][2].
 
-The reason for (this) seperate library vs. using the [tmdb-java][3] library was I found that when pulling lists of movie information from TMDb, the genere information was in an Integer array. The information was not moved into the Genre object by Retrofit. The only way around this was to remove the Movie object and replace it with a list movie object: MovieResult and movie detail MovieFull. 
+The reason for (this) separate library vs. using the [tmdb-java][3] library was I found that when pulling lists of movie information from TMDb, the genere information was in an Integer array. The information was not moved into the Genre object by Retrofit. The only way around this was to remove the Movie object and replace it with a list movie object: MovieResult and movie detail MovieFull.
 
 The partial addition of the Account calls allows the TMDb user to log in as well as set/unset movie favorites and set/remove movie rating value.
 
+Note: This version uses API 27
 
 Usage
 -----
 Add the following dependency to your Gradle project:
 
 ```groovy
-compile 'com.b12kab.tmdblibrary:tmdblibrary:0.11.4'
+compile 'com.b12kab.tmdblibrary:tmdblibrary:0.11.5'
 ```
 
 
