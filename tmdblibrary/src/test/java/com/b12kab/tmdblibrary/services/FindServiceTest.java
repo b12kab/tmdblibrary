@@ -12,6 +12,7 @@
  * limitations under the License.
  *
  * Keith Beatty 2017 - Converted to jUnit 4.12
+ * Keith Beatty 2019 - Converted to jUnit 5.x
  */
 
 package com.b12kab.tmdblibrary.services;
@@ -26,19 +27,18 @@ import com.b12kab.tmdblibrary.entities.TvSeason;
 import com.b12kab.tmdblibrary.entities.TvShow;
 import com.b12kab.tmdblibrary.enumerations.ExternalSource;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(JUnit4.class)
 public class FindServiceTest extends BaseTestCase {
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
 
@@ -51,55 +51,65 @@ public class FindServiceTest extends BaseTestCase {
     static final String ImdbTvSeasonName = "Season 1";
     static final String ImdbTvEpisodeId = "tt0959621";
 
+    @BeforeEach
+    void init() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e){
+            System.out.println(e);
+        }
+    }
+
     @Test
     public void test_find_movie() throws ParseException {
         final String funcName = "test_find_movie ";
         FindResults results = getManager().findService().find(ImdbMovieId, ExternalSource.IMDB_ID, null);
-        assertNotNull(funcName + "results is null", results);
-        assertNotNull(funcName + "results movie_results is null", results.movie_results);
-        assertTrue(funcName + "results movie_results < 1", results.movie_results.size() > 0);
+
+        assertNotNull(results, funcName + "results is null");
+        assertNotNull(results.movie_results, funcName + "results movie_results is null");
+        assertTrue(results.movie_results.size() > 0, funcName + "results movie_results < 1");
 
         MovieAbbreviated movie = results.movie_results.get(0);
-        assertNotNull(funcName + "movie is null", movie);
-        assertFalse(funcName + "movie adult is not false", movie.isAdult());
+        assertNotNull(movie, funcName + "movie is null");
+        assertFalse(movie.isAdult(), funcName + "movie adult is not false");
 
-        assertNotNull(funcName + "movie getBackdrop_path() is null", movie.getBackdrop_path());
-        assertTrue(funcName + "movie id is < 1", movie.getId() > 0);
+        assertNotNull(movie.getBackdrop_path(), funcName + "movie getBackdrop_path() is null");
+        assertTrue(movie.getId() > 0, funcName + "movie id is < 1");
 
-        assertNotNull(funcName + "movie getOriginal_title() is null", movie.getOriginal_title());
-        assertEquals(funcName + "movie getOriginal_title() is not " + movieTitle, movie.getOriginal_title(), movieTitle);
+        assertNotNull(movie.getOriginal_title(), funcName + "movie getOriginal_title() is null");
+        assertEquals(movie.getOriginal_title(), movieTitle, funcName + "movie getOriginal_title() is not " + movieTitle);
 
-        assertNotNull(funcName + "movie getRelease_date() is null", movie.getRelease_date());
-        assertEquals(funcName + "movie getRelease_date() is not 2009-08-21",
-                JSON_STRING_DATE.parse("2009-08-18"), movie.getRelease_date());
+        assertNotNull(movie.getRelease_date(), funcName + "movie getRelease_date() is null");
+        assertEquals(JSON_STRING_DATE.parse("2009-08-18"), movie.getRelease_date(), funcName + "movie getRelease_date() is not 2009-08-21");
 
-        assertNotNull(funcName + "movie getPoster_path() is null", movie.getPoster_path());
+        assertNotNull(movie.getPoster_path(), funcName + "movie getPoster_path() is null");
 
-        assertNotNull(funcName + "movie getPopularity() is null", movie.getPopularity());
+        assertNotNull(movie.getPopularity(), funcName + "movie getPopularity() is null");
 
-        assertNotNull(funcName + "movie getTitle() is null", movie.getTitle());
-        assertEquals(funcName + "movie getTitle() is not " + movieTitle, movie.getTitle(), movieTitle);
+        assertNotNull(movie.getTitle(), funcName + "movie getTitle() is null");
+        assertEquals(movie.getTitle(), movieTitle, funcName + "movie getTitle() is not " + movieTitle);
 
-        assertNotNull(funcName + "movie vote_average is null", movie.getVote_average());
-        assertTrue(funcName + "movie vote_average is < 1", movie.getVote_average() > 0);
+        assertNotNull( movie.getVote_average(), funcName + "movie vote_average is null");
+        assertTrue(movie.getVote_average() > 0, funcName + "movie vote_average is < 1");
 
-        assertNotNull(funcName + "movie vote_count is null", movie.getVote_count());
-        assertTrue(funcName + "movie vote_count is < 1", movie.getVote_count() > 0);
+        assertNotNull(movie.getVote_count(), funcName + "movie vote_count is null");
+        assertTrue(movie.getVote_count() > 0, funcName + "movie vote_count is < 1");
     }
     
     @Test
     public void test_find_people() {
         final String funcName = "test_find_people ";
         FindResults results = getManager().findService().find(ImdbPersonId, ExternalSource.IMDB_ID, null);
-        assertNotNull(funcName + "results is null", results);
-        assertNotNull(funcName + "results List person_results is null", results.person_results);
-        assertTrue(funcName + "results List person_results size < 1", results.person_results.size() > 0);
+
+        assertNotNull(results, funcName + "results is null");
+        assertNotNull(results.person_results, funcName + "results List person_results is null");
+        assertTrue(results.person_results.size() > 0, funcName + "results List person_results size < 1");
 
         Person person = results.person_results.get(0);
-        assertNotNull(funcName + "person is null", person);
-        assertNotNull(funcName + "person id is null", person.id);
-        assertNotNull(funcName + "person name is null", person.name);
-        assertTrue(funcName + "person name is not the same as "+ TestData.PERSON_NAME, person.name.equals(TestData.PERSON_NAME));
+        assertNotNull(person, funcName + "person is null" );
+        assertNotNull(person.id, funcName + "person id is null");
+        assertNotNull(person.name, funcName + "person name is null");
+        assertEquals(person.name, TestData.PERSON_NAME, funcName + "person name is not the same as " + TestData.PERSON_NAME);
         assertNotNull(funcName + "person profile_path is null", person.profile_path);
     }
     
@@ -107,68 +117,70 @@ public class FindServiceTest extends BaseTestCase {
     public void test_find_tv_show() {
         final String funcName = "test_find_tv_show ";
         FindResults results = getManager().findService().find(ImdbTvId, ExternalSource.IMDB_ID, null);
-        assertNotNull(funcName + "results is null", results );
-        assertNotNull(funcName + "results tv_results is null", results.tv_results);
-        assertTrue(funcName + "results tv_results is < 1", results.tv_results.size() > 0);
+
+        assertNotNull(results, funcName + "results is null");
+        assertNotNull(results.tv_results, funcName + "results tv_results is null");
+        assertTrue(results.tv_results.size() > 0, funcName + "results tv_results is < 1");
 
         TvShow show = results.tv_results.get(0);
-        assertNotNull(funcName + "show is null", show);
-        assertNotNull(funcName + "show id is null", show.id);
-        assertNotNull(funcName + "show original_name is null", show.original_name);
-        assertTrue(funcName + "show original_name is not" + ImdbTvIdName, show.original_name.equals(ImdbTvIdName));
-        assertTrue(funcName + "show name is not" + ImdbTvIdName, show.name.equals(ImdbTvIdName));
-        assertNotNull(funcName + "show first_air_date is null", show.first_air_date);
-        assertNotNull(funcName + "show backdrop_path is null", show.backdrop_path);
-        assertNotNull(funcName + "show poster_path is null", show.poster_path);
-        assertNotNull(funcName + "show popularity is null", show.popularity);
-        assertTrue(funcName + "show popularity is < 1", show.popularity > 0);
-        assertNotNull(funcName + "show vote_average is null", show.vote_average);
-        assertTrue(funcName + "show vote_average is < 1", show.vote_average > 0);
-        assertNotNull(funcName + "show vote_count is null", show.vote_count);
-        assertTrue(funcName + "show vote_count is < 1", show.vote_count > 0);
+        assertNotNull(show, funcName + "show is null");
+        assertNotNull(show.id, funcName + "show id is null");
+        assertNotNull(show.original_name, funcName + "show original_name is null");
+        assertEquals(show.original_name, ImdbTvIdName, funcName + "show original_name is not" + ImdbTvIdName);
+        assertEquals(show.name, ImdbTvIdName, funcName + "show name is not" + ImdbTvIdName);
+        assertNotNull(show.first_air_date, funcName + "show first_air_date is null");
+        assertNotNull(show.backdrop_path, funcName + "show backdrop_path is null");
+        assertNotNull(show.poster_path, funcName + "show poster_path is null");
+        assertNotNull(show.popularity, funcName + "show popularity is null");
+        assertTrue(show.popularity > 0, funcName + "show popularity is < 1");
+        assertNotNull(show.vote_average, funcName + "show vote_average is null");
+        assertTrue(show.vote_average > 0, funcName + "show vote_average is < 1");
+        assertNotNull(show.vote_count, funcName + "show vote_count is null");
+        assertTrue(show.vote_count > 0, funcName + "show vote_count is < 1");
     }
     
     @Test
     public void test_find_tv_season() {
         final String funcName = "test_find_tv_season ";
         FindResults results = getManager().findService().find(ImdbTvSeasonId, ExternalSource.TVDB_ID, null);
-        assertNotNull(funcName + "results is null", results);
-        assertNotNull(funcName + "results tv_season_results is null", results.tv_season_results);
-        assertTrue(funcName + "results tv_season_results List < 1", results.tv_season_results.size() > 0);
+
+        assertNotNull(results, funcName + "results is null");
+        assertNotNull(results.tv_season_results, funcName + "results tv_season_results is null");
+        assertTrue(results.tv_season_results.size() > 0, funcName + "results tv_season_results List < 1");
 
         TvSeason season = results.tv_season_results.get(0);
-        assertNotNull(funcName + "season is null", season);
-        assertNotNull(funcName + "season air_date is null", season.air_date);
-        assertNotNull(funcName + "season name is null", season.name);
-//        assertTrue(funcName + "season name is not equal to " + ImdbTvSeasonName, season.name.equals(ImdbTvSeasonName));
-        assertNotNull(funcName + "season id is null", season.id);
-//        assertNotNull(funcName + "season poster_path is null", season.poster_path);
-        assertNotNull(funcName + "season season_number is null", season.season_number);
-//        assertTrue(funcName + "season season_number is != 1", season.season_number == 1);
+        assertNotNull(season, funcName + "season is null");
+        assertNotNull(season.air_date, funcName + "season air_date is null");
+        assertNotNull(season.name, funcName + "season name is null");
+//        assertTrue(season.name.equals(ImdbTvSeasonName), funcName + "season name is not equal to " + ImdbTvSeasonName);
+        assertNotNull(season.id, funcName + "season id is null");
+//        assertNotNull(season.poster_path, funcName + "season poster_path is null");
+        assertNotNull(season.season_number, funcName + "season season_number is null");
+//        assertTrue(season.season_number == 1, funcName + "season season_number is != 1");
     }
     
     @Test
     public void test_find_tv_episode() {
         final String funcName = "test_find_tv_episode ";
         FindResults results = getManager().findService().find(ImdbTvEpisodeId, ExternalSource.IMDB_ID, null);
-        assertNotNull(funcName + "results is null", results);
-        assertNotNull(funcName + "results List tv_episode_results is null", results.tv_episode_results);
-        assertTrue(funcName + "results List tv_episode_results size < 1", results.tv_episode_results.size() > 0);
+
+        assertNotNull(results, funcName + "results is null");
+        assertNotNull(results.tv_episode_results, funcName + "results List tv_episode_results is null");
+        assertTrue(results.tv_episode_results.size() > 0, funcName + "results List tv_episode_results size < 1");
 
         TvEpisode episode = results.tv_episode_results.get(0);
-        assertNotNull(funcName + "episode is null", episode);
-        assertNotNull(funcName + "episode air_date is null", episode.air_date);
-        assertNotNull(funcName + "episode episode_number is null", episode.episode_number);
-        assertTrue(funcName + "episode episode_number < 1", episode.episode_number > 0);
-        assertNotNull(funcName + "episode name is null", episode.name);
-        assertNotNull(funcName + "episode id is null", episode.id);
-        assertNotNull(funcName + "episode season_number is null", episode.season_number);
-        assertTrue(funcName + "episode season_number < 1", episode.season_number == 1);
-        assertNotNull(funcName + "episode still_path is null", episode.still_path);
-        assertNotNull(funcName + "episode vote_average is null", episode.vote_average);
-        assertTrue(funcName + "episode vote_average is < 1", episode.vote_average > 0);
-        assertNotNull(funcName + "episode vote_count is null", episode.vote_count);
-        assertTrue(funcName + "episode vote_count is < 1", episode.vote_count > 0);
+        assertNotNull(episode, funcName + "episode is null");
+        assertNotNull(episode.air_date, funcName + "episode air_date is null");
+        assertNotNull(episode.episode_number, funcName + "episode episode_number is null");
+        assertTrue(episode.episode_number > 0, funcName + "episode episode_number < 1");
+        assertNotNull(episode.name, funcName + "episode name is null");
+        assertNotNull(episode.id, funcName + "episode id is null");
+        assertNotNull(episode.season_number, funcName + "episode season_number is null");
+        assertTrue(episode.season_number == 1, funcName + "episode season_number < 1");
+        assertNotNull(episode.still_path, funcName + "episode still_path is null");
+        assertNotNull(episode.vote_average, funcName + "episode vote_average is null");
+        assertTrue(episode.vote_average > 0, funcName + "episode vote_average is < 1");
+        assertNotNull(episode.vote_count, funcName + "episode vote_count is null");
+        assertTrue(episode.vote_count > 0, funcName + "episode vote_count is < 1");
     }
-
 }

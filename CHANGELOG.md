@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+0.11.7
+----------------
+* Updated gradle, API 27 to 29, moved to androidx; moved to JUnit 5; now requires Java 88.
+
+0.11.6
+----------------
+* Version skipped
+
 0.11.5
 ----------------
 * Updated gradle, API 26 to API 27

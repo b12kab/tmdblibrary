@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  * Keith Beatty 2017 - Converted to jUnit 4.12
+ * Keith Beatty 2019 - Converted to jUnit 5.x
  */
 
 package com.b12kab.tmdblibrary.services;
@@ -33,17 +34,25 @@ import com.b12kab.tmdblibrary.entities.Video;
 import com.b12kab.tmdblibrary.entities.VideoResults;
 import com.b12kab.tmdblibrary.enumerations.AppendToResponseItem;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-@RunWith(JUnit4.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class TvSeasonsServiceTest extends BaseTestCase {
+
+    @BeforeEach
+    void init() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e){
+            System.out.println(e);
+        }
+    }
 
     @Test
     public void test_season() {
@@ -62,21 +71,21 @@ public class TvSeasonsServiceTest extends BaseTestCase {
         assertTvSeason(funcName, season);
 
         // credits
-        assertNotNull(funcName + "season is null", season);
-        assertNotNull(funcName + "season credits is null", season.credits);
+        assertNotNull(season, funcName + "season is null");
+        assertNotNull(season.credits, funcName + "season credits is null");
 
         assertCrewCredits(funcName, season.credits.getCrew());
         assertCastCredits(funcName, season.credits.getCast());
 
         // images
-        assertNotNull(funcName + "season images is null", season.images);
+        assertNotNull(season.images, funcName + "season images is null");
         assertImages(funcName, season.images.posters);
 
         // external ids
-        assertNotNull(funcName + "season external_ids is null", season.external_ids);
-        assertNotNull(funcName + "season freebase_id is null", season.external_ids.freebase_id);
-        assertNotNull(funcName + "season freebase_mid is null", season.external_ids.freebase_mid);
-        assertNotNull(funcName + "season tvdb_id is null", season.external_ids.tvdb_id);
+        assertNotNull(season.external_ids, funcName + "season external_ids is null");
+        assertNotNull(season.external_ids.freebase_id, funcName + "season freebase_id is null");
+        assertNotNull(season.external_ids.freebase_mid, funcName + "season freebase_mid is null");
+        assertNotNull(season.external_ids.tvdb_id, funcName + "season tvdb_id is null");
     }
     
     @Test
@@ -84,8 +93,8 @@ public class TvSeasonsServiceTest extends BaseTestCase {
         final String funcName = "test_credits ";
         CreditResults creditResults = getManager().tvSeasonsService().credits(TestData.TVSHOW_ID, 1);
 
-        assertNotNull(funcName + "credits is null", creditResults);
-        assertNotNull(funcName + "credits id is null", creditResults.getId());
+        assertNotNull(creditResults, funcName + "credits is null");
+        assertNotNull(creditResults.getId(), funcName + "credits id is null");
 
         assertCrewCredits(funcName, creditResults.getCrew());
         assertCastCredits(funcName, creditResults.getCast());
@@ -96,11 +105,11 @@ public class TvSeasonsServiceTest extends BaseTestCase {
         final String funcName = "test_externalIds ";
         ExternalIds ids = getManager().tvSeasonsService().externalIds(TestData.TVSHOW_ID, 1, null);
 
-        assertNotNull(funcName + "ids is null", ids);
-        assertNotNull(funcName + "ids id is null", ids.id);
-        assertNotNull(funcName + "ids freebase_id is null", ids.freebase_id);
-        assertNotNull(funcName + "ids freebase_mid is null", ids.freebase_mid);
-        assertNotNull(funcName + "ids tvdb_id is null", ids.tvdb_id);
+        assertNotNull(ids, funcName + "ids is null");
+        assertNotNull(ids.id, funcName + "ids id is null");
+        assertNotNull(ids.freebase_id, funcName + "ids freebase_id is null");
+        assertNotNull(ids.freebase_mid, funcName + "ids freebase_mid is null");
+        assertNotNull(ids.tvdb_id, funcName + "ids tvdb_id is null");
     }
     
     @Test
@@ -108,8 +117,8 @@ public class TvSeasonsServiceTest extends BaseTestCase {
         final String funcName = "test_images ";
         Images images = getManager().tvSeasonsService().images(TestData.TVSHOW_ID, 1, null);
 
-        assertNotNull(funcName + "images is null", images);
-        assertNotNull(funcName + "images id is null", images.id);
+        assertNotNull(images, funcName + "images is null");
+        assertNotNull(images.id, funcName + "images id is null");
         assertImages(funcName, images.posters);
     }
     
@@ -117,100 +126,98 @@ public class TvSeasonsServiceTest extends BaseTestCase {
     public void test_videos() {
         final String funcName = "test_videos ";
         VideoResults videoResults = getManager().tvSeasonsService().videos(TestData.TVSHOW_ID, 1, null);
-        assertNotNull(funcName + "videoResults is null", videoResults);
-        assertNotNull(funcName + "videoResults results is null", videoResults.results);
+        assertNotNull(videoResults, funcName + "videoResults is null");
+        assertNotNull(videoResults.results, funcName + "videoResults results is null");
 
         for (Video video : videoResults.results) {
-            assertNotNull(funcName + "video is null", video);
-            assertNotNull(funcName + "video id is null", video.getId());
-            assertNotNull(funcName + "video iso_639_1 is null", video.getIso_639_1());
-            assertNotNull(funcName + "video key is null", video.getKey());
-            assertNotNull(funcName + "video name is null", video.getName());
-            assertNotNull(funcName + "video site is null", video.getSite());
-            assertNotNull(funcName + "video size is null", video.getSize());
-            assertNotNull(funcName + "video type is null", video.getType());
+            assertNotNull(video, funcName + "video is null");
+            assertNotNull(video.getId(), funcName + "video id is null");
+            assertNotNull(video.getIso_639_1(), funcName + "video iso_639_1 is null");
+            assertNotNull(video.getKey(), funcName + "video key is null");
+            assertNotNull(video.getName(), funcName + "video name is null");
+            assertNotNull(video.getSite(), funcName + "video site is null");
+            assertNotNull(video.getSize(), funcName + "video size is null");
+            assertNotNull(video.getType(), funcName + "video type is null");
         }
     }
 
     private void assertTvSeason(String funcName, TvSeason season) {
-        assertNotNull(funcName + "season is null", season);
-        assertNotNull(funcName + "season air_date is null", season.air_date);
-        assertNotNull(funcName + "season name is null", season.name);
-        assertTrue(funcName + "season name is != 'Season 1'",
-                season.name.equals("Season 1"));
-        assertNotNull(funcName + "season overview is null", season.overview);
-        assertNotNull(funcName + "season id is null", season.id);
-        assertNotNull(funcName + "season poster_path is null", season.poster_path);
-        assertNotNull(funcName + "season season_number is null", season.season_number);
-        assertTrue(funcName + "season season_number is != 1", season.season_number == 1);
-        assertNotNull(funcName + "season episodes is null", season.episodes);
+        assertNotNull(season, funcName + "season is null");
+        assertNotNull(season.air_date, funcName + "season air_date is null");
+        assertNotNull(season.name, funcName + "season name is null");
+        assertEquals("Season 1", season.name, funcName + "season name is != 'Season 1'");
+        assertNotNull(season.overview, funcName + "season overview is null");
+        assertNotNull(season.id, funcName + "season id is null");
+        assertNotNull(season.poster_path, funcName + "season poster_path is null");
+        assertNotNull(season.season_number, funcName + "season season_number is null");
+        assertEquals(1, (int) season.season_number, funcName + "season season_number is != 1");
+        assertNotNull(season.episodes, funcName + "season episodes is null");
 
         for (TvEpisode episode : season.episodes) {
-            assertNotNull(funcName + "episode is null", episode);
-            assertNotNull(funcName + "episode crew is null", episode.getCrew());
+            assertNotNull(episode, funcName + "episode is null");
+            assertNotNull(episode.getCrew(), funcName + "episode crew is null");
 
             assertCrewCredits(funcName, episode.getCrew());
             assertCastCredits(funcName, episode.getGuest_stars());
 
-            assertNotNull(funcName + "episode air_date is null", episode.air_date);
-            assertNotNull(funcName + "episode episode_number is null", episode.episode_number);
-            assertTrue(funcName + "episode episode_number < 1", episode.episode_number > 0);
-            assertNotNull(funcName + "episode name is null", episode.name);
-            assertNotNull(funcName + "episode overview is null", episode.overview);
-            assertNotNull(funcName + "episode id is null", episode.id);
-            assertNotNull(funcName + "episode season_number is null", episode.season_number);
-            assertNotNull(funcName + "episode still_path is null", episode.still_path);
+            assertNotNull(episode.air_date, funcName + "episode air_date is null");
+            assertNotNull(episode.episode_number, funcName + "episode episode_number is null");
+            assertTrue(episode.episode_number > 0, funcName + "episode episode_number < 1");
+            assertNotNull(episode.name, funcName + "episode name is null");
+            assertNotNull(episode.overview, funcName + "episode overview is null");
+            assertNotNull(episode.id, funcName + "episode id is null");
+            assertNotNull(episode.season_number, funcName + "episode season_number is null");
+            assertNotNull(episode.still_path, funcName + "episode still_path is null");
 
-            assertNotNull(funcName + "episode vote_average is null", episode.vote_average);
-            assertTrue(funcName + "episode vote_average is < 1", episode.vote_average > 0);
-            assertNotNull(funcName + "episode vote_count is null", episode.vote_count);
-            assertTrue(funcName + "episode vote_count is < 1", episode.vote_count > 0);
+            assertNotNull(episode.vote_average, funcName + "episode vote_average is null");
+            assertTrue(episode.vote_average > 0, funcName + "episode vote_average is < 1");
+            assertNotNull(episode.vote_count, funcName + "episode vote_count is null");
+            assertTrue(episode.vote_count > 0, funcName + "episode vote_count is < 1");
         }
     }
     
     private void assertCrewCredits(String funcName, List<CrewMember> crew) {
-        assertNotNull(funcName + "crew is null", crew);
+        assertNotNull(crew, funcName + "crew is null");
 
         for (CrewMember member : crew) {
-            assertNotNull(funcName + "member is null", member);
-            assertNotNull(funcName + "member id is null", member.id);
-            assertNotNull(funcName + "member credit_id is null", member.credit_id);
-            assertNotNull(funcName + "member name is null", member.name);
-            assertNotNull(funcName + "member department is null", member.department);
-            assertNotNull(funcName + "member job is null", member.job);
+            assertNotNull(member, funcName + "member is null");
+            assertNotNull(member.id, funcName + "member id is null");
+            assertNotNull(member.credit_id, funcName + "member credit_id is null");
+            assertNotNull(member.name, funcName + "member name is null");
+            assertNotNull(member.department, funcName + "member department is null");
+            assertNotNull(member.job, funcName + "member job is null");
         }
     }
     
     private void assertCastCredits(String funcName, List<CastMember> cast) {
-        assertNotNull(funcName + "cast is null", cast);
+        assertNotNull(cast, funcName + "cast is null");
 
         for (CastMember member : cast) {
-            assertNotNull(funcName + "member is null", member);
-            assertNotNull(funcName + "member id is null", member.id);
-            assertNotNull(funcName + "member credit_id is null", member.credit_id);
-            assertNotNull(funcName + "member name is null", member.name);
-            assertNotNull(funcName + "member character is null", member.character);
-            assertNotNull(funcName + "member order is null", member.order);
+            assertNotNull(member, funcName + "member is null");
+            assertNotNull(member.id, funcName + "member id is null");
+            assertNotNull(member.credit_id, funcName + "member credit_id is null");
+            assertNotNull(member.name, funcName + "member name is null");
+            assertNotNull(member.character, funcName + "member character is null");
+            assertNotNull(member.order, funcName + "member order is null");
         }
     }
 
     private void assertImages(String funcName, List<Image> images){
-        assertNotNull(funcName + "images is null", images);
-        assertTrue(funcName + "images List size < 1", images.size() > 0);
+        assertNotNull(images, funcName + "images is null");
+        assertTrue(images.size() > 0, funcName + "images List size < 1");
 
         for(Image image : images) {
-            assertNotNull(funcName + "image is null", image);
-            assertNotNull(funcName + "image file_path is null", image.file_path);
-            assertNotNull(funcName + "image width is null", image.width);
-            assertNotNull(funcName + "image height is null", image.height);
-            assertNotNull(funcName + "image aspect_ratio is null", image.aspect_ratio);
-            assertTrue(funcName + "image aspect_ratio < 1", image.aspect_ratio > 0);
+            assertNotNull(image, funcName + "image is null");
+            assertNotNull(image.file_path, funcName + "image file_path is null");
+            assertNotNull(image.width, funcName + "image width is null");
+            assertNotNull(image.height, funcName + "image height is null");
+            assertNotNull(image.aspect_ratio, funcName + "image aspect_ratio is null");
+            assertTrue(image.aspect_ratio > 0, funcName + "image aspect_ratio < 1");
 
-            assertNotNull(funcName + "image vote_average is null", image.vote_average);
-            assertTrue(funcName + "image vote_average is < 0", image.vote_average >= 0);
-            assertNotNull(funcName + "image vote_count is null", image.vote_count);
-            assertTrue(funcName + "image vote_count is < 0", image.vote_count >= 0);
+            assertNotNull(image.vote_average, funcName + "image vote_average is null");
+            assertTrue(image.vote_average >= 0, funcName + "image vote_average is < 0");
+            assertNotNull(image.vote_count, funcName + "image vote_count is null");
+            assertTrue(image.vote_count >= 0, funcName + "image vote_count is < 0" );
         }
     }
-
 }

@@ -12,6 +12,7 @@
  * limitations under the License.
  *
  * Keith Beatty 2017 - Converted to jUnit 4.12
+ * Keith Beatty 2019 - Converted to jUnit 5.x
  */
 
 package com.b12kab.tmdblibrary.services;
@@ -27,17 +28,27 @@ import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.PersonResultsPage;
 import com.b12kab.tmdblibrary.entities.TvResultsPage;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(JUnit4.class)
 public class SearchServiceTest extends BaseTestCase {
+
+    @BeforeEach
+    void init() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e){
+            System.out.println(e);
+        }
+    }
 
     @Test
     public void test_companySearch() throws ParseException {
@@ -45,11 +56,11 @@ public class SearchServiceTest extends BaseTestCase {
         CompanyResultsPage companyResults = getManager().searchService().company("Sony Pictures", null);
         
         assertResultsPage(funcName, companyResults);
-        assertNotNull(funcName + "companyResults results is null", companyResults.results);
-        assertTrue(funcName + "companyResults results is < 1", companyResults.results.size() > 0);
-        assertNotNull(funcName + "companyResults results.get(0) is null", companyResults.results.get(0));
-        assertNotNull(funcName + "companyResults id is null", companyResults.results.get(0).id);
-        assertNotNull(funcName + "companyResults logo_path is null", companyResults.results.get(0).logo_path);
+        assertNotNull(companyResults.results, funcName + "companyResults results is null");
+        assertTrue(companyResults.results.size() > 0, funcName + "companyResults results is < 1");
+        assertNotNull(companyResults.results.get(0), funcName + "companyResults results.get(0) is null");
+        assertNotNull(companyResults.results.get(0).id, funcName + "companyResults id is null");
+        assertNotNull(companyResults.results.get(0).logo_path, funcName + "companyResults logo_path is null");
     }
     
     @Test
@@ -60,12 +71,12 @@ public class SearchServiceTest extends BaseTestCase {
         
         assertResultsPage(funcName, collectionResults);
 
-        assertNotNull(funcName + "collectionResults results is null", collectionResults.results);
-        assertTrue(funcName + "collectionResults results is < 1", collectionResults.results.size() > 0);
-        assertNotNull(funcName + "collectionResults id is null", collectionResults.results.get(0).id);
-        assertNotNull(funcName + "collectionResults backdrop_path is null", collectionResults.results.get(0).backdrop_path);
-        assertNotNull(funcName + "collectionResults name is null", collectionResults.results.get(0).name);
-        assertNotNull(funcName + "collectionResults poster_path is null", collectionResults.results.get(0).poster_path);
+        assertNotNull(collectionResults.results, funcName + "collectionResults results is null");
+        assertTrue(collectionResults.results.size() > 0, funcName + "collectionResults results is < 1");
+        assertNotNull(collectionResults.results.get(0).id, funcName + "collectionResults id is null");
+        assertNotNull(collectionResults.results.get(0).backdrop_path, funcName + "collectionResults backdrop_path is null");
+        assertNotNull(collectionResults.results.get(0).name, funcName + "collectionResults name is null");
+        assertNotNull(collectionResults.results.get(0).poster_path, funcName + "collectionResults poster_path is null");
     }
     
     @Test
@@ -74,10 +85,10 @@ public class SearchServiceTest extends BaseTestCase {
         KeywordResultsPage keywordResults = getManager().searchService().keyword("fight", null);
         
         assertResultsPage(funcName, keywordResults);
-        assertNotNull(funcName + "keywordResults results is null", keywordResults.results);
-        assertTrue(funcName + "keywordResults results is < 1", keywordResults.results.size() > 0);
-        assertNotNull(funcName + "keywordResults id is null", keywordResults.results.get(0).id);
-        assertNotNull(funcName + "keywordResults name is null", keywordResults.results.get(0).name);
+        assertNotNull(keywordResults.results, funcName + "keywordResults results is null");
+        assertTrue(keywordResults.results.size() > 0, funcName + "keywordResults results is < 1");
+        assertNotNull(keywordResults.results.get(0).id, funcName + "keywordResults id is null");
+        assertNotNull(keywordResults.results.get(0).name, funcName + "keywordResults name is null");
     }
     
     @Test
@@ -87,8 +98,8 @@ public class SearchServiceTest extends BaseTestCase {
                 null, null, null, null);
         
         assertResultsPage(funcName, movieResults);
-        assertNotNull(funcName + "movieResults results is null", movieResults.results);
-        assertTrue(funcName + "movieResults results is < 1", movieResults.results.size() > 0);
+        assertNotNull(movieResults.results, funcName + "movieResults results is null");
+        assertTrue( movieResults.results.size() > 0, funcName + "movieResults results is < 1");
     }
     
     @Test
@@ -97,32 +108,31 @@ public class SearchServiceTest extends BaseTestCase {
         PersonResultsPage movieResults = getManager().searchService().person(TestData.PERSON_NAME, null, null, null);
         
         assertResultsPage(funcName, movieResults);
-        assertNotNull(funcName + "movieResults results.get(0) is null", movieResults.results.get(0));
-        assertNotNull(funcName + "movieResults id is null", movieResults.results.get(0).id);
-        assertNotNull(funcName + "movieResults name is null", movieResults.results.get(0).name);
-        assertNotNull(funcName + "movieResults popularity is null", movieResults.results.get(0).popularity);
-        assertNotNull(funcName + "movieResults profile_path is null", movieResults.results.get(0).profile_path);
-        assertNotNull(funcName + "movieResults adult is null", movieResults.results.get(0).adult);
+        assertNotNull(movieResults.results.get(0), funcName + "movieResults results.get(0) is null");
+        assertNotNull(movieResults.results.get(0).id, funcName + "movieResults id is null");
+        assertNotNull(movieResults.results.get(0).name, funcName + "movieResults name is null");
+        assertNotNull(movieResults.results.get(0).popularity, funcName + "movieResults popularity is null");
+        assertNotNull(movieResults.results.get(0).profile_path, funcName + "movieResults profile_path is null");
+        assertNotNull(movieResults.results.get(0).adult, funcName + "movieResults adult is null");
 
         for (Media media : movieResults.results.get(0).known_for) {
-            assertNotNull(funcName + "media is null", media);
-            assertNotNull(funcName + "media id is null", media.id);
-            assertNotNull(funcName + "media adult is null", media.adult);
-            assertNotNull(funcName + "media backdrop_path is null", media.backdrop_path);
-            assertNotNull(funcName + "media original_title is null", media.original_title);
-            assertNotNull(funcName + "media release_date is null", media.release_date);
-            assertNotNull(funcName + "media poster_path is null", media.poster_path);
-            assertNotNull(funcName + "media popularity is null", media.popularity);
-            assertTrue(funcName + "media popularity results is < 1", media.popularity > 0);
-            assertNotNull(funcName + "media title is null", media.title);
+            assertNotNull(media, funcName + "media is null");
+            assertNotNull(media.id, funcName + "media id is null");
+            assertNotNull(media.adult, funcName + "media adult is null");
+            assertNotNull(media.backdrop_path, funcName + "media backdrop_path is null");
+            assertNotNull(media.original_title, funcName + "media original_title is null");
+            assertNotNull(media.release_date, funcName + "media release_date is null");
+            assertNotNull(media.poster_path, funcName + "media poster_path is null");
+//            assertNotNull(media.popularity, funcName + "media popularity is null");
+//            assertTrue(media.popularity > 0, funcName + "media popularity results is < 1");
+            assertNotNull(media.title, funcName + "media title is null");
 
-            assertNotNull(funcName + "media vote_average is null", media.vote_average);
-            assertTrue(funcName + "media vote_average is < 1", media.vote_average > 0);
-            assertNotNull(funcName + "media vote_count is null", media.vote_count);
-            assertTrue(funcName + "media vote_count is < 1", media.vote_count > 0);
-            assertNotNull(funcName + "media media_type is null", media.media_type);
+            assertNotNull(media.vote_average, funcName + "media vote_average is null");
+            assertTrue(media.vote_average > 0, funcName + "media vote_average is < 1");
+            assertNotNull(media.vote_count, funcName + "media vote_count is null");
+            assertTrue(media.vote_count > 0, funcName + "media vote_count is < 1");
+            assertNotNull(media.media_type, funcName + "media media_type is null");
         }
-        
     }
 
     @Test
@@ -132,23 +142,21 @@ public class SearchServiceTest extends BaseTestCase {
         
         assertResultsPage(funcName, tvResults);
 
-        assertNotNull(funcName + "tvResults is null", tvResults);
-        assertNotNull(funcName + "tvResults results is null", tvResults.results);
-        assertTrue(funcName + "tvResults results List < 1", tvResults.results.size() > 0);
-        assertNotNull(funcName + "tvResults get(0) is null", tvResults.results.get(0));
-        assertNotNull(funcName + "tvResults name is null", tvResults.results.get(0).name);
-        assertTrue(funcName + "tvResults name is not equal to " + TestData.TVSHOW_TITLE,
-                tvResults.results.get(0).name.equals(TestData.TVSHOW_TITLE));
+        assertNotNull(tvResults, funcName + "tvResults is null");
+        assertNotNull(tvResults.results, funcName + "tvResults results is null");
+        assertTrue(tvResults.results.size() > 0, funcName + "tvResults results List < 1");
+        assertNotNull(tvResults.results.get(0), funcName + "tvResults get(0) is null");
+        assertNotNull(tvResults.results.get(0).name, funcName + "tvResults name is null");
+        assertEquals(tvResults.results.get(0).name, TestData.TVSHOW_TITLE, funcName + "tvResults name is not equal to " + TestData.TVSHOW_TITLE);
     }
 
     private void assertResultsPage(String funcName, BaseResultsPage results) {
-        assertNotNull(funcName + "results is null", results);
-        assertNotNull(funcName + "results page is null", results.page);
-        assertTrue(funcName + "results page is < 1", results.page > 0);
-        assertNotNull(funcName + "results total_pages is null", results.total_pages);
-        assertTrue(funcName + "results total_pages is < 1", results.total_pages > 0);
-        assertNotNull(funcName + "results total_results is null", results.total_results);
-        assertTrue(funcName + "results total_results is < 1", results.total_results > 0);
+        assertNotNull(results, funcName + "results is null");
+        assertNotNull(results.page, funcName + "results page is null");
+        assertTrue(results.page > 0, funcName + "results page is < 1");
+        assertNotNull(results.total_pages, funcName + "results total_pages is null");
+        assertTrue(results.total_pages > 0, funcName + "results total_pages is < 1");
+        assertNotNull(results.total_results, funcName + "results total_results is null");
+        assertTrue(results.total_results > 0, funcName + "results total_results is < 1");
     }
-
 }

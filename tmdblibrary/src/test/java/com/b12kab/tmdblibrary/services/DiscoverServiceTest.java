@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  * Keith Beatty 2017 - Converted to jUnit 4.12
+ * Keith Beatty 2019 - Converted to jUnit 5.x
  */
 
 package com.b12kab.tmdblibrary.services;
@@ -25,20 +26,29 @@ import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.TvResultsPage;
 import com.b12kab.tmdblibrary.enumerations.SortBy;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(JUnit4.class)
 public class DiscoverServiceTest extends BaseTestCase {
-
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
+
+    @BeforeEach
+    void init() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e){
+            System.out.println(e);
+        }
+    }
 
     @Test
     public void test_discover_movie() throws ParseException {
@@ -66,8 +76,8 @@ public class DiscoverServiceTest extends BaseTestCase {
                 null);
 
         assertResultsPage(results);
-        assertNotNull("results is null", results.results);
-        assertTrue("results size < 1", results.results.size() > 0);
+        assertNotNull(results.results, "results is null" );
+        assertTrue(results.results.size() > 0, "results size < 1");
     }
 
     @Test
@@ -85,14 +95,13 @@ public class DiscoverServiceTest extends BaseTestCase {
                 "2014-01-01");
 
         assertResultsPage(results);
-        assertNotNull("results is null", results.results);
-        assertTrue("results size < 1", results.results.size() > 0);
+        assertNotNull(results.results, "results is null");
+        assertTrue(results.results.size() > 0, "results size < 1");
     }
 
     private void assertResultsPage(BaseResultsPage results) {
-        assertTrue("BaseResultsPage results List length is < 1", results.page > 0);
-        assertTrue("BaseResultsPage results total_pages length is < 1", results.total_pages > 0);
-        assertTrue("BaseResultsPage results total_results length is < 1", results.total_results > 0);
+        assertTrue(results.page > 0, "BaseResultsPage results List length is < 1");
+        assertTrue(results.total_pages > 0, "BaseResultsPage results total_pages length is < 1");
+        assertTrue(results.total_results > 0, "BaseResultsPage results total_results length is < 1");
     }
-
 }

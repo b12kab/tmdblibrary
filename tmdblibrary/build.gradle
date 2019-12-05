@@ -1,12 +1,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'de.mannodermaus.android-junit5'
 
-def getLibVersionName() {
-    return "0.11.5"
+static def getLibVersionName() {
+    return "0.11.7"
 }
 
-def getLibTextVersionName() {
+static def getLibTextVersionName() {
     String vers = 'v' + getLibVersionName()
     return vers
 }
@@ -17,16 +18,33 @@ android {
         maven { url 'http://repo1.maven.org/maven2' }
     }
 
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    // Move to JUnit 5 - https://github.com/mannodermaus/android-junit5
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 6
+        targetSdkVersion 29
+        versionCode 7
         versionName getLibVersionName()
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // 1) Make sure to use the AndroidJUnitRunner, of a subclass of it. This requires a dependency on androidx.test:runner, too!
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // 2) Connect JUnit 5 to the runner
+        testInstrumentationRunnerArgument "runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder"
+    }
+
+    // 3) Java 8 is required
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // 4) JUnit 5 will bundle in files with identical paths; exclude them
+    packagingOptions {
+        exclude "META-INF/LICENSE*"
     }
 
     buildTypes {
@@ -39,14 +57,28 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+//    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//    })
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.squareup.retrofit:retrofit:1.9.0'
-    implementation 'com.squareup.okhttp:okhttp:2.3.0'
-    implementation 'com.google.code.gson:gson:2.8.2'
-    testImplementation 'junit:junit:4.12'
+    implementation 'com.squareup.okhttp:okhttp:2.7.4'
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    // 5) Jupiter API & Test Runner, if you don't have it already
+    androidTestImplementation "androidx.test:runner:1.2.0"
+    androidTestImplementation "org.junit.jupiter:junit-jupiter-api:5.5.2"
+
+    // 6) The instrumentation test companion libraries
+    androidTestImplementation "de.mannodermaus.junit5:android-test-core:1.2.0"
+    androidTestRuntimeOnly "de.mannodermaus.junit5:android-test-runner:1.2.0"
+
+    // Assertions
+    // https://medium.com/@boonkeat/android-unit-testing-with-junit5-d1b8f9c620b6
+    testImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.5.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.5.2"
 }
 
 apply from: rootProject.file('gradle/bintray-upload.gradle')

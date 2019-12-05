@@ -7,14 +7,16 @@ The reason for (this) separate library vs. using the [tmdb-java][3] library was 
 
 The partial addition of the Account calls allows the TMDb user to log in as well as set/unset movie favorites and set/remove movie rating value.
 
-Note: This version uses API 27
+Note: This version uses API 29; converted to androidx; upgraded to use JUnit 5; now requires Java 88 (because of JUnit 5).
+
+Note 2: This will need to be fixed in 2020 to allow for packaging in a different way to bintray, as of this: variant.getJavaCompileProvider() will no longer be supported. This is used to exclude the various external packages from the JavaDoc generation.
 
 Usage
 -----
 Add the following dependency to your Gradle project:
 
 ```groovy
-compile 'com.b12kab.tmdblibrary:tmdblibrary:0.11.5'
+compile 'com.b12kab.tmdblibrary:tmdblibrary:0.11.7'
 ```
 
 
@@ -23,8 +25,9 @@ Dependencies
 Gradle:
 
 ```groovy
-compile 'com.squareup.retrofit:retrofit:1.9.0'
-compile 'com.squareup.okhttp:okhttp:2.3.0'
+implementation 'com.squareup.retrofit:retrofit:1.9.0'
+implementation 'com.squareup.okhttp:okhttp:2.7.4'
+implementation 'com.google.code.gson:gson:2.8.5'
 ```
 
 

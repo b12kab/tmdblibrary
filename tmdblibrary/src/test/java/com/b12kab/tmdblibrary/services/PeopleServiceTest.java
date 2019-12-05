@@ -12,6 +12,7 @@
  * limitations under the License.
  *
  * Keith Beatty 2017 - Converted to jUnit 4.12
+ * Keith Beatty 2019 - Converted to jUnit 5.x
  */
 
 package com.b12kab.tmdblibrary.services;
@@ -28,55 +29,63 @@ import com.b12kab.tmdblibrary.entities.PersonIds;
 import com.b12kab.tmdblibrary.entities.PersonImages;
 import com.b12kab.tmdblibrary.entities.PersonResultsPage;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(JUnit4.class)
 public class PeopleServiceTest extends BaseTestCase {
-
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
+
+    @BeforeEach
+    void init() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e){
+            System.out.println(e);
+        }
+    }
 
     @Test
     public void test_summary() throws ParseException {
         Person person = getManager().personService().summary(TestData.PERSON_ID);
-        assertNotNull("Result was null.", person);
-        assertEquals("Person name does not match.", "Brad Pitt", person.name);
-        assertNull("Person homepage was not null", person.homepage);
-        assertNotNull("Person TMDB ID was null.", person.id);
-        assertNotNull("Person biography was null.", person.biography);
-        assertEquals("Person birthday does not match.", JSON_STRING_DATE.parse("1963-12-18"),
-                person.birthday);
-        assertNull("Person deathday does not match", person.deathday);
-        assertNotNull("Person place of birth does not match", person.place_of_birth);
-        assertNotNull("Movie profile path was null.", person.profile_path);
+
+        assertNotNull(person, "Result was null.");
+        assertEquals("Brad Pitt", person.name, "Person name does not match.");
+        assertNull(person.homepage, "Person homepage was not null");
+        assertNotNull(person.id, "Person TMDB ID was null.");
+        assertNotNull(person.biography, "Person biography was null.");
+        assertEquals(JSON_STRING_DATE.parse("1963-12-18"),
+                person.birthday, "Person birthday does not match.");
+        assertNull(person.deathday, "Person deathday does not match");
+        assertNotNull(person.place_of_birth, "Person place of birth does not match");
+        assertNotNull(person.profile_path, "Movie profile path was null.");
     }
 
     @Test
     public void test_movie_credits() {
         final String funcName = "test_movie_credits ";
         PersonCredits credits = getManager().personService().movieCredits(TestData.PERSON_ID, null);
-        assertNotNull(funcName + "credits is null", credits);
-        assertNotNull(funcName + "credits id is null", credits.id);
-        assertTrue(funcName + "credits id is not the same as "+ TestData.PERSON_ID, credits.id == TestData.PERSON_ID);
+
+        assertNotNull(credits, funcName + "credits is null");
+        assertNotNull(credits.id, funcName + "credits id is null");
+        assertEquals((int) credits.id, TestData.PERSON_ID, funcName + "credits id is not the same as " + TestData.PERSON_ID);
 
         assertCastCredits(funcName, credits, false);
         assertCrewCredits(funcName, credits, false);
 
         for (PersonCastCredit credit : credits.cast) {
-            assertNotNull(funcName + "credit is null", credit);
-            assertNotNull(funcName + "credit original_title is null", credit.original_title);
-            assertNotNull(funcName + "credit title is null", credit.title);
-            assertFalse(funcName + "credit title is empty", credit.title.isEmpty());
+            assertNotNull(credit, funcName + "credit is null");
+            assertNotNull(credit.original_title, funcName + "credit original_title is null");
+            assertNotNull(credit.title, funcName + "credit title is null");
+            assertFalse(credit.title.isEmpty(), funcName + "credit title is empty");
         }
     }
 
@@ -85,16 +94,17 @@ public class PeopleServiceTest extends BaseTestCase {
         final String funcName = "test_tv_credits ";
         PersonCredits credits = getManager().personService().tvCredits(TestData.PERSON_ID, null);
 
-        assertNotNull(funcName + "credits is null", credits);
-        assertNotNull(funcName + "credits id is null", credits.id);
-        assertTrue(funcName + "credits id is not " + TestData.PERSON_ID, credits.id == TestData.PERSON_ID);
+        assertNotNull(credits, funcName + "credits is null");
+        assertNotNull(credits.id, funcName + "credits id is null");
+        assertEquals((int) credits.id, TestData.PERSON_ID, funcName + "credits id is not the same as " + TestData.PERSON_ID);
+
         assertCastCredits(funcName, credits, false);
 
         for (PersonCastCredit credit : credits.cast) {
-            assertNotNull(funcName + "credit episode_count is null", credit.episode_count);
-            assertNotNull(funcName + "credit episode_count < 0", credit.episode_count < 0);
-            assertNotNull(funcName + "credit name is null", credit.name);
-            assertFalse(funcName + "credit name is empty", credit.name.isEmpty());
+            assertNotNull(credit.episode_count, funcName + "credit episode_count is null");
+            assertNotNull(credit.episode_count < 0, funcName + "credit episode_count < 0");
+            assertNotNull(credit.name, funcName + "credit name is null");
+            assertFalse(credit.name.isEmpty(), funcName + "credit name is empty");
         }
     }
 
@@ -103,9 +113,9 @@ public class PeopleServiceTest extends BaseTestCase {
         final String funcName = "test_combined_credits ";
         PersonCredits credits = getManager().personService().combinedCredits(TestData.PERSON_ID, null);
 
-        assertNotNull(funcName + "credits is null", credits);
-        assertNotNull(funcName + "credits id is null", credits.id);
-        assertTrue(funcName + "credits id is not " + TestData.PERSON_ID, credits.id == TestData.PERSON_ID);
+        assertNotNull(credits, funcName + "credits is null");
+        assertNotNull(credits.id, funcName + "credits id is null");
+        assertEquals((int) credits.id, TestData.PERSON_ID, funcName + "credits id is not the same as " + TestData.PERSON_ID);
 
         assertCastCredits(funcName, credits, true);
         assertCrewCredits(funcName, credits, true);
@@ -116,38 +126,38 @@ public class PeopleServiceTest extends BaseTestCase {
         final String funcName = "test_external_ids ";
         PersonIds ids = getManager().personService().externalIds(TestData.PERSON_ID);
 
-        assertNotNull(funcName + "ids is null", ids);
-        assertNotNull(funcName + "ids id is null", ids.id);
-        assertTrue(funcName + "ids id is not " + TestData.PERSON_ID, ids.id == TestData.PERSON_ID);
+        assertNotNull(ids, funcName + "ids is null");
+        assertNotNull(ids.id, funcName + "ids id is null");
+        assertEquals((int) ids.id, TestData.PERSON_ID, funcName + "ids id is not " + TestData.PERSON_ID);
 
-        assertNotNull(funcName + "ids IMDB ID is null", ids.imdb_id );
-        assertTrue(funcName + "ids IMDB ID is not" + "nm0000093", ids.imdb_id.equals("nm0000093") );
+        assertNotNull(ids.imdb_id, funcName + "ids IMDB ID is null");
+        assertEquals("nm0000093", ids.imdb_id, funcName + "ids IMDB ID is not" + "nm0000093");
 
         assertNotNull(funcName + "ids FREEBASE MID is null", ids.freebase_mid );
-        assertTrue(funcName + "ids FREEBASE MID is not" + "/m/0c6qh", ids.freebase_mid.equals("/m/0c6qh") );
+        assertEquals("/m/0c6qh", ids.freebase_mid, funcName + "ids FREEBASE MID is not" + "/m/0c6qh");
 
         assertNotNull(funcName + "ids FREEBASE ID is null", ids.freebase_id );
-        assertTrue(funcName + "ids FREEBASE ID was null.", ids.freebase_id.equals("/en/brad_pitt"));
+        assertEquals("/en/brad_pitt", ids.freebase_id, funcName + "ids FREEBASE ID was null.");
 
-        assertNotNull(funcName + "ids tvrage_id is null", ids.tvrage_id);
-        assertTrue(funcName + "ids tvrage_id is not " + 59436, ids.tvrage_id == 59436);
+        assertNotNull(ids.tvrage_id, funcName + "ids tvrage_id is null");
+        assertEquals(59436, (int) ids.tvrage_id, funcName + "ids tvrage_id is not " + 59436);
     }
     
     @Test
     public void test_images() {
         final String funcName = "test_images ";
         PersonImages images = getManager().personService().images(TestData.PERSON_ID);
-        assertNotNull(funcName + "images is null", images);
-        assertNotNull(funcName + "images id is null", images.id);
-        assertTrue(funcName + "images id is not the same as "+ TestData.PERSON_ID, images.id == TestData.PERSON_ID);
+
+        assertNotNull(images, funcName + "images is null");
+        assertNotNull(images.id, funcName + "images id is null");
+        assertEquals((int) images.id, TestData.PERSON_ID, funcName + "images id is not the same as " + TestData.PERSON_ID);
 
         for (Image image : images.profiles) {
-            assertNotNull(funcName + "image is null", image);
-            assertNotNull(funcName + "image file_path is null", image.file_path);
-            assertFalse(funcName + "image file_path is empty", image.file_path.isEmpty());
-            assertNotNull(funcName + "image width is null", image.width);
-            assertNotNull(funcName + "image height is null", image.height);
-            assertNotNull(funcName + "image aspect_ratio is null", image.aspect_ratio);
+            assertNotNull(image, funcName + "image is null");
+            assertNotNull(image.file_path, funcName + "image file_path is null");
+            assertFalse(image.file_path.isEmpty(), funcName + "image file_path is empty");
+            assertNotNull(image.width, funcName + "image width is null");
+            assertNotNull(image.height, funcName + "image height is null");
         }
     }
     
@@ -156,35 +166,35 @@ public class PeopleServiceTest extends BaseTestCase {
         final String funcName = "test_popular ";
         PersonResultsPage popular = getManager().personService().popular(null);
 
-        assertNotNull(funcName + "popular is null", popular);
-        assertNotNull(funcName + "popular results is null", popular.results);
-        assertTrue(funcName + "popular results size < 1", popular.results.size() > 0);
-        assertNotNull(funcName + "popular results get(0) is null", popular.results.get(0));
-        assertNotNull(funcName + "popular id is null", popular.results.get(0).id);
-        assertNotNull(funcName + "popular name is null", popular.results.get(0).name);
-        assertNotNull(funcName + "popular popularity is null", popular.results.get(0).popularity);
-        assertNotNull(funcName + "popular profile_path is null", popular.results.get(0).profile_path);
-        assertNotNull(funcName + "popular adult is null", popular.results.get(0).adult);
+        assertNotNull(popular, funcName + "popular is null");
+        assertNotNull(popular.results, funcName + "popular results is null");
+        assertTrue(popular.results.size() > 0, funcName + "popular results size < 1");
+        assertNotNull(popular.results.get(0), funcName + "popular results get(0) is null");
+        assertNotNull(popular.results.get(0).id, funcName + "popular id is null");
+        assertNotNull(popular.results.get(0).name, funcName + "popular name is null");
+        assertNotNull(popular.results.get(0).popularity, funcName + "popular popularity is null");
+        assertNotNull(popular.results.get(0).profile_path, funcName + "popular profile_path is null");
+        assertNotNull(popular.results.get(0).adult, funcName + "popular adult is null");
 
         for (Media media : popular.results.get(0).known_for) {
             if (media.vote_average > 0.0) {
-                assertNotNull(funcName + "media is null", media);
-//            assertNotNull(funcName + "media adult is null", media.adult); // This isn't on all entries
-                assertNotNull(funcName + "media backdrop_path is null", media.backdrop_path);
-                assertNotNull(funcName + "media id is null", media.id);
-//            assertNotNull(funcName + "media original_title is null", media.original_title); // This isn't on all entries
-//            assertNotNull(funcName + "media release_date is null", media.release_date); // This isn't on all entries
-                assertNotNull(funcName + "media poster_path is null", media.poster_path);
-                assertNotNull(funcName + "media popularity is null", media.popularity);
-                assertTrue(funcName + "media popularity size < 0", media.popularity >= 0);
-//            assertNotNull(funcName + "media title is null", media.title);
+                assertNotNull(media, funcName + "media is null");
+//            assertNotNull(media.adult, funcName + "media adult is null"); // This isn't on all entries
+                assertNotNull(media.backdrop_path, funcName + "media backdrop_path is null");
+                assertNotNull(media.id, funcName + "media id is null");
+//            assertNotNull(media.original_title, funcName + "media original_title is null"); // This isn't on all entries
+//            assertNotNull(media.release_date, funcName + "media release_date is null"); // This isn't on all entries
+                assertNotNull(media.poster_path, funcName + "media poster_path is null");
+//                assertNotNull( media.popularity, funcName + "media popularity is null");
+//                assertTrue(media.popularity >= 0, funcName + "media popularity size < 0");
+//            assertNotNull(media.title, funcName + "media title is null");
 
-                assertNotNull(funcName + "media vote_average is null", media.vote_average);
-                assertTrue(funcName + "media vote_average is < 1", media.vote_average > 0);
-                assertNotNull(funcName + "media vote_count is null", media.vote_count);
-                assertTrue(funcName + "media vote_count is < 1", media.vote_count > 0);
+                assertNotNull(media.vote_average, funcName + "media vote_average is null");
+                assertTrue(media.vote_average > 0, funcName + "media vote_average is < 1");
+                assertNotNull(media.vote_count, funcName + "media vote_count is null");
+                assertTrue(media.vote_count > 0, funcName + "media vote_count is < 1");
 
-                assertNotNull(funcName + "media media_type is null", media.media_type);
+                assertNotNull(media.media_type, funcName + "media media_type is null");
             }
         }
     }
@@ -193,46 +203,46 @@ public class PeopleServiceTest extends BaseTestCase {
     public void test_latest() throws ParseException {
         final String funcName = "test_latest ";
         Person person = getManager().personService().latest();
+
         // Latest person might not have a complete TMDb entry, but at should least some basic properties.
-        assertNotNull(funcName + "person is null", person);
-        assertNotNull(funcName + "person name is null", person.name);
-        assertNotNull(funcName + "person id is null", person.id);
+        assertNotNull(person, funcName + "person is null");
+        assertNotNull(person.name, funcName + "person name is null");
+        assertNotNull(person.id, funcName + "person id is null");
     }
 
     private void assertCastCredits(String funcName, PersonCredits credits, boolean hasMediaType) {
         // assert cast credits
-        assertNotNull(funcName + "credits is null", credits);
-        assertNotNull(funcName + "credits cast is null", credits.cast);
-        assertFalse(funcName + "credits cast is empty", credits.cast.isEmpty());
+        assertNotNull(credits, funcName + "credits is null");
+        assertNotNull(credits.cast, funcName + "credits cast is null");
+        assertFalse(credits.cast.isEmpty(), funcName + "credits cast is empty");
 
         for (PersonCastCredit credit : credits.cast) {
-            assertNotNull(funcName + "credit is null", credit);
-            assertNotNull(funcName + "credit character is null", credit.character); // may be empty
+            assertNotNull(credit, funcName + "credit is null");
+            assertNotNull(credit.character, funcName + "credit character is null"); // may be empty
 
             if (hasMediaType) {
-                assertNotNull(funcName + "credit media_type is null", credit.media_type);
-                assertFalse(funcName + "credits media_type is empty", credit.media_type.isEmpty());
+                assertNotNull(credit.media_type, funcName + "credit media_type is null");
+                assertFalse(credit.media_type.isEmpty(), funcName + "credits media_type is empty");
             }
         }
     }
 
     private void assertCrewCredits(String funcName, PersonCredits credits, boolean hasMediaType) {
         // assert crew credits
-        assertNotNull(funcName + "credits is null", credits);
-        assertNotNull(funcName + "credits crew is null", credits.crew);
-        assertFalse(funcName + "credits crew is empty", credits.crew.isEmpty());
+        assertNotNull(credits, funcName + "credits is null");
+        assertNotNull(credits.crew, funcName + "credits crew is null");
+        assertFalse(credits.crew.isEmpty(), funcName + "credits crew is empty");
 
         for (PersonCrewCredit credit : credits.crew) {
             // may be empty, but should exist
-            assertNotNull(funcName + "credit is null", credit);
-            assertNotNull(funcName + "credit department is null", credit.department);
-            assertNotNull(funcName + "credit job is null", credit.job);
+            assertNotNull(credit, funcName + "credit is null");
+            assertNotNull(credit.department, funcName + "credit department is null");
+            assertNotNull(credit.job, funcName + "credit job is null");
 
             if (hasMediaType) {
-                assertNotNull(funcName + "credit media_type is null", credit.media_type);
-                assertFalse(funcName + "credits media_type is empty", credit.media_type.isEmpty());
+                assertNotNull(credit.media_type, funcName + "credit media_type is null");
+                assertFalse(credit.media_type.isEmpty(), funcName + "credits media_type is empty");
             }
         }
     }
-
 }

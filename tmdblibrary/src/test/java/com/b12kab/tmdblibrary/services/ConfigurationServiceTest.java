@@ -21,45 +21,53 @@ package com.b12kab.tmdblibrary.services;
 import com.b12kab.tmdblibrary.BaseTestCase;
 import com.b12kab.tmdblibrary.entities.Configuration;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(JUnit4.class)
 public class ConfigurationServiceTest extends BaseTestCase {
+
+    @BeforeEach
+    void init() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e){
+            System.out.println(e);
+        }
+    }
 
     @Test
     public void test_configuration() {
         Configuration config = getManager().configurationService().configuration();
-        assertNotNull("Configuration is null", config);
-        assertNotNull("Configuration images is null", config.images);
 
-        assertNotNull("Configuration images base_url is null", config.images.base_url);
-        assertFalse("Configuration images base_url string length is empty", config.images.base_url.isEmpty());
+        assertNotNull(config, "Configuration is null");
+        assertNotNull(config.images, "Configuration images is null");
 
-        assertNotNull("Configuration images secure_base_url is null", config.images.secure_base_url);
-        assertFalse("Configuration images secure_base_url string is empty", config.images.secure_base_url.isEmpty());
+        assertNotNull(config.images.base_url, "Configuration images base_url is null");
+        assertFalse(config.images.base_url.isEmpty(), "Configuration images base_url string length is empty" );
 
-        assertNotNull("Configuration images poster_sizes is null", config.images.poster_sizes);
-        assertNotEquals("Configuration images poster_sizes List length is 0", config.images.poster_sizes.size(), 0);
+        assertNotNull(config.images.secure_base_url, "Configuration images secure_base_url is null");
+        assertFalse(config.images.secure_base_url.isEmpty(), "Configuration images secure_base_url string is empty" );
 
-        assertNotNull("Configuration images backdrop_sizes is null", config.images.backdrop_sizes);
-        assertNotEquals("Configuration images backdrop_sizes List length is 0", config.images.backdrop_sizes.size(), 0);
+        assertNotNull(config.images.poster_sizes, "Configuration images poster_sizes is null");
+        assertNotEquals(config.images.poster_sizes.size(), 0, "Configuration images poster_sizes List length is 0" );
 
-        assertNotNull("Configuration images profile_sizes is null", config.images.profile_sizes);
-        assertNotEquals("Configuration images profile_sizes List length is 0", config.images.profile_sizes.size(), 0);
+        assertNotNull(config.images.backdrop_sizes, "Configuration images backdrop_sizes is null");
+        assertNotEquals(config.images.backdrop_sizes.size(), 0, "Configuration images backdrop_sizes List length is 0");
 
-        assertNotNull("Configuration images logo_sizes is null", config.images.logo_sizes);
-        assertNotEquals("Configuration images logo_sizes List length is 0", config.images.logo_sizes.size(), 0);
+        assertNotNull(config.images.profile_sizes, "Configuration images profile_sizes is null");
+        assertNotEquals(config.images.profile_sizes.size(), 0, "Configuration images profile_sizes List length is 0");
 
-        assertNotNull("Configuration images still_sizes is null", config.images.still_sizes);
-        assertNotEquals("Configuration images still_sizes List length is 0", config.images.still_sizes.size(), 0);
+        assertNotNull(config.images.logo_sizes, "Configuration images logo_sizes is null");
+        assertNotEquals(config.images.logo_sizes.size(), 0, "Configuration images logo_sizes List length is 0");
 
-        assertNotNull("Configuration images change_keys is null", config.change_keys);
-        assertNotEquals("Configuration images change_keys List length is 0", config.change_keys.size(), 0);
+        assertNotNull(config.images.still_sizes, "Configuration images still_sizes is null");
+        assertNotEquals(config.images.still_sizes.size(), 0, "Configuration images still_sizes List length is 0");
+
+        assertNotNull(config.change_keys, "Configuration images change_keys is null");
+        assertNotEquals(config.change_keys.size(), 0, "Configuration images change_keys List length is 0");
     }
 }

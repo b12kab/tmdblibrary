@@ -1,6 +1,6 @@
 package com.b12kab.tmdblibrary;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 
 public abstract class BaseTestCase {
     // Do NOT use this API key in your application, it is solely for testing tmdb-java!
@@ -20,8 +20,8 @@ public abstract class BaseTestCase {
     private static final String tmdbUserPassword = "addYourTmdbUserPasswordHere";
     private static final String tmdbUserPasswordInvalid = "asdfadfasdf";
 
-    @Before
-    public void setUpOnce() {
+    @BeforeAll
+    public static void setUpOnce() {
         manager.setApiKey(API_KEY);
         manager.setIsDebug(DEBUG);
     }
