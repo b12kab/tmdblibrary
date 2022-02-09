@@ -1,9 +1,11 @@
 Change Log
 ==========
+0.11.8
+* Updated to remove bintray upload
 
 0.11.7
 ----------------
-* Updated gradle, API 27 to 29, moved to androidx; moved to JUnit 5; now requires Java 88.
+* Updated gradle, API 27 to 29, moved to androidx; moved to JUnit 5; now requires Java 8.
 
 0.11.6
 ----------------

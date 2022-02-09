@@ -40,11 +40,13 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.in;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class TvServiceTest extends BaseTestCase {
 
@@ -53,7 +55,7 @@ public class TvServiceTest extends BaseTestCase {
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e){
-            System.out.println(e);
+            System.out.println(e.toString());
         }
     }
 
@@ -98,7 +100,7 @@ public class TvServiceTest extends BaseTestCase {
 
         assertNotNull(titles, funcName + "titles is null");
         assertNotNull(titles.id, funcName + "titles id is null");
-        assertTrue(titles.id == TestData.TVSHOW_ID, funcName + "titles id is != " + TestData.TVSHOW_ID);
+        assertEquals(TestData.TVSHOW_ID, (int) titles.id, funcName + "titles id is != " + TestData.TVSHOW_ID);
         assertNotNull(titles.results, funcName + "titles results is null");
         assertTrue(titles.results.size() > 0, funcName + "titles results size < 1");
         assertNotNull(titles.results.get(0), funcName + "titles results get(0) is null");
@@ -200,8 +202,9 @@ public class TvServiceTest extends BaseTestCase {
         assertNotNull(videoResults.results.get(0).getSite(), funcName + "videoResults site is null");
         assertEquals("YouTube", videoResults.results.get(0).getSite(), funcName + "videoResults site is != 'YouTube'");
         assertNotNull(videoResults.results.get(0).getSite(), funcName + "videoResults site is null");
-        assertNotNull(videoResults.results.get(0).getType(), funcName + "videoResults type is null");
-        assertEquals("Trailer", videoResults.results.get(0).getType(), funcName + "videoResults type is != 'Trailer'");
+        String videoType = videoResults.results.get(0).getType();
+        assertNotNull(videoType, funcName + "videoResults type is null");
+        assertThat(videoType, anyOf(in(new String[]{ "Trailer", "Clip", "Featurette"}))); //, funcName + "videoResults type is != 'Trailer'");
     }
     
     @Test

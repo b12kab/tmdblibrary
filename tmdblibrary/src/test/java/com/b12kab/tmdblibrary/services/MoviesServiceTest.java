@@ -333,9 +333,9 @@ public class MoviesServiceTest extends BaseTestCase {
         assertNotNull(images.posters.get(0).file_path, funcName + "images posters file_path is null");
         assertFalse(images.posters.get(0).file_path.isEmpty(), funcName + "images posters file_path is empty");
         assertNotNull(images.posters.get(0).width, funcName + "Images posters width is null");
-        assertFalse(images.posters.get(0).width < 1200, funcName + "Images posters width < 1200");
+        assertTrue(images.posters.get(0).width < 1200, funcName + "Images posters width < 1200");
         assertNotNull(images.posters.get(0).height, funcName + "Images posters height is null");
-        assertTrue(images.posters.get(0).height > 1800, funcName + "Images posters height not > 1800");
+        assertFalse(images.posters.get(0).height > 1800, funcName + "Images posters height not > 1800");
         assertNotNull(images.posters.get(0).iso_639_1, funcName + "Images posters iso_639_1 is null");
         assertEquals(2, images.posters.get(0).iso_639_1.length(), funcName + "Images posters iso_639_1 length is not 2");
         assertNotNull(images.posters.get(0).aspect_ratio, funcName + "Images posters aspect_ratio is null");
@@ -354,11 +354,19 @@ public class MoviesServiceTest extends BaseTestCase {
         assertNotNull(keywords, funcName + "keywords is null");
         assertNotNull(keywords.id, funcName + "keywords id is null");
         assertEquals((int) keywords.id, TestData.MOVIE_ID, funcName + "keywords id is != " + TestData.MOVIE_ID);
+        assertTrue(keywords.keywords.size() > 0, funcName + "keywords keywords size is 0");
         assertNotNull(keywords.keywords.get(0), funcName + "keywords keywords is null");
         assertNotNull(keywords.keywords.get(0).id, funcName + "keywords keywords id is null");
-        assertEquals(825, (int) keywords.keywords.get(0).id, funcName + "keywords keywords id is != 825");
-        assertNotNull(keywords.keywords.get(0).name, funcName + "keywords keywords name is null");
-        assertEquals("support group", keywords.keywords.get(0).name, funcName + "keywords keywords name is != 'support group'");
+        boolean itemFound = false;
+        for (int i = 0; i < keywords.keywords.size(); i++) {
+            int id = keywords.keywords.get(i).id;
+            if (id == 825) {
+                assertNotNull(keywords.keywords.get(i).name, funcName + "keywords keywords name is null");
+                assertEquals("support group", keywords.keywords.get(i).name, funcName + "keywords keywords name is != 'support group'");
+                itemFound = true;
+                break;
+            }
+        }
     }
 
     @Test

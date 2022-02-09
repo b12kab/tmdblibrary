@@ -80,7 +80,7 @@ public class FindServiceTest extends BaseTestCase {
         assertEquals(movie.getOriginal_title(), movieTitle, funcName + "movie getOriginal_title() is not " + movieTitle);
 
         assertNotNull(movie.getRelease_date(), funcName + "movie getRelease_date() is null");
-        assertEquals(JSON_STRING_DATE.parse("2009-08-18"), movie.getRelease_date(), funcName + "movie getRelease_date() is not 2009-08-21");
+        assertEquals(JSON_STRING_DATE.parse("2009-08-19"), movie.getRelease_date(), funcName + "movie getRelease_date() is not 2009-08-21");
 
         assertNotNull(movie.getPoster_path(), funcName + "movie getPoster_path() is null");
 
