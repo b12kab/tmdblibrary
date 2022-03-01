@@ -15,5 +15,7 @@ public class TvShow {
     public Double popularity;
     public Double vote_average;
     public Integer vote_count;
-
+    public String overview;
+    public List<Integer> genre_ids;
+    public String original_language;
 }

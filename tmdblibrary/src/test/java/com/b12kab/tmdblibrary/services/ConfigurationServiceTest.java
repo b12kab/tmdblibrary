@@ -20,28 +20,32 @@ package com.b12kab.tmdblibrary.services;
 
 import com.b12kab.tmdblibrary.BaseTestCase;
 import com.b12kab.tmdblibrary.entities.Configuration;
+import com.b12kab.tmdblibrary.entities.Jobs;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ConfigurationServiceTest extends BaseTestCase {
 
-    @BeforeEach
-    void init() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e){
-            System.out.println(e);
-        }
-    }
-
     @Test
     public void test_configuration() {
-        Configuration config = getManager().configurationService().configuration();
+        Configuration config = null;
+
+        try {
+            config = getManager().configurationService().configuration().execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on test_configuration: " + e.toString());
+        }
 
         assertNotNull(config, "Configuration is null");
         assertNotNull(config.images, "Configuration images is null");
@@ -69,5 +73,19 @@ public class ConfigurationServiceTest extends BaseTestCase {
 
         assertNotNull(config.change_keys, "Configuration images change_keys is null");
         assertNotEquals(config.change_keys.size(), 0, "Configuration images change_keys List length is 0");
+    }
+
+    @Test
+    public void test_config_jobs() {
+        List<Jobs> jobsList = null;
+
+        try {
+            jobsList = getManager().configurationService().jobs().execute().body();
+        } catch (Exception e) {
+            fail("Exception occurred on test_configuration: " + e.toString());
+        }
+
+        assertNotNull(jobsList, "jobs is null");
+        assertTrue(jobsList.size() > 0, "Configuration images is null");
     }
 }

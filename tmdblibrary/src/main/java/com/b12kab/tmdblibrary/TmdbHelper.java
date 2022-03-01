@@ -18,13 +18,10 @@
 package com.b12kab.tmdblibrary;
 
 import com.b12kab.tmdblibrary.entities.AccountState;
+import com.b12kab.tmdblibrary.entities.Status;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 
-import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,27 +42,26 @@ public class TmdbHelper {
 
         // class types
         builder.registerTypeAdapter(AccountState.class, new AccountStateDeserializer());
-        builder.registerTypeAdapter(Integer.class, new JsonDeserializer<Integer>() {
-            @Override
-            public Integer deserialize(JsonElement json, Type typeOfT,
-                                       JsonDeserializationContext context) throws JsonParseException {
-                try {
-                    return Integer.valueOf(json.getAsInt());
-                } catch (NumberFormatException e) {
+        builder.registerTypeAdapter(Status.class, new StatusDeserializer());
+        // is this needed or have the upgrades over time added this to work OK?
+        builder.registerTypeAdapter(Integer.class, (JsonDeserializer<Integer>) (json, typeOfT, context) -> {
+
+            try {
+                if (json.isJsonNull())
                     return null;
-                }
+                return json.getAsInt();
+            } catch (Exception e) {
+                return null;
             }
         });
-        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-            @Override
-            public Date deserialize(JsonElement json, Type typeOfT,
-                                    JsonDeserializationContext context) throws JsonParseException {
+        builder.registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, typeOfT, context) -> {
 
-                try {
-                    return JSON_STRING_DATE.parse(json.getAsString());
-                } catch (ParseException e) {
+            try {
+                if (json.isJsonNull())
                     return null;
-                }
+                return JSON_STRING_DATE.parse(json.getAsString());
+            } catch (ParseException e) {
+                return null;
             }
         });
 

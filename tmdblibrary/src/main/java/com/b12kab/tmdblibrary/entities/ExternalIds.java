@@ -24,5 +24,7 @@ public class ExternalIds {
     public Integer id;
     public Integer tvdb_id;
     public Integer tvrage_id;
-
+    public String facebook_id;
+    public String instagram_id;
+    public String twitter_id;
 }

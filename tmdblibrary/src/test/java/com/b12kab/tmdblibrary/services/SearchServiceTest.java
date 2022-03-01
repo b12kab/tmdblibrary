@@ -38,23 +38,23 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class SearchServiceTest extends BaseTestCase {
-
-    @BeforeEach
-    void init() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e){
-            System.out.println(e);
-        }
-    }
 
     @Test
     public void test_companySearch() throws ParseException {
         final String funcName = "test_companySearch ";
-        CompanyResultsPage companyResults = getManager().searchService().company("Sony Pictures", null);
-        
+        CompanyResultsPage companyResults = null;
+
+        try {
+            companyResults = getManager().searchService().company("Sony Pictures", null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
         assertResultsPage(funcName, companyResults);
         assertNotNull(companyResults.results, funcName + "companyResults results is null");
         assertTrue(companyResults.results.size() > 0, funcName + "companyResults results is < 1");
@@ -66,9 +66,17 @@ public class SearchServiceTest extends BaseTestCase {
     @Test
     public void test_collectionSearch() throws ParseException {
         final String funcName = "test_collectionSearch ";
-        CollectionResultsPage collectionResults = getManager().searchService().collection("The Avengers Collection",
-                null, null);
-        
+        CollectionResultsPage collectionResults = null;
+
+        try {
+            collectionResults = getManager().searchService().collection("The Avengers Collection",
+                    null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
         assertResultsPage(funcName, collectionResults);
 
         assertNotNull(collectionResults.results, funcName + "collectionResults results is null");
@@ -82,8 +90,16 @@ public class SearchServiceTest extends BaseTestCase {
     @Test
     public void test_keywordSearch() throws ParseException {
         final String funcName = "test_keywordSearch ";
-        KeywordResultsPage keywordResults = getManager().searchService().keyword("fight", null);
-        
+        KeywordResultsPage keywordResults = null;
+
+        try {
+            keywordResults = getManager().searchService().keyword("fight", null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
         assertResultsPage(funcName, keywordResults);
         assertNotNull(keywordResults.results, funcName + "keywordResults results is null");
         assertTrue(keywordResults.results.size() > 0, funcName + "keywordResults results is < 1");
@@ -94,9 +110,16 @@ public class SearchServiceTest extends BaseTestCase {
     @Test
     public void test_movieSearch() throws ParseException {
         final String funcName = "test_movieSearch ";
-        MovieResultsPage movieResults = getManager().searchService().movie(TestData.MOVIE_TITLE, null, null,
-                null, null, null, null);
-        
+        MovieResultsPage movieResults = null;
+        try {
+            movieResults = getManager().searchService().movie(TestData.MOVIE_TITLE, null, null,
+                    null, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
         assertResultsPage(funcName, movieResults);
         assertNotNull(movieResults.results, funcName + "movieResults results is null");
         assertTrue( movieResults.results.size() > 0, funcName + "movieResults results is < 1");
@@ -105,8 +128,16 @@ public class SearchServiceTest extends BaseTestCase {
     @Test
     public void test_personSearch() throws ParseException {
         final String funcName = "test_personSearch ";
-        PersonResultsPage movieResults = getManager().searchService().person(TestData.PERSON_NAME, null, null, null);
-        
+        PersonResultsPage movieResults = null;
+
+        try {
+            movieResults = getManager().searchService().person(TestData.PERSON_NAME, null, null, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
         assertResultsPage(funcName, movieResults);
         assertNotNull(movieResults.results.get(0), funcName + "movieResults results.get(0) is null");
         assertNotNull(movieResults.results.get(0).id, funcName + "movieResults id is null");
@@ -138,8 +169,16 @@ public class SearchServiceTest extends BaseTestCase {
     @Test
     public void test_tv() {
         final String funcName = "test_tv ";
-        TvResultsPage tvResults = getManager().searchService().tv(TestData.TVSHOW_TITLE, null, null, null, null);
-        
+        TvResultsPage tvResults = null;
+
+        try {
+            tvResults = getManager().searchService().tv(TestData.TVSHOW_TITLE, null, null, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
         assertResultsPage(funcName, tvResults);
 
         assertNotNull(tvResults, funcName + "tvResults is null");

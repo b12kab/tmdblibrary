@@ -19,5 +19,10 @@ package com.b12kab.tmdblibrary.entities;
 
 public class Company extends ProductionCompany {
 
-    public String logo_path;
+    public String description;
+    public String headquarters;
+    public String homepage;
+    public Company parent_company;
+
+    public MovieResultsPage movies;
 }

@@ -1,11 +1,11 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'de.mannodermaus.android-junit5'
 
 android {
     repositories {
         maven { url "https://jitpack.io" }
-        maven { url 'http://repo1.maven.org/maven2' }
+        maven { url 'https://repo1.maven.org/maven2' }
     }
 
     compileSdkVersion 32
@@ -37,9 +37,21 @@ android {
     }
 
     buildTypes {
+        debug {
+            // These values come from your personal local.properties Gradle file
+            buildConfigField "String", "TMDB_TEST_ID", "\"${project.TMDB_ID}\""
+            buildConfigField "String", "TMDB_TEST_GOOD_PSWD", "\"${project.TMDB_GOOD_PSWD}\""
+            buildConfigField "String", "TMDB_TEST_BAD_PSWD", "\"${project.TMDB_BAD_PSWD}\""
+            buildConfigField "String", "TMDB_TEST_API_KEY",  "\"${project.TMDB_JAVA_LIBRARY_TEST_API_KEY}\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "TMDB_TEST_ID", "\"ABCDEFGH\""
+            buildConfigField "String", "TMDB_TEST_GOOD_PSWD", "\"ABCDEFGH\""
+            buildConfigField "String", "TMDB_TEST_BAD_PSWD", "\"ABCDEFGH\""
+            buildConfigField "String", "TMDB_TEST_API_KEY",  "\"ABCDEFGH\""
         }
     }
 }
@@ -50,9 +62,16 @@ dependencies {
 //        exclude group: 'com.android.support', module: 'support-annotations'
 //    })
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.squareup.retrofit:retrofit:1.9.0'
-    implementation 'com.squareup.okhttp:okhttp:2.7.5'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.3"))
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
+    implementation 'org.apache.commons:commons-lang3:3.11'
 
     // Force higher level versions of hamcrest in, so earlier addition
     testImplementation 'org.hamcrest:hamcrest:2.2'

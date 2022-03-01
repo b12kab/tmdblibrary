@@ -37,22 +37,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class DiscoverServiceTest extends BaseTestCase {
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
 
-    @BeforeEach
-    void init() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e){
-            System.out.println(e);
-        }
-    }
-
     @Test
     public void test_discover_movie() throws ParseException {
-        MovieResultsPage results = getManager().discoverService().discoverMovie(
+        MovieResultsPage results = null;
+
+        try {
+            results = getManager().discoverService().discoverMovie(
                 false,
                 true,
                 null,
@@ -73,7 +68,12 @@ public class DiscoverServiceTest extends BaseTestCase {
                 new AppendToDiscoverResponse(10749),
                 null,
                 null,
-                null);
+                null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on test_discover_movie: " + e.toString());
+        }
 
         assertResultsPage(results);
         assertNotNull(results.results, "results is null" );
@@ -82,7 +82,10 @@ public class DiscoverServiceTest extends BaseTestCase {
 
     @Test
     public void test_discover_tv() throws ParseException {
-        TvResultsPage results = getManager().discoverService().discoverTv(
+        TvResultsPage results = null;
+        try
+        {
+            results = getManager().discoverService().discoverTv(
                 null,
                 null,
                 SortBy.VOTE_AVERAGE_DESC,
@@ -92,7 +95,12 @@ public class DiscoverServiceTest extends BaseTestCase {
                 new AppendToDiscoverResponse(18, 10765),
                 new AppendToDiscoverResponse(49),
                 "2010-01-01",
-                "2014-01-01");
+                "2014-01-01").execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on test_discover_tv: " + e.toString());
+        }
 
         assertResultsPage(results);
         assertNotNull(results.results, "results is null");
@@ -100,6 +108,7 @@ public class DiscoverServiceTest extends BaseTestCase {
     }
 
     private void assertResultsPage(BaseResultsPage results) {
+        assertNotNull(results);
         assertTrue(results.page > 0, "BaseResultsPage results List length is < 1");
         assertTrue(results.total_pages > 0, "BaseResultsPage results total_pages length is < 1");
         assertTrue(results.total_results > 0, "BaseResultsPage results total_results length is < 1");

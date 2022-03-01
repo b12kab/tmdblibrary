@@ -194,5 +194,4 @@ public class MovieFull extends MovieBase {
     public void setAccount_states(AccountState account_states) {
         this.account_states = account_states;
     }
-
 }

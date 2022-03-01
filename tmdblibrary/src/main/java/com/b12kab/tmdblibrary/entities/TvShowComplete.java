@@ -23,22 +23,22 @@ import java.util.List;
 public class TvShowComplete extends TvShow {
 
     public List<Person> created_by;
-    public List<Network> networks;
     public List<Integer> episode_run_time;
     public List<Genre> genres;
     public String homepage;
-    public boolean in_production;
+    public Boolean in_production;
     public List<String> languages;
     public Date last_air_date;
+    public TvEpisode last_episode_to_air;
+    public TvEpisode next_episode_to_air;
+    public List<Network> networks;
     public Integer number_of_episodes;
     public Integer number_of_seasons;
-    public String original_language;
-    public String overview;
     public List<ProductionCompany> production_companies;
+    public List<ProductionCountry> production_countries;
     public List<TvSeason> seasons;
+    public List<SpokenLanguage> spoken_languages;
     public String status;
+    public String tagline;
     public String type;
-    public Images images;
-    public CreditResults credits;
-    public ExternalIds external_ids;
 }

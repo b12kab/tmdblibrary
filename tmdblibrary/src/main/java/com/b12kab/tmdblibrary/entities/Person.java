@@ -18,23 +18,17 @@
 package com.b12kab.tmdblibrary.entities;
 
 import java.util.Date;
+import java.util.List;
 
-public class Person {
-
-    public Integer id;
-
-    public String name;
-
-    public String place_of_birth;
-
-    public String profile_path;
-
-    public String homepage;
-
-    public String biography;
-
+public class Person extends PersonBase {
     public Date birthday;
-
-    public Date deathday;
-
+    public String known_for_department;
+    public String deathday;
+    public List<String> also_known_as;
+    public Integer gender;
+    public String biography;
+    public String place_of_birth;
+    public String imdb_id;
+    public String homepage;
+    public String credit_id;
 }

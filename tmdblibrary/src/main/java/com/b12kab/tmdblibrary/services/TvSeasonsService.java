@@ -23,14 +23,16 @@ import com.b12kab.tmdblibrary.entities.Images;
 import com.b12kab.tmdblibrary.entities.TvSeason;
 import com.b12kab.tmdblibrary.entities.VideoResults;
 
-import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface TvSeasonsService {
 
     /**
      * Get the primary information about a TV season by its season number.
+     * @see <a href="https://developers.themoviedb.org/3/tv-seasons/get-tv-season-details">Documentation</a>
      *
      * @param showId A themoviedb id.
      * @param seasonNumber season
@@ -38,8 +40,8 @@ public interface TvSeasonsService {
      * @param appendToResponse <em>Optional.</em> extra requests to append to the result.
      * @return TvSeason
      */
-    @GET("/tv/{id}/season/{season_number}")
-    TvSeason season(
+    @GET("tv/{id}/season/{season_number}")
+    Call<TvSeason> season(
             @Path("id") int showId,
             @Path("season_number") int seasonNumber,
             @Query("language") String language,
@@ -48,27 +50,29 @@ public interface TvSeasonsService {
     
     /**
      * Get the cast and crew credits for a TV season by season number.
+     * @see <a href="https://developers.themoviedb.org/3/tv-seasons/get-tv-season-credits">Documentation</a>
      *
      * @param showId A themoviedb id.
      * @param seasonNumber season
      * @return CreditResults
      */
-    @GET("/tv/{id}/season/{season_number}/credits")
-    CreditResults credits(
+    @GET("tv/{id}/season/{season_number}/credits")
+    Call<CreditResults> credits(
             @Path("id") int showId,
             @Path("season_number") int seasonNumber
     );
     
     /**
      * Get the external ids that we have stored for a TV season by season number.
+     * @see <a href="https://developers.themoviedb.org/3/tv-seasons/get-tv-season-external-ids">Documentation</a>
      *
      * @param showId A themoviedb id.
      * @param seasonNumber season
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return ExternalIds
      */
-    @GET("/tv/{id}/season/{season_number}/external_ids")
-    ExternalIds externalIds(
+    @GET("tv/{id}/season/{season_number}/external_ids")
+    Call<ExternalIds> externalIds(
             @Path("id") int showId,
             @Path("season_number") int seasonNumber,
             @Query("language") String language
@@ -76,14 +80,15 @@ public interface TvSeasonsService {
     
     /**
      * Get the images (posters) that we have stored for a TV season by season number.
+     * @see <a href="https://developers.themoviedb.org/3/tv-seasons/get-tv-season-images">Documentation</a>
      *
      * @param showId A themoviedb id.
      * @param seasonNumber season
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return Images
      */
-    @GET("/tv/{id}/season/{season_number}/images")
-    Images images(
+    @GET("tv/{id}/season/{season_number}/images")
+    Call<Images> images(
             @Path("id") int showId,
             @Path("season_number") int seasonNumber,
             @Query("language") String language
@@ -91,17 +96,17 @@ public interface TvSeasonsService {
     
     /**
      * Get the videos that have been added to a TV season (trailers, teasers, etc...)
+     * @see <a href="https://developers.themoviedb.org/3/tv-seasons/get-tv-season-videos">Documentation</a>
      *
      * @param showId A themoviedb id.
      * @param seasonNumber season
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return VideoResults
      */
-    @GET("/tv/{id}/season/{season_number}/videos")
-    VideoResults videos(
+    @GET("tv/{id}/season/{season_number}/videos")
+    Call<VideoResults> videos(
             @Path("id") int showId,
             @Path("season_number") int seasonNumber,
             @Query("language") String language
     );
-
 }

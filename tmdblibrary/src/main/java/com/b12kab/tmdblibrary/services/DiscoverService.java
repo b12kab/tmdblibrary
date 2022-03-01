@@ -21,13 +21,15 @@ import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.TvResultsPage;
 import com.b12kab.tmdblibrary.enumerations.SortBy;
 
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public interface DiscoverService {
 
     /**
      * Discover movies by different types of data like average rating, number of votes and genres.
+     * @see <a href="https://developers.themoviedb.org/3/discover/movie-discover">Documentation</a>
      *
      * @param includeAdult <em>Optional.</em> Toggle the inclusion of adult titles. Expected value is a boolean, true or
      * false. Default is false.
@@ -72,8 +74,8 @@ public interface DiscoverService {
      * added as a year. Expected value is an integer (year).
      * @return MovieResultsPage
      */
-    @GET("/discover/movie")
-    MovieResultsPage discoverMovie(
+    @GET("discover/movie")
+    Call<MovieResultsPage> discoverMovie(
             @Query("include_adult") boolean includeAdult,
             @Query("include_video") boolean includeVideo,
             @Query("language") String language,
@@ -100,6 +102,7 @@ public interface DiscoverService {
     /**
      * Discover TV shows by different types of data like average rating, number of votes, genres, the network they aired
      * on and air dates.
+     * @see <a href="https://developers.themoviedb.org/3/discover/tv-discover">Documentation</a>
      *
      * @param page <em>Optional.</em> Minimum 1, maximum 1000.
      * @param language <em>Optional.</em> ISO 639-1 code.
@@ -120,8 +123,8 @@ public interface DiscoverService {
      * @param firstAirDateLte <em>Optional.</em> The maximum release to include. Expected format is YYYY-MM-DD.
      * @return TvResultsPage
      */
-    @GET("/discover/tv")
-    TvResultsPage discoverTv(
+    @GET("discover/tv")
+    Call<TvResultsPage> discoverTv(
             @Query("page") Integer page,
             @Query("language") String language,
             @Query("sort_by") SortBy sortBy,
@@ -133,5 +136,4 @@ public interface DiscoverService {
             @Query("first_air_date.gte") String firstAirDateGte,
             @Query("first_air_date.lte") String firstAirDateLte
     );
-
 }

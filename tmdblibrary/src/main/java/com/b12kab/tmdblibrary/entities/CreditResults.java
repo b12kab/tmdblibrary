@@ -23,7 +23,6 @@ public class CreditResults {
     Integer id;
     List<CastMember> cast;
     List<CrewMember> crew;
-    List<CastMember> guest_stars;
 
     public Integer getId() {
         return id;
@@ -47,13 +46,5 @@ public class CreditResults {
 
     public void setCrew(List<CrewMember> crew) {
         this.crew = crew;
-    }
-
-    public List<CastMember> getGuest_stars() {
-        return guest_stars;
-    }
-
-    public void setGuest_stars(List<CastMember> guest_stars) {
-        this.guest_stars = guest_stars;
     }
 }

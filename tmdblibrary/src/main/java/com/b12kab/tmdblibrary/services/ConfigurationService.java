@@ -18,8 +18,12 @@
 package com.b12kab.tmdblibrary.services;
 
 import com.b12kab.tmdblibrary.entities.Configuration;
+import com.b12kab.tmdblibrary.entities.Jobs;
 
-import retrofit.http.GET;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
 
 public interface ConfigurationService {
 
@@ -32,9 +36,19 @@ public interface ConfigurationService {
      * all and you will have a fully qualified URL. Here is an example URL:<br> <br> <a href=
      * "http://cf2.imgobject.com/t/p/w500/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg"
      * >http://cf2.imgobject.com/t/p/w500/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg</a>
+     * @see <a href="https://developers.themoviedb.org/3/configuration">Documentation</a>
+     *
      * @return Configuration
      */
-    @GET("/configuration")
-    Configuration configuration();
+    @GET("configuration")
+    Call<Configuration> configuration();
 
+    /**
+     * Get a list of the jobs and departments we use on TMDb.
+     * @see <a href="https://developers.themoviedb.org/3/configuration/get-jobs">Documentation</a>
+     *
+     * @return List<Jobs>
+     */
+    @GET("configuration/jobs")
+    Call<List<Jobs>> jobs();
 }

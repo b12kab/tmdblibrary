@@ -40,7 +40,7 @@ public class AccountStateDeserializer implements JsonDeserializer<AccountState> 
         JsonObject obj = (JsonObject) json;
         JsonElement element;
         JsonElement ratingElement;
-        JsonPrimitive rating;
+
         try {
             convertVariable = "id";
             element = obj.get("id");

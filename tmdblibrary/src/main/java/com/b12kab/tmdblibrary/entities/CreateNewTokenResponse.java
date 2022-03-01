@@ -18,18 +18,25 @@ package com.b12kab.tmdblibrary.entities;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AccountStatusCodeReturn {
-    @SerializedName("status_code")
-    private Integer statusCode;
+public class CreateNewTokenResponse {
+    @SerializedName("success")
+    private Boolean success;
 
-    @SerializedName("status_message")
-    private String statusMessage;
+    @SerializedName("expires_at")
+    private String expiresAt;
 
-    public Integer getStatusCode() {
-        return statusCode;
+    @SerializedName("request_token")
+    private String requestToken;
+
+    public Boolean getSuccess() {
+        return success;
     }
 
-    public String getStatusMessage() {
-        return statusMessage;
+    public String getExpiresAtTime() {
+        return expiresAt;
+    }
+
+    public String getRequestToken() {
+        return requestToken;
     }
 }

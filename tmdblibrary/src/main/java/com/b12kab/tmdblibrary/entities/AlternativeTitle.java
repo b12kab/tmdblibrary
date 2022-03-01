@@ -21,5 +21,6 @@ public class AlternativeTitle {
 
     public String iso_3166_1;
     public String title;
+    public String type;
 
 }

@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
@@ -49,18 +50,34 @@ public class TvEpisodesServiceTest extends BaseTestCase {
     @Test
     public void test_episode() {
         final String funcName = "test_episode ";
-        TvEpisode episode = getManager().tvEpisodesService().episode(TestData.TVSHOW_ID, 1, 1, null, null);
+        TvEpisode episode = null;
+        try {
+            episode = getManager().tvEpisodesService().episode(TestData.TVSHOW_ID, 1, 1, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
         assertTvEpisode(funcName, episode);
     }
 
     @Test
     public void test_episode_with_append_to_response() {
         final String funcName = "test_episode_with_append_to_response ";
-        TvEpisode episode = getManager().tvEpisodesService().episode(TestData.TVSHOW_ID, 1, 1, null,
-                new AppendToResponse(
-                        AppendToResponseItem.CREDITS,
-                        AppendToResponseItem.IMAGES,
-                        AppendToResponseItem.EXTERNAL_IDS));
+        TvEpisode episode = null;
+
+        try {
+            episode = getManager().tvEpisodesService().episode(TestData.TVSHOW_ID, 1, 1, null,
+                    new AppendToResponse(
+                            AppendToResponseItem.CREDITS,
+                            AppendToResponseItem.IMAGES,
+                            AppendToResponseItem.EXTERNAL_IDS)).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertTvEpisode(funcName, episode);
 
@@ -68,8 +85,8 @@ public class TvEpisodesServiceTest extends BaseTestCase {
         assertNotNull(episode.credits, funcName + "episode credits is null" );
         assertNotNull(episode.credits.getCrew(), funcName + "episode crew is null");
         assertTrue(episode.credits.getCrew().size() > 0,  funcName + "episode crew List < 1");
-        assertNotNull(episode.credits.getGuest_stars(), funcName + "episode guest_stars is null");
-        assertTrue(episode.credits.getGuest_stars().size() > 0, funcName + "episode guest_stars List < 1");
+        assertNotNull(episode.getGuest_stars(), funcName + "episode guest_stars is null");
+        assertTrue(episode.getGuest_stars().size() > 0, funcName + "episode guest_stars List < 1");
         assertNotNull(episode.credits.getCast(), funcName + "episode cast is null");
         assertTrue(episode.credits.getCast().size() > 0, funcName + "episode cast List < 1");
         assertCrewCredits(funcName, episode.credits.getCrew());
@@ -91,19 +108,33 @@ public class TvEpisodesServiceTest extends BaseTestCase {
     @Test
     public void test_credits() {
         final String funcName = "test_credits ";
-        CreditResults creditResults = getManager().tvEpisodesService().credits(TestData.TVSHOW_ID, 1, 1);
+        CreditResults creditResults = null;
+
+        try {
+            creditResults = getManager().tvEpisodesService().credits(TestData.TVSHOW_ID, 1, 1, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(creditResults, funcName + "credits is null");
         assertNotNull(creditResults.getId(), funcName + "credits id is null");
         assertNotNull(creditResults.getCrew(), funcName + "credits crew is null");
         assertNotNull(creditResults.getCast(), funcName + "credits cast is null");
-        assertNotNull(creditResults.getGuest_stars(), funcName + "credits guest_stars is null");
     }
 
     @Test
     public void test_externalIds() {
         final String funcName = "test_externalIds ";
-        ExternalIds ids = getManager().tvEpisodesService().externalIds(TestData.TVSHOW_ID, 1, 1);
+        ExternalIds ids = null;
+        try {
+            ids = getManager().tvEpisodesService().externalIds(TestData.TVSHOW_ID, 1, 1).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(ids, funcName + "ids is null");
         assertNotNull(ids.id, funcName + "ids id is null");
@@ -117,7 +148,15 @@ public class TvEpisodesServiceTest extends BaseTestCase {
     @Test
     public void test_images() {
         final String funcName = "test_images ";
-        Images images = getManager().tvEpisodesService().images(TestData.TVSHOW_ID, 1, 1);
+        Images images = null;
+
+        try {
+            images = getManager().tvEpisodesService().images(TestData.TVSHOW_ID, 1, 1).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(images, funcName + "images is null");
         assertNotNull(images.id, funcName + "images id is null");
@@ -128,7 +167,15 @@ public class TvEpisodesServiceTest extends BaseTestCase {
     @Test
     public void test_videos() {
         final String funcName = "test_videos ";
-        VideoResults videoResults = getManager().tvEpisodesService().videos(TestData.TVSHOW_ID, 1, 1);
+        VideoResults videoResults = null;
+
+        try {
+            videoResults = getManager().tvEpisodesService().videos(TestData.TVSHOW_ID, 1, 1, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(videoResults, funcName + "videoResults is null");
 

@@ -23,6 +23,5 @@ public class ReviewResultsPage extends BaseResultsPage {
 
     public Integer id;
     public List<Review> results;
-    public String url;
 
 }

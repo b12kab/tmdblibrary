@@ -40,22 +40,22 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class PeopleServiceTest extends BaseTestCase {
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
 
-    @BeforeEach
-    void init() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e){
-            System.out.println(e);
-        }
-    }
-
     @Test
     public void test_summary() throws ParseException {
-        Person person = getManager().personService().summary(TestData.PERSON_ID);
+        final String funcName = "test_summary ";
+        Person person = null;
+        try {
+            person = getManager().personService().summary(TestData.PERSON_ID).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(person, "Result was null.");
         assertEquals("Brad Pitt", person.name, "Person name does not match.");
@@ -72,7 +72,15 @@ public class PeopleServiceTest extends BaseTestCase {
     @Test
     public void test_movie_credits() {
         final String funcName = "test_movie_credits ";
-        PersonCredits credits = getManager().personService().movieCredits(TestData.PERSON_ID, null);
+        PersonCredits credits = null;
+
+        try {
+            credits = getManager().personService().movieCredits(TestData.PERSON_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(credits, funcName + "credits is null");
         assertNotNull(credits.id, funcName + "credits id is null");
@@ -92,7 +100,15 @@ public class PeopleServiceTest extends BaseTestCase {
     @Test
     public void test_tv_credits() {
         final String funcName = "test_tv_credits ";
-        PersonCredits credits = getManager().personService().tvCredits(TestData.PERSON_ID, null);
+        PersonCredits credits = null;
+
+        try {
+            credits = getManager().personService().tvCredits(TestData.PERSON_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(credits, funcName + "credits is null");
         assertNotNull(credits.id, funcName + "credits id is null");
@@ -111,7 +127,15 @@ public class PeopleServiceTest extends BaseTestCase {
     @Test
     public void test_combined_credits() {
         final String funcName = "test_combined_credits ";
-        PersonCredits credits = getManager().personService().combinedCredits(TestData.PERSON_ID, null);
+        PersonCredits credits = null;
+
+        try {
+            credits = getManager().personService().combinedCredits(TestData.PERSON_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(credits, funcName + "credits is null");
         assertNotNull(credits.id, funcName + "credits id is null");
@@ -124,7 +148,15 @@ public class PeopleServiceTest extends BaseTestCase {
     @Test
     public void test_external_ids() {
         final String funcName = "test_external_ids ";
-        PersonIds ids = getManager().personService().externalIds(TestData.PERSON_ID);
+        PersonIds ids = null;
+
+        try {
+            ids = getManager().personService().externalIds(TestData.PERSON_ID).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(ids, funcName + "ids is null");
         assertNotNull(ids.id, funcName + "ids id is null");
@@ -146,7 +178,15 @@ public class PeopleServiceTest extends BaseTestCase {
     @Test
     public void test_images() {
         final String funcName = "test_images ";
-        PersonImages images = getManager().personService().images(TestData.PERSON_ID);
+        PersonImages images = null;
+
+        try {
+            images = getManager().personService().images(TestData.PERSON_ID).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(images, funcName + "images is null");
         assertNotNull(images.id, funcName + "images id is null");
@@ -164,7 +204,15 @@ public class PeopleServiceTest extends BaseTestCase {
     @Test
     public void test_popular() {
         final String funcName = "test_popular ";
-        PersonResultsPage popular = getManager().personService().popular(null);
+        PersonResultsPage popular = null;
+
+        try {
+            popular = getManager().personService().popular(null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(popular, funcName + "popular is null");
         assertNotNull(popular.results, funcName + "popular results is null");
@@ -202,7 +250,15 @@ public class PeopleServiceTest extends BaseTestCase {
     @Test
     public void test_latest() throws ParseException {
         final String funcName = "test_latest ";
-        Person person = getManager().personService().latest();
+        Person person = null;
+
+        try {
+            person = getManager().personService().latest().execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         // Latest person might not have a complete TMDb entry, but at should least some basic properties.
         assertNotNull(person, funcName + "person is null");

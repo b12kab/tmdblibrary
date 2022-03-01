@@ -42,32 +42,39 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TvSeasonsServiceTest extends BaseTestCase {
-
-    @BeforeEach
-    void init() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e){
-            System.out.println(e);
-        }
-    }
 
     @Test
     public void test_season() {
         final String funcName = "test_season ";
-        TvSeason season = getManager().tvSeasonsService().season(TestData.TVSHOW_ID, 1, null, null);
+        TvSeason season = null;
+        try {
+            season = getManager().tvSeasonsService().season(TestData.TVSHOW_ID, 1, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
         assertTvSeason(funcName, season);
     }
 
     @Test
     public void test_season_with_append_to_response() {
         final String funcName = "test_season_with_append_to_response ";
-        TvSeason season = getManager().tvSeasonsService().season(TestData.TVSHOW_ID, 1, null,
+        TvSeason season = null;
+        try {
+            season = getManager().tvSeasonsService().season(TestData.TVSHOW_ID, 1, null,
                 new AppendToResponse(AppendToResponseItem.IMAGES,
                         AppendToResponseItem.EXTERNAL_IDS,
-                        AppendToResponseItem.CREDITS));
+                        AppendToResponseItem.CREDITS)).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
         assertTvSeason(funcName, season);
 
         // credits
@@ -91,7 +98,15 @@ public class TvSeasonsServiceTest extends BaseTestCase {
     @Test
     public void test_credits() {
         final String funcName = "test_credits ";
-        CreditResults creditResults = getManager().tvSeasonsService().credits(TestData.TVSHOW_ID, 1);
+        CreditResults creditResults = null;
+
+        try {
+            creditResults = getManager().tvSeasonsService().credits(TestData.TVSHOW_ID, 1).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(creditResults, funcName + "credits is null");
         assertNotNull(creditResults.getId(), funcName + "credits id is null");
@@ -103,7 +118,15 @@ public class TvSeasonsServiceTest extends BaseTestCase {
     @Test
     public void test_externalIds() {
         final String funcName = "test_externalIds ";
-        ExternalIds ids = getManager().tvSeasonsService().externalIds(TestData.TVSHOW_ID, 1, null);
+        ExternalIds ids = null;
+
+        try {
+            ids = getManager().tvSeasonsService().externalIds(TestData.TVSHOW_ID, 1, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(ids, funcName + "ids is null");
         assertNotNull(ids.id, funcName + "ids id is null");
@@ -115,7 +138,15 @@ public class TvSeasonsServiceTest extends BaseTestCase {
     @Test
     public void test_images() {
         final String funcName = "test_images ";
-        Images images = getManager().tvSeasonsService().images(TestData.TVSHOW_ID, 1, null);
+        Images images = null;
+
+        try {
+            images = getManager().tvSeasonsService().images(TestData.TVSHOW_ID, 1, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(images, funcName + "images is null");
         assertNotNull(images.id, funcName + "images id is null");
@@ -125,7 +156,16 @@ public class TvSeasonsServiceTest extends BaseTestCase {
     @Test
     public void test_videos() {
         final String funcName = "test_videos ";
-        VideoResults videoResults = getManager().tvSeasonsService().videos(TestData.TVSHOW_ID, 1, null);
+        VideoResults videoResults = null;
+
+        try {
+            videoResults = getManager().tvSeasonsService().videos(TestData.TVSHOW_ID, 1, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
         assertNotNull(videoResults, funcName + "videoResults is null");
         assertNotNull(videoResults.results, funcName + "videoResults results is null");
 

@@ -23,6 +23,8 @@ import java.util.List;
 public class MovieAbbreviated extends MovieBase {
     List<Integer> genre_ids;
 
+    // this might be able to be removed
+    @Deprecated
     Float rating;
 
     public List<Integer> getGenre_ids() {
@@ -33,10 +35,12 @@ public class MovieAbbreviated extends MovieBase {
         this.genre_ids = genre_ids;
     }
 
+    @Deprecated
     public Float getRating() {
         return rating;
     }
 
+    @Deprecated
     public void setRating(Float rating) {
         this.rating = rating;
     }

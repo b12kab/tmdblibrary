@@ -25,6 +25,8 @@ public class Video {
     String site;
     Integer size;
     String type;
+    Boolean official;
+    String published_at;
 
     public String getId() {
         return id;
@@ -88,5 +90,21 @@ public class Video {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Boolean getOfficial() {
+        return official;
+    }
+
+    public void setOfficial(Boolean official) {
+        this.official = official;
+    }
+
+    public String getPublished_at() {
+        return published_at;
+    }
+
+    public void setPublished_at(String published_at) {
+        this.published_at = published_at;
     }
 }

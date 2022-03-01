@@ -18,11 +18,19 @@ package com.b12kab.tmdblibrary.entities;
 
 public abstract class BaseMember {
 
+    public String adult;
+
     public Integer id;
+
+    public String known_for_department;
 
     public String credit_id;
 
     public String name;
+
+    public String original_name;
+
+    public String popularity;
 
     public String profile_path;
 
@@ -66,5 +74,37 @@ public abstract class BaseMember {
 
     public void setGender(Integer gender) {
         this.gender = gender;
+    }
+
+    public String getAdult() {
+        return adult;
+    }
+
+    public void setAdult(String adult) {
+        this.adult = adult;
+    }
+
+    public String getKnown_for_department() {
+        return known_for_department;
+    }
+
+    public void setKnown_for_department(String known_for_department) {
+        this.known_for_department = known_for_department;
+    }
+
+    public String getOriginal_name() {
+        return original_name;
+    }
+
+    public void setOriginal_name(String original_name) {
+        this.original_name = original_name;
+    }
+
+    public String getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(String popularity) {
+        this.popularity = popularity;
     }
 }

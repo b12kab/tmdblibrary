@@ -22,7 +22,7 @@ import java.util.Date;
 public abstract class MovieBase {
     int id;
 
-    boolean adult;
+    Boolean adult;
     String backdrop_path;
 
     String original_language;
@@ -33,9 +33,9 @@ public abstract class MovieBase {
     String poster_path;
     Date release_date;
     String title;
-    boolean video;
+    Boolean video;
     Double vote_average;
-    int vote_count;
+    Integer vote_count;
 
     public int getId() {
         return id;
@@ -45,11 +45,11 @@ public abstract class MovieBase {
         this.id = id;
     }
 
-    public boolean isAdult() {
+    public Boolean isAdult() {
         return adult;
     }
 
-    public void setAdult(boolean adult) {
+    public void setAdult(Boolean adult) {
         this.adult = adult;
     }
 
@@ -117,11 +117,11 @@ public abstract class MovieBase {
         this.title = title;
     }
 
-    public boolean isVideo() {
+    public Boolean isVideo() {
         return video;
     }
 
-    public void setVideo(boolean video) {
+    public void setVideo(Boolean video) {
         this.video = video;
     }
 
@@ -133,7 +133,7 @@ public abstract class MovieBase {
         this.vote_average = vote_average;
     }
 
-    public int getVote_count() {
+    public Integer getVote_count() {
         return vote_count;
     }
 

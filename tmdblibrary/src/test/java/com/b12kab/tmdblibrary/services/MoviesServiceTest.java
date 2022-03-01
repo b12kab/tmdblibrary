@@ -25,6 +25,7 @@ import com.b12kab.tmdblibrary.entities.Images;
 import com.b12kab.tmdblibrary.entities.ListResultsPage;
 import com.b12kab.tmdblibrary.entities.MovieAbbreviated;
 import com.b12kab.tmdblibrary.entities.MovieAlternativeTitles;
+import com.b12kab.tmdblibrary.entities.MovieExternalIds;
 import com.b12kab.tmdblibrary.entities.MovieFull;
 import com.b12kab.tmdblibrary.entities.MovieKeywords;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
@@ -32,14 +33,20 @@ import com.b12kab.tmdblibrary.entities.ReleaseResults;
 import com.b12kab.tmdblibrary.entities.ReviewResultsPage;
 import com.b12kab.tmdblibrary.entities.Translations;
 import com.b12kab.tmdblibrary.entities.VideoResults;
+import com.b12kab.tmdblibrary.entities.WatchProviders;
 import com.b12kab.tmdblibrary.enumerations.AppendToResponseItem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,29 +56,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MoviesServiceTest extends BaseTestCase {
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
 
-    @BeforeEach
-    void init() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e){
-            System.out.println(e);
-        }
-    }
-
     @Test
     public void test_summary() throws ParseException {
         final String funcName = "test_summary ";
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null, null);
+        MovieFull movie = null;
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary: " + e.toString());
+        }
+
         assertMovie(funcName, movie);
         assertNotNull(movie.getOriginal_title(),funcName + "movie original_title is null");
         assertEquals(movie.getOriginal_title(), TestData.MOVIE_TITLE, funcName + "movie original_title is not " + TestData.MOVIE_TITLE);
     }
 
     @Test
-    public void test_summary_language() throws ParseException {
+    public void test_summary_language() {
         final String funcName = "test_summary_language ";
         final String movieTitle = "Clube da Luta";
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, "pt-BR", null);
+        MovieFull movie = null;
+        try
+        {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, "pt-BR", null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_language: " + e.toString());
+        }
+
         assertNotNull(movie, funcName + "movie is null");
 
         assertNotNull(movie.getTitle(),funcName + "movie title is null");
@@ -80,11 +95,19 @@ public class MoviesServiceTest extends BaseTestCase {
     }
 
     @Test
-    public void test_summary_with_collection() throws ParseException {
+    public void test_summary_with_collection() throws Exception {
         final String funcName = "test_summary_with_collection ";
         final int movieCollectionId = 1241;
         final String movieCollectionName = "Harry Potter Collection";
-        MovieFull movie = this.getManager().moviesService().summary(TestData.MOVIE_WITH_COLLECTION_ID, null, null);
+        MovieFull movie = null;
+
+        try {
+            movie = this.getManager().moviesService().summary(TestData.MOVIE_WITH_COLLECTION_ID, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_with_collection: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNotNull(movie.getTitle(),funcName + "movie title is null");
@@ -131,8 +154,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_summary_append_credits() {
         final String funcName = "test_summary_append_credits ";
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                new AppendToResponse( AppendToResponseItem.CREDITS));
+        MovieFull movie = null;
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                new AppendToResponse( AppendToResponseItem.CREDITS)).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_credits: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNotNull(movie.getCredits(),funcName + "movie credits is null");
@@ -141,8 +171,16 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_summary_append_images() {
         final String funcName = "test_summary_append_images ";
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                new AppendToResponse( AppendToResponseItem.IMAGES));
+        MovieFull movie = null;
+
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                    new AppendToResponse( AppendToResponseItem.IMAGES)).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_images: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNotNull(movie.getImages(),funcName + "movie images is null");
@@ -151,8 +189,16 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_summary_append_releases() {
         final String funcName = "test_summary_append_releases ";
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                new AppendToResponse( AppendToResponseItem.RELEASES));
+        MovieFull movie = null;
+
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                new AppendToResponse( AppendToResponseItem.RELEASE_DATES)).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_releases: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNotNull(movie.getRelease_dates(), funcName + "movie release_dates is null");
@@ -161,8 +207,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_summary_append_videos() {
         final String funcName = "test_summary_append_videos ";
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                new AppendToResponse(AppendToResponseItem.VIDEOS));
+        MovieFull movie = null;
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                new AppendToResponse(AppendToResponseItem.VIDEOS)).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_videos: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNotNull(movie.getVideos(),funcName + "movie videos is null");
@@ -171,8 +224,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_summary_append_reviews() {
         final String funcName = "test_summary_append_videos ";
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                new AppendToResponse(AppendToResponseItem.REVIEWS));
+        MovieFull movie = null;
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                    new AppendToResponse(AppendToResponseItem.REVIEWS)).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_reviews: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNotNull(movie.getReviews(),funcName + "movie reviews is null");
@@ -181,8 +241,16 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_summary_append_similar() {
         final String funcName = "test_summary_append_similar ";
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                new AppendToResponse( AppendToResponseItem.SIMILAR));
+        MovieFull movie = null;
+
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                new AppendToResponse( AppendToResponseItem.SIMILAR)).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_similar: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNotNull(movie.getSimilar(),funcName + "movie similar is null");
@@ -192,8 +260,16 @@ public class MoviesServiceTest extends BaseTestCase {
     public void test_summary_append_states_no_session() {
         final String funcName = "test_summary_append_states_no_session ";
         AppendToResponse atr = new AppendToResponse( AppendToResponseItem.STATES);
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                atr );
+        MovieFull movie = null;
+
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                atr ).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_states_no_session: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNull(movie.getAccount_states(),funcName + "movie similar is not null");
@@ -203,35 +279,47 @@ public class MoviesServiceTest extends BaseTestCase {
     public void test_summary_append_states_session() {
         final String funcName = "test_summary_append_states ";
         AppendToResponse atr = new AppendToResponse( AppendToResponseItem.STATES);
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                TMDB_SESSION,
-                atr);
+        MovieFull movie = null;
+
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                atr).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_states_session: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
-        if (!TMDB_SESSION.equals(TMDB_SESSION_INVALID)) {
-            assertNotNull(movie.getAccount_states(), funcName + "movie similar is null");
-        }
     }
 
     @Test
     public void test_summary_append_all() {
         final String funcName = "test_summary_append_all ";
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                new AppendToResponse(
-                        AppendToResponseItem.CREDITS,
-                        AppendToResponseItem.IMAGES,
-                        AppendToResponseItem.RELEASES,
-                        AppendToResponseItem.VIDEOS,
-                        AppendToResponseItem.REVIEWS,
-                        AppendToResponseItem.SIMILAR));
+        MovieFull movie = null;
+
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                    new AppendToResponse(
+                            AppendToResponseItem.CREDITS,
+                            AppendToResponseItem.IMAGES,
+                            AppendToResponseItem.RELEASE_DATES,
+                            AppendToResponseItem.VIDEOS,
+                            AppendToResponseItem.REVIEWS,
+                            AppendToResponseItem.SIMILAR)).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_all: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNotNull(movie.getCredits(),funcName + "movie credits is null");
         assertNotNull(movie.getImages(),funcName + "movie images is null");
+        assertNotNull(movie.getRelease_dates(),funcName + "movie release_dates is null");
         assertNotNull(movie.getVideos(), funcName + "movie videos is null");
         assertNotNull(movie.getReviews(),funcName + "movie reviews is null");
         assertNotNull(movie.getSimilar(),funcName + "movie similar is null");
-        assertNotNull(movie.getRelease_dates(),funcName + "movie release_dates is null");
     }
 
     @Test
@@ -240,15 +328,22 @@ public class MoviesServiceTest extends BaseTestCase {
         AppendToResponse atr = new AppendToResponse(
                 AppendToResponseItem.CREDITS,
                 AppendToResponseItem.IMAGES,
-                AppendToResponseItem.RELEASES,
+                AppendToResponseItem.RELEASE_DATES,
                 AppendToResponseItem.VIDEOS,
                 AppendToResponseItem.REVIEWS,
                 AppendToResponseItem.SIMILAR,
-                AppendToResponseItem.STATES);
+                AppendToResponseItem.LISTS);
 
-        MovieFull movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                TMDB_SESSION,
-                atr);
+        MovieFull movie = null;
+
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                    atr).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_summary_append_all_session: " + e.toString());
+        }
 
         assertNotNull(movie, funcName + "movie is null");
         assertNotNull(movie.getCredits(),funcName + "movie credits is null");
@@ -257,10 +352,6 @@ public class MoviesServiceTest extends BaseTestCase {
         assertNotNull(movie.getReviews(),funcName + "movie reviews is null");
         assertNotNull(movie.getSimilar(),funcName + "movie similar is null");
         assertNotNull(movie.getRelease_dates(),funcName + "movie release_dates is null");
-
-        if (!TMDB_SESSION.equals(TMDB_SESSION_INVALID)) {
-            assertNotNull(movie.getAccount_states(),funcName + "movie account states is null");
-        }
     }
 
     @Test
@@ -268,8 +359,15 @@ public class MoviesServiceTest extends BaseTestCase {
         final String funcName = "test_alternative_titles ";
         final String movieLanguage = "PL";
         final String movieTitle = "Podziemny krąg";
+        MovieAlternativeTitles titles = null;
 
-        MovieAlternativeTitles titles = getManager().moviesService().alternativeTitles(TestData.MOVIE_ID, null);
+        try {
+            titles = getManager().moviesService().alternativeTitles(TestData.MOVIE_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_alternative_titles: " + e.toString());
+        }
 
         assertNotNull(titles, funcName + "titles is null");
         assertNotNull(titles.id, funcName + "titles id is null");
@@ -286,7 +384,14 @@ public class MoviesServiceTest extends BaseTestCase {
     public void test_credits() {
         final String funcName = "test_credits ";
         final String creditName = "Edward Norton";
-        CreditResults credits = getManager().moviesService().credits(TestData.MOVIE_ID);
+        CreditResults credits = null;
+        try {
+            credits = getManager().moviesService().credits(TestData.MOVIE_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_credits: " + e.toString());
+        }
 
         assertNotNull(credits, funcName + "credits is null");
         assertNotNull(credits.getId(), funcName + "credits id is null");
@@ -300,9 +405,36 @@ public class MoviesServiceTest extends BaseTestCase {
     }
 
     @Test
+    public void test_externalIds() {
+        final String funcName = "test_externalIds ";
+
+        MovieExternalIds externalIds = null;
+
+        try {
+            externalIds = getManager().moviesService().externalIds(TestData.MOVIE_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_externalIds: " + e.toString());
+        }
+
+        assertNotNull(externalIds, funcName + "externalIds is null");
+        assertNotNull(externalIds.id, funcName + "externalIds id is null");
+        assertNotNull(externalIds.imdb_id, funcName + "externalIds imdb is null");
+    }
+
+    @Test
     public void test_images() {
         final String funcName = "test_images ";
-        Images images = getManager().moviesService().images(TestData.MOVIE_ID, null);
+        Images images = null;
+        try {
+            images = getManager().moviesService().images(TestData.MOVIE_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_images: " + e.toString());
+        }
+
         assertNotNull(images,funcName + "images is null");
         assertNotNull(images.id, funcName + "images id is null");
         assertEquals((int) images.id, TestData.MOVIE_ID, funcName + "images id is not equal to " + TestData.MOVIE_ID);
@@ -349,7 +481,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_keywords() {
         final String funcName = "test_keywords ";
-        MovieKeywords keywords = getManager().moviesService().keywords(TestData.MOVIE_ID);
+        MovieKeywords keywords = null;
+
+        try {
+            keywords = getManager().moviesService().keywords(TestData.MOVIE_ID).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_keywords: " + e.toString());
+        }
 
         assertNotNull(keywords, funcName + "keywords is null");
         assertNotNull(keywords.id, funcName + "keywords id is null");
@@ -372,7 +512,14 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_releases() {
         final String funcName = "test_releases ";
-        ReleaseResults releases = getManager().moviesService().releases(TestData.MOVIE_ID);
+        ReleaseResults releases = null;
+        try {
+            releases = getManager().moviesService().releases(TestData.MOVIE_ID).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_releases: " + e.toString());
+        }
 
         assertNotNull(releases, funcName + "releases is null");
         assertNotNull(releases.getResults(), funcName + "releases results is null");
@@ -401,7 +548,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_videos() {
         final String funcName = "test_videos ";
-        VideoResults videos = getManager().moviesService().videos(TestData.MOVIE_ID, null);
+        VideoResults videos = null;
+
+        try {
+            videos = getManager().moviesService().videos(TestData.MOVIE_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_videos: " + e.toString());
+        }
 
         assertNotNull(videos, funcName + "videos is null");
         assertNotNull(videos.getResults(), funcName + "videos results is null");
@@ -421,7 +576,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_translations() {
         final String funcName = "test_translations ";
-        Translations translations = getManager().moviesService().translations(TestData.MOVIE_ID, null);
+        Translations translations = null;
+
+        try {
+            translations = getManager().moviesService().translations(TestData.MOVIE_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_translations: " + e.toString());
+        }
 
         assertNotNull(translations, funcName + "translations is null");
         assertNotNull(translations.id, funcName + "translations id is null");
@@ -439,7 +602,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_similar() {
         final String funcName = "test_similar ";
-        MovieResultsPage results = getManager().moviesService().similar(TestData.MOVIE_ID, 3, null);
+        MovieResultsPage results = null;
+
+        try {
+            results = getManager().moviesService().similar(TestData.MOVIE_ID, 3, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_similar: " + e.toString());
+        }
 
         assertNotNull(results,funcName + "results is null");
         assertNotNull(results.page, funcName + "results page is null");
@@ -468,7 +639,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_reviews() {
         final String funcName = "test_similar ";
-        ReviewResultsPage results = getManager().moviesService().reviews(49026, 1, null);
+        ReviewResultsPage results = null;
+
+        try {
+            results = getManager().moviesService().reviews(TestData.MOVIE_ID, 1, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_reviews: " + e.toString());
+        }
 
         assertNotNull(results, funcName + "results is null");
         assertNotNull(results.id, funcName + "results id is null");
@@ -482,13 +661,21 @@ public class MoviesServiceTest extends BaseTestCase {
         assertNotNull(results.results.get(0).id, funcName + "results id is null");
         assertNotNull(results.results.get(0).author, funcName + "results author is null");
         assertNotNull(results.results.get(0).content, funcName + "results content is null");
-        assertNotNull(results.results.get(0).content, funcName + "results url is null");
+        assertNotNull(results.results.get(0).author_details, funcName + "author detail is null");
     }
 
     @Test
     public void test_lists() {
         final String funcName = "test_lists ";
-        ListResultsPage results = getManager().moviesService().lists(49026, 1, null);
+        ListResultsPage results = null;
+
+        try {
+            results = getManager().moviesService().lists(49026, 1, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_lists: " + e.toString());
+        }
 
         assertNotNull(results, funcName + "results is null");
         assertNotNull(results.id, funcName + "results id is null");
@@ -512,7 +699,14 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_latest() {
         final String funcName = "test_latest ";
-        MovieAbbreviated movie = getManager().moviesService().latest();
+        MovieAbbreviated movie = null;
+        try {
+            movie = getManager().moviesService().latest().execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_latest: " + e.toString());
+        }
 
         // Latest movie might not have a complete TMDb entry, but should at least some basic properties.
         assertNotNull(movie, funcName + "movie is null");
@@ -522,7 +716,14 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_upcoming() {
         final String funcName = "test_upcoming ";
-        MovieResultsPage page = getManager().moviesService().upcoming(null, null);
+        MovieResultsPage page = null;
+        try {
+            page = getManager().moviesService().upcoming(null, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_upcoming: " + e.toString());
+        }
 
         assertNotNull(page, funcName + "page is null");
         assertNotNull(page.getResults(), funcName + "page results is null");
@@ -532,7 +733,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_nowPlaying() {
         final String funcName = "test_nowPlaying ";
-        MovieResultsPage page = getManager().moviesService().nowPlaying(null, null);
+        MovieResultsPage page = null;
+
+        try {
+            page = getManager().moviesService().nowPlaying(null, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on test_nowPlaying: " + e.toString());
+        }
 
         assertNotNull(page, funcName + "page is null");
         assertNotNull(page.getResults(), funcName + "page results is null");
@@ -542,7 +751,15 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_popular() {
         final String funcName = "test_popular ";
-        MovieResultsPage page = getManager().moviesService().popular(null, null);
+        MovieResultsPage page = null;
+
+        try {
+            page = getManager().moviesService().popular(null, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail( "Exception occurred on test_popular: " + e.toString());
+        }
 
         assertNotNull(page, funcName + "page is null");
         assertNotNull(page.getResults(), funcName + "page results is null");
@@ -552,10 +769,35 @@ public class MoviesServiceTest extends BaseTestCase {
     @Test
     public void test_topRated() {
         final String funcName = "test_topRated ";
-        MovieResultsPage page = getManager().moviesService().topRated(null, null);
+        MovieResultsPage page = null;
+        try {
+            page = getManager().moviesService().topRated(null, null, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            assertTrue(false, "Exception occurred on test_topRated: " + e.toString());
+        }
 
         assertNotNull(page, funcName + "page is null");
         assertNotNull(page.getResults(), funcName + "page results is null");
         assertTrue(page.getResults().size() > 0, funcName + "page results List size < 1");
+    }
+
+    @Test
+    public void test_watchProviders() {
+        final String funcName = "test_watchProviders ";
+        WatchProviders providers = null;
+
+        try {
+            providers = getManager().moviesService().watchProviders(TestData.MOVIE_ID).execute().body();
+        }
+        catch (Exception e)
+        {
+            assertTrue(false, "Exception occurred on test_watchProviders: " + e.toString());
+        }
+
+        assertNotNull(providers, funcName + "providers is null");
+        assertNotNull(providers.id, funcName + "id is null");
+        assertTrue(providers.results.size() > 0, funcName + "providers results List size < 1");
     }
 }

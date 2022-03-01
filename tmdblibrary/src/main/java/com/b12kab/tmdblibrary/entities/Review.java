@@ -17,11 +17,21 @@
 
 package com.b12kab.tmdblibrary.entities;
 
+import java.util.Date;
+
 public class Review {
 
     public String id;
     public String author;
+    public AuthorDetail author_details;
     public String content;
+    public Date created_at;
+    public Date updated_at;
     public String url;
 
+    // optional
+    public String iso_639_1;
+    public Integer media_id;
+    public String media_title;
+    public String media_type;
 }

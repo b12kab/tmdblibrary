@@ -18,6 +18,9 @@ package com.b12kab.tmdblibrary;
 
 public interface TestData {
 
+    int COMPANY_ID = 5;
+    String COMPANY_TITLE = "Columbia Pictures";
+
     int MOVIE_ID = 550;
     String MOVIE_TITLE = "Fight Club";
     String MOVIE_IMDB = "tt0137523";
@@ -33,4 +36,8 @@ public interface TestData {
     int TVSHOW_ID = 1396;
     int TVSHOW_TVDB_ID = 81189;
     int PERSON_ID = 287;
+
+    String REVIEW_ID = "581bbdbbc3a36805c60001f1";
+    String REVIEW_ISO_639_1 = "en";
+
 }

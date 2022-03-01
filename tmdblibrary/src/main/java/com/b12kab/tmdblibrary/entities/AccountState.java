@@ -18,15 +18,11 @@ package com.b12kab.tmdblibrary.entities;
 
 public class AccountState {
     // This is deserialized by AccountStateDeserializer, not automatically via Retrofit.
-    private static final String TAG = AccountState.class.getSimpleName();
 
-//    @SerializedName("id")
     private int id;
-//    @SerializedName("favorite")
     private boolean favorite;
     private Float userRating;
-//    @SerializedName("watchlist")
-    private boolean watchlist;
+    private Boolean watchlist;
 
     public int getId() {
         return id;

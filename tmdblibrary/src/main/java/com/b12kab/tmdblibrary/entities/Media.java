@@ -18,19 +18,33 @@
 package com.b12kab.tmdblibrary.entities;
 
 import java.util.Date;
+import java.util.List;
 
 public class Media {
 
+    // Both
     public Integer id;
-    public Boolean adult;
-    public String backdrop_path;
-    public String original_title;
-    public Date release_date;
     public String poster_path;
+    public String overview;
+    public String backdrop_path;
+    public List<Integer> genre_ids;
+    public String original_language;
     public Double popularity;
     public String title;
     public Double vote_average;
     public Integer vote_count;
     public String media_type;
+
+    // Movie
+    public Boolean adult;
+    public Date release_date;
+    public String original_title;
+    public Boolean video;
+
+    // TV
+    public String first_air_date;
+    public List<String> origin_country;
+    public String name;
+    public String original_name;
 
 }

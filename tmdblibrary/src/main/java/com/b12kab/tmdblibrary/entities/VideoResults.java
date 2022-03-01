@@ -22,7 +22,7 @@ package com.b12kab.tmdblibrary.entities;
 import java.util.List;
 
 public class VideoResults {
-
+    public Integer id;
     public List<Video> results;
 
     public List<Video> getResults() {

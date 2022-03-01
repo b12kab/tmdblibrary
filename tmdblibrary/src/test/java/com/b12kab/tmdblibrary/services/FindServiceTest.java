@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class FindServiceTest extends BaseTestCase {
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
@@ -51,19 +52,19 @@ public class FindServiceTest extends BaseTestCase {
     static final String ImdbTvSeasonName = "Season 1";
     static final String ImdbTvEpisodeId = "tt0959621";
 
-    @BeforeEach
-    void init() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e){
-            System.out.println(e);
-        }
-    }
-
     @Test
     public void test_find_movie() throws ParseException {
         final String funcName = "test_find_movie ";
-        FindResults results = getManager().findService().find(ImdbMovieId, ExternalSource.IMDB_ID, null);
+        FindResults results = null;
+
+        try
+        {
+            results = getManager().findService().find(ImdbMovieId, ExternalSource.IMDB_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(results, funcName + "results is null");
         assertNotNull(results.movie_results, funcName + "results movie_results is null");
@@ -99,7 +100,15 @@ public class FindServiceTest extends BaseTestCase {
     @Test
     public void test_find_people() {
         final String funcName = "test_find_people ";
-        FindResults results = getManager().findService().find(ImdbPersonId, ExternalSource.IMDB_ID, null);
+        FindResults results = null;
+        try
+        {
+            results = getManager().findService().find(ImdbPersonId, ExternalSource.IMDB_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail( "Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(results, funcName + "results is null");
         assertNotNull(results.person_results, funcName + "results List person_results is null");
@@ -110,13 +119,20 @@ public class FindServiceTest extends BaseTestCase {
         assertNotNull(person.id, funcName + "person id is null");
         assertNotNull(person.name, funcName + "person name is null");
         assertEquals(person.name, TestData.PERSON_NAME, funcName + "person name is not the same as " + TestData.PERSON_NAME);
-        assertNotNull(funcName + "person profile_path is null", person.profile_path);
+        assertNotNull(person.profile_path, funcName + "person profile_path is null");
     }
     
     @Test
     public void test_find_tv_show() {
         final String funcName = "test_find_tv_show ";
-        FindResults results = getManager().findService().find(ImdbTvId, ExternalSource.IMDB_ID, null);
+        FindResults results = null;
+        try {
+            results = getManager().findService().find(ImdbTvId, ExternalSource.IMDB_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail( "Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(results, funcName + "results is null");
         assertNotNull(results.tv_results, funcName + "results tv_results is null");
@@ -142,7 +158,15 @@ public class FindServiceTest extends BaseTestCase {
     @Test
     public void test_find_tv_season() {
         final String funcName = "test_find_tv_season ";
-        FindResults results = getManager().findService().find(ImdbTvSeasonId, ExternalSource.TVDB_ID, null);
+        FindResults results = null;
+
+        try {
+            results = getManager().findService().find(ImdbTvSeasonId, ExternalSource.TVDB_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail( "Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(results, funcName + "results is null");
         assertNotNull(results.tv_season_results, funcName + "results tv_season_results is null");
@@ -162,7 +186,14 @@ public class FindServiceTest extends BaseTestCase {
     @Test
     public void test_find_tv_episode() {
         final String funcName = "test_find_tv_episode ";
-        FindResults results = getManager().findService().find(ImdbTvEpisodeId, ExternalSource.IMDB_ID, null);
+        FindResults results = null;
+        try {
+            results = getManager().findService().find(ImdbTvEpisodeId, ExternalSource.IMDB_ID, null).execute().body();
+        }
+        catch (Exception e)
+        {
+            fail( "Exception occurred on " + funcName + ": " + e.toString());
+        }
 
         assertNotNull(results, funcName + "results is null");
         assertNotNull(results.tv_episode_results, funcName + "results List tv_episode_results is null");

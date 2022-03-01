@@ -17,6 +17,7 @@
 package com.b12kab.tmdblibrary.entities;
 
 import java.util.Date;
+import java.util.List;
 
 public abstract class BasePersonCredit {
 
@@ -32,6 +33,14 @@ public abstract class BasePersonCredit {
     public Date release_date;
     public String title;
     public String original_title;
+    public Integer vote_count;
+    public Boolean video;
+    public Float vote_average;
+    public List<Integer> genre_ids;
+    public String original_language;
+    public String popularity;
+    public String backdrop_path;
+    public String overview;
 
     // tv
     public Date first_air_date;
