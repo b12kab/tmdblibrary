@@ -12,7 +12,7 @@ public enum ExternalSource {
 
     private final String value;
 
-    private ExternalSource(String value) {
+    ExternalSource(String value) {
         this.value = value;
     }
 

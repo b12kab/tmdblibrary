@@ -9,6 +9,7 @@ import com.b12kab.tmdblibrary.entities.CrewMember;
 import com.b12kab.tmdblibrary.entities.Image;
 import com.b12kab.tmdblibrary.entities.MovieAbbreviated;
 import com.b12kab.tmdblibrary.entities.MovieFull;
+import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.ProductionCountry;
 import com.b12kab.tmdblibrary.entities.ReleaseDateResults;
 import com.b12kab.tmdblibrary.entities.ReleaseDates;
@@ -29,14 +30,18 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class MovieAsserts {
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
 
-    public static void assertBaseMovie(BaseMovie movie) {
+    public static void assertBaseMovie(BaseMovie movie, boolean imagesOptional) {
         assertNotNull(movie, "movie");
         assertNotNull(movie.isAdult(), "movie adult");
-        assertNotNull(movie.getBackdrop_path(), "movie backdrop");
+        if (!imagesOptional) {
+            assertNotNull(movie.getBackdrop_path(), "movie backdrop");
+        }
         assertNotNull(movie.getOriginal_language(), "movie original language");
         assertNotNull(movie.getOverview(), "movie overview");
         assertNotNull(movie.getPopularity(), "movie popularity");
-        assertNotNull(movie.getPoster_path(), "movie poster");
+        if (!imagesOptional) {
+            assertNotNull(movie.getPoster_path(), "movie poster");
+        }
         assertNotNull(movie.getRelease_date(), "movie release");
         assertNotNull(movie.getTitle(), "movie title");
         assertNotNull(movie.isVideo(), "movie video");
@@ -46,14 +51,26 @@ public class MovieAsserts {
         assertTrue(movie.getVote_count() >= 0, "movie count < 0");
     }
 
-    public static void assertMovieAbbr(MovieAbbreviated movie) {
-        assertBaseMovie(movie);
+    public static void assertMovieResultsPage(MovieResultsPage resultsPage, boolean imagesOptional) {
+        assertNotNull(resultsPage, "results page is null");
+        assertNotNull(resultsPage.page, "results page page # is null");
+        assertNotNull(resultsPage.total_pages, "results page total pages is null");
+        assertNotNull(resultsPage.total_results, "results page total results is null");
+        assertNotNull(resultsPage.getResults(), "results page results is null");
+        assertTrue(resultsPage.getResults().size() > 0, "results page results size = 0");
+        for (MovieAbbreviated movie: resultsPage.getResults()) {
+            assertMovieAbbr(movie, imagesOptional);
+        }
+    }
+
+    public static void assertMovieAbbr(MovieAbbreviated movie, boolean imagesOptional) {
+        assertBaseMovie(movie, imagesOptional);
         assertNotNull(movie.getGenre_ids(), "movie genre id");
-        assertTrue(movie.getGenre_ids().size() > 0, "movie genre id size");
+//        assertTrue(movie.getGenre_ids().size() > 0, "movie genre id size");
     }
 
     public static void assertMovie(MovieFull movie, boolean collectionPopulated) {
-        assertBaseMovie(movie);
+        assertBaseMovie(movie, false);
         if (collectionPopulated)
             assertNotNull(movie.getBelongs_to_collection(), "movie belongs to collection");
         assertNotNull(movie.getBudget(), "movie budget");
