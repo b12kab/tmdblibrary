@@ -245,17 +245,17 @@ public class TvServiceTest extends BaseTestCase {
         assertTrue(tvResultsPage.total_results > 0, funcName + "tvResultsPage total_results is < 1" );
 
         assertNotNull(tvResultsPage.results, funcName + "tvResultsPage results is null");
-        assertTrue(tvResultsPage.results.size() > 0, funcName + "tvResultsPage results is < 1");
-        assertNotNull(tvResultsPage.results.get(0).id, funcName + "tvResultsPage id is null");
-        assertNotNull(tvResultsPage.results.get(0).backdrop_path, funcName + "tvResultsPage backdrop_path is null");
-        assertNotNull(tvResultsPage.results.get(0).name, funcName + "tvResultsPage name is null");
-        assertNotNull(tvResultsPage.results.get(0).poster_path, funcName + "tvResultsPage poster_path is null");
-        assertNotNull(tvResultsPage.results.get(0).popularity, funcName + "tvResultsPage popularity is null");
-        assertNotNull(tvResultsPage.results.get(0).name, funcName + "tvResultsPage name is null");
-        assertNotNull(tvResultsPage.results.get(0).vote_average, funcName + "tvResultsPage vote_average is null");
-        assertTrue(tvResultsPage.results.get(0).vote_average > 0, funcName + "tvResultsPage vote_average is < 1");
-        assertNotNull(tvResultsPage.results.get(0).vote_count, funcName + "tvResultsPage vote_count is null");
-        assertTrue(tvResultsPage.results.get(0).vote_count > 0, funcName + "tvResultsPage vote_count is < 1");
+        assertTrue(tvResultsPage.results.size() > 2, funcName + "tvResultsPage results is < 1");
+        assertNotNull(tvResultsPage.results.get(1).id, funcName + "tvResultsPage id is null");
+        assertNotNull(tvResultsPage.results.get(1).backdrop_path, funcName + "tvResultsPage backdrop_path is null");
+        assertNotNull(tvResultsPage.results.get(1).name, funcName + "tvResultsPage name is null");
+        assertNotNull(tvResultsPage.results.get(1).poster_path, funcName + "tvResultsPage poster_path is null");
+        assertNotNull(tvResultsPage.results.get(1).popularity, funcName + "tvResultsPage popularity is null");
+        assertNotNull(tvResultsPage.results.get(1).name, funcName + "tvResultsPage name is null");
+        assertNotNull(tvResultsPage.results.get(1).vote_average, funcName + "tvResultsPage vote_average is null");
+        assertTrue(tvResultsPage.results.get(1).vote_average > 0, funcName + "tvResultsPage vote_average is < 1");
+        assertNotNull(tvResultsPage.results.get(1).vote_count, funcName + "tvResultsPage vote_count is null");
+        assertTrue(tvResultsPage.results.get(1).vote_count > 0, funcName + "tvResultsPage vote_count is < 1");
     }
     
     @Test
