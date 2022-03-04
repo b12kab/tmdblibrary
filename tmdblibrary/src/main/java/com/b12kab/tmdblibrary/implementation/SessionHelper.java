@@ -25,7 +25,7 @@ public class SessionHelper extends NetworkHelper {
      * @param tmdb Tmdb
      * @param session logged in TMDb session
      * @return true = worked, false = didn't work
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     public boolean DestroyTmdbSession(Tmdb tmdb, String session) throws IOException {
         if (tmdb == null) {
@@ -41,7 +41,7 @@ public class SessionHelper extends NetworkHelper {
         if (worked == null)
             return false;
 
-        return worked.booleanValue();
+        return worked;
     }
 
     /***
@@ -51,7 +51,7 @@ public class SessionHelper extends NetworkHelper {
      * @param tmdb Tmdb
      * @param session logged in TMDb session
      * @return Boolean
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     @Nullable
     private Boolean ObtainLogout(Tmdb tmdb, String session) throws IOException {
@@ -67,7 +67,7 @@ public class SessionHelper extends NetworkHelper {
                     if (status.getSuccess()) {
                         return status.getSuccess();
                     } else {
-                        if (status.getStatusCode() != null && status.getStatusCode().intValue() == 6) {
+                        if (status.getStatusCode() != null && status.getStatusCode() == 6) {
                             return false;
                         }
                         // result not success, retry - it can't hurt
@@ -109,7 +109,7 @@ public class SessionHelper extends NetworkHelper {
      * @param tmdb Tmdb
      * @param session logged in TMDb session
      * @return Status
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     private Status ProcessLogout(@NonNull Tmdb tmdb, String session) throws IOException {
         try {
@@ -134,7 +134,7 @@ public class SessionHelper extends NetworkHelper {
      * @param tmdb Tmdb
      * @param userId user id
      * @param passwd password
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     public String CreateTmdbSession(Tmdb tmdb, String userId, String passwd) throws IOException {
         if (tmdb == null) {
@@ -180,7 +180,7 @@ public class SessionHelper extends NetworkHelper {
      *
      * @param tmdb Tmdb
      * @return Token value or null
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     @Nullable
     private String ObtainToken(@NonNull Tmdb tmdb) throws IOException {
@@ -236,7 +236,7 @@ public class SessionHelper extends NetworkHelper {
      *
      * @param tmdb Tmdb
      * @return AuthenticateTokenNewResponse
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     private CreateNewTokenResponse GetToken(@NonNull Tmdb tmdb) throws IOException {
         try {
@@ -265,7 +265,7 @@ public class SessionHelper extends NetworkHelper {
      * @param passwd password
      * @param token Token created in step 1
      * @return true = success; false = failure
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     private boolean ObtainAssociation(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws IOException {
         boolean retry;
@@ -295,6 +295,8 @@ public class SessionHelper extends NetworkHelper {
 
                     retry = true;
                     retryTime = checkReturn.retryTime;
+                } else {
+                    throw ex;
                 }
             }
 
@@ -319,7 +321,7 @@ public class SessionHelper extends NetworkHelper {
      * @param passwd password
      * @param token created token
      * @return AuthenticateTokenValidateWithLoginResponse
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     @Nullable
     private AuthenticateTokenValidateWithLoginResponse AssociateToken(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws IOException {
@@ -347,7 +349,7 @@ public class SessionHelper extends NetworkHelper {
      * @param tmdb Tmdb
      * @param token Token associated in step 2
      * @return Session Id
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     @Nullable
     private String ObtainSession(@NonNull Tmdb tmdb, String token) throws IOException {
@@ -378,6 +380,8 @@ public class SessionHelper extends NetworkHelper {
 
                     retry = true;
                     retryTime = checkReturn.retryTime;
+                } else {
+                    throw ex;
                 }
             }
 
@@ -400,7 +404,7 @@ public class SessionHelper extends NetworkHelper {
      * @param tmdb Tmdb
      * @param token Associated userid / password token from step 2 (and step 1)
      * @return AuthenticateSessionNewResponse
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     @Nullable
     private AuthenticateSessionNewResponse CreateSessionFromToken(@NonNull Tmdb tmdb, String token) throws IOException {

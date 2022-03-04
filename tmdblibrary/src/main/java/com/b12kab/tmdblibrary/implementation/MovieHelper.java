@@ -16,7 +16,7 @@ public class MovieHelper extends NetworkHelper {
     //https://stackoverflow.com/questions/2186931/java-pass-method-as-parameter
     @FunctionalInterface
     interface GetInitialMovieType {
-        public Call<MovieResultsPage> initialMovies(Tmdb tmdb, String language, String region, int page);
+        Call<MovieResultsPage> initialMovies(Tmdb tmdb, String language, String region, int page);
     }
 
     GetInitialMovieType nowPlaying = (t, l, r, p) -> t.moviesService().nowPlaying(p,l,r);
@@ -33,7 +33,7 @@ public class MovieHelper extends NetworkHelper {
      * @param region <em>Optional.</em>
      * @param initialFetchPages number of pages to fetch
      * @return MovieResultsPage
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     public MovieResultsPage ProcessInitialMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int initialFetchPages) throws IOException {
         GetInitialMovieType pass = null;
@@ -76,7 +76,7 @@ public class MovieHelper extends NetworkHelper {
      * @param region <em>Optional.</em>
      * @param initialFetchPages number of pages to fetch
      * @return MovieResultsPage
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     private MovieResultsPage ObtainInitialMoviePages(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int initialFetchPages) throws IOException {
         MovieResultsPage results = null;
@@ -113,7 +113,7 @@ public class MovieHelper extends NetworkHelper {
      * @param region <em>Optional.</em>
      * @param page tmdb page #
      * @return MovieResultsPage
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     private MovieResultsPage ObtainMoviePage(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int page) throws IOException {
         boolean retry;
@@ -141,6 +141,8 @@ public class MovieHelper extends NetworkHelper {
 
                     retry = true;
                     retryTime = checkReturn.retryTime;
+                } else {
+                    throw ex;
                 }
             }
 

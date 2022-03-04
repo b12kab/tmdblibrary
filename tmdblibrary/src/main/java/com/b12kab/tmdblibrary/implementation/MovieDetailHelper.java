@@ -4,13 +4,11 @@ import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.AppendToResponse;
 import com.b12kab.tmdblibrary.entities.MovieFull;
-import com.b12kab.tmdblibrary.enumerations.AppendToResponseItem;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +33,7 @@ public class MovieDetailHelper extends NetworkHelper {
      * @param session <em>Optional.</em> TMDb session Id
      * @param additionalAppends <em>Optional.</em> AppendToResponse - already appends ACCT_STATES, CREDITS, IMAGES, REVIEWS, VIDEOS, RELEASE_DATES
      * @return MovieFull
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     public MovieFull ProcessMovieDetail(Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
         if (tmdb == null) {
@@ -57,7 +55,7 @@ public class MovieDetailHelper extends NetworkHelper {
      * @param session <em>Optional.</em> TMDb session Id
      * @param additionalAppends AppendToResponse - additional AppendToResponseItems to be merged
      * @return MovieFull
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     @Nullable
     private MovieFull ObtainMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
@@ -97,6 +95,8 @@ public class MovieDetailHelper extends NetworkHelper {
 
                     retry = true;
                     retryTime = checkReturn.retryTime;
+                } else {
+                    throw ex;
                 }
             }
 
@@ -122,7 +122,7 @@ public class MovieDetailHelper extends NetworkHelper {
      * @param session TMDb session Id
      * @param appendToResponse AppendToResponse - merged appendResponse
      * @return MovieFull
-     * @throws IOException
+     * @throws IOException TmdbException
      */
     private MovieFull GetMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse appendToResponse) throws IOException {
         try {
