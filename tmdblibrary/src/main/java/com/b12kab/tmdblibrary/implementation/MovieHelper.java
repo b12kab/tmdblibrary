@@ -24,6 +24,17 @@ public class MovieHelper extends NetworkHelper {
     GetInitialMovieType topRated = (t, l, r, p) -> t.moviesService().topRated(p,l,r);
     GetInitialMovieType upcoming = (t, l, r, p) -> t.moviesService().upcoming(p,l,r);
 
+    /***
+     * Perform the initial fetch movies pages
+     *
+     * @param tmdb Tmdb
+     * @param fetchType Movie type to fetch
+     * @param language <em>Optional.</em> ISO 639-1 code.
+     * @param region <em>Optional.</em>
+     * @param initialFetchPages number of pages to fetch
+     * @return MovieResultsPage
+     * @throws IOException
+     */
     public MovieResultsPage ProcessInitialMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int initialFetchPages) throws IOException {
         GetInitialMovieType pass = null;
 
@@ -56,6 +67,17 @@ public class MovieHelper extends NetworkHelper {
         return movieFull;
     }
 
+    /***
+     * Loop thru pages to fetch
+     *
+     * @param function Method to call
+     * @param tmdb Tmdb
+     * @param language <em>Optional.</em> ISO 639-1 code.
+     * @param region <em>Optional.</em>
+     * @param initialFetchPages number of pages to fetch
+     * @return MovieResultsPage
+     * @throws IOException
+     */
     private MovieResultsPage ObtainInitialMoviePages(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int initialFetchPages) throws IOException {
         MovieResultsPage results = null;
         boolean initResults = false;
@@ -82,6 +104,17 @@ public class MovieHelper extends NetworkHelper {
         return results;
     }
 
+    /***
+     * Get specific TMDb page
+     *
+     * @param function Method to call
+     * @param tmdb Tmdb
+     * @param language <em>Optional.</em> ISO 639-1 code.
+     * @param region <em>Optional.</em>
+     * @param page tmdb page #
+     * @return MovieResultsPage
+     * @throws IOException
+     */
     private MovieResultsPage ObtainMoviePage(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int page) throws IOException {
         boolean retry;
         int retryTime = 0;
