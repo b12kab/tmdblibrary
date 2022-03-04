@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class MovieDetailHelperTest extends BaseTestCase {
     private MovieDetailHelper helper;
-    private AppendToResponse additionalResponse = new AppendToResponse(SIMILAR);
 
     public MovieDetailHelperTest() {
         helper = new MovieDetailHelper();
@@ -63,6 +62,7 @@ public class MovieDetailHelperTest extends BaseTestCase {
         final String funcName = "test_movie_detail_movieId_missing_with_session ";
 
         try {
+            this.sleepSetup(3);
             helper.ProcessMovieDetail(this.getManager(), 0, null, this.createTmdbSession(), null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
@@ -96,12 +96,14 @@ public class MovieDetailHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_movie_detail_movieId_valid_with_session() throws ParseException {
+    public void test_movie_detail_movieId_valid_with_additional_response_session() throws ParseException {
         final String funcName = "test_movie_detail_movieId_valid_with_session ";
+        AppendToResponse additionalResponse = new AppendToResponse(SIMILAR);
 
         MovieFull movie = null;
 
         try {
+            this.sleepSetup(3);
             movie = helper.ProcessMovieDetail(this.getManager(), TestData.MOVIE_ID, null, this.createTmdbSession(), additionalResponse);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e.toString());
@@ -115,6 +117,30 @@ public class MovieDetailHelperTest extends BaseTestCase {
                 true,
                 true,
                 true);
+    }
+
+    @Test
+    public void test_movie_detail_movieId_valid_with_additional_response_empty() throws ParseException {
+        final String funcName = "test_movie_detail_movieId_valid_with_session ";
+        AppendToResponse additionalResponse = new AppendToResponse();
+
+        MovieFull movie = null;
+
+        try {
+            this.sleepSetup(3);
+            movie = helper.ProcessMovieDetail(this.getManager(), TestData.MOVIE_ID, null, this.createTmdbSession(), additionalResponse);
+        } catch (Exception e) {
+            fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+        MovieAsserts.assertMovieTestData(movie, funcName);
+        MovieAsserts.assertMovieTestDataAppended(movie, funcName,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false);
     }
 
 }
