@@ -1,5 +1,7 @@
 package com.b12kab.tmdblibrary.enumerations;
 
+import androidx.annotation.NonNull;
+
 public enum ExternalSource {
 
     IMDB_ID("imdb_id"),
@@ -14,6 +16,7 @@ public enum ExternalSource {
         this.value = value;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return value;

@@ -16,6 +16,8 @@
 
 package com.b12kab.tmdblibrary.enumerations;
 
+import androidx.annotation.NonNull;
+
 public enum SortBy {
 
     POPULARITY_ASC("popularity.asc"),
@@ -39,6 +41,7 @@ public enum SortBy {
         this.value = value;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return value;

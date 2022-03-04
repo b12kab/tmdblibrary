@@ -22,7 +22,12 @@ import java.util.List;
 public class Images {
     
     public Integer id;
+    // Movies and tv series only
     public List<Image> backdrops;
+    // Movies and tv series & seasons only
     public List<Image> posters;
+    // TV episodes only
     public List<Image> stills;
+    // Movies and tv series only
+    public List<Image> logos;
 }

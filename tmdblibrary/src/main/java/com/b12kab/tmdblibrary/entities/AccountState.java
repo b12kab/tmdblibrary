@@ -48,7 +48,7 @@ public class AccountState {
         this.userRating = rated;
     }
 
-    public boolean isWatchlist() {
+    public Boolean isWatchlist() {
         return watchlist;
     }
 

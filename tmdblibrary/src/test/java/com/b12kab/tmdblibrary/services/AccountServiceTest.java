@@ -31,11 +31,7 @@ public class AccountServiceTest extends BaseTestCase {
 
     @BeforeEach
     void init() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e){
-            System.out.println(e);
-        }
+        this.sleepSetup(3);
     }
 
     @Test

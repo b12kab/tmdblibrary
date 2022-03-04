@@ -19,22 +19,36 @@ package com.b12kab.tmdblibrary.entities;
 
 import com.b12kab.tmdblibrary.enumerations.AppendToResponseItem;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class AppendToResponse {
 
-    private final AppendToResponseItem[] items;
+    private EnumSet<AppendToResponseItem> items = EnumSet.noneOf(AppendToResponseItem.class);
 
     public AppendToResponse(AppendToResponseItem... items) {
-        this.items = items;
+        if (items == null)
+            return;
+
+        Collections.addAll(this.items, items);
     }
 
+    @Nullable
     @Override
     public String toString() {
-        if (items != null && items.length > 0) {
+        if (items != null && items.size() > 0) {
             StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < items.length ; i++) {
-                sb.append(items[i]);
+            Iterator iter = items.iterator();
+            for (int i = 1; iter.hasNext(); i++) {
+                sb.append(iter.next().toString());
 
-                if (i < items.length - 1) {
+                if (i < items.size()) {
                     sb.append(',');
                 }
             }
@@ -43,5 +57,45 @@ public class AppendToResponse {
         }
 
         return null;
+    }
+
+    @NonNull
+    public List<AppendToResponseItem> toList() {
+        List<AppendToResponseItem> itemList = new ArrayList<>();
+        for (AppendToResponseItem item: this.items) {
+            itemList.add(item);
+        }
+        return itemList;
+    }
+
+    public EnumSet<AppendToResponseItem> values() {
+        return this.items;
+    }
+
+    public int size() {
+        return this.items.size();
+    }
+
+    public AppendToResponse merge(AppendToResponse appendToResponse) {
+        if (appendToResponse == null)
+            return this;
+
+        if (appendToResponse.size() == 0)
+            return this;
+
+        if (this.size() == 0 && appendToResponse.size() > 0) {
+            return appendToResponse;
+        }
+
+//        EnumSet<AppendToResponseItem> originalSet = this.values();
+//        EnumSet<AppendToResponseItem> appendSet = appendToResponse.values().clone();
+//
+//        appendSet.removeAll(originalSet);
+//        originalSet.addAll(appendSet);
+//
+//        return new AppendToResponse(originalSet.toArray(new AppendToResponseItem[originalSet.size()]));
+        this.items.addAll(appendToResponse.toList());
+
+        return this;
     }
 }

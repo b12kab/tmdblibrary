@@ -19,6 +19,7 @@ package com.b12kab.tmdblibrary.services;
 
 import com.b12kab.tmdblibrary.BaseTestCase;
 import com.b12kab.tmdblibrary.TestData;
+import com.b12kab.tmdblibrary.assertations.MovieAsserts;
 import com.b12kab.tmdblibrary.entities.AppendToResponse;
 import com.b12kab.tmdblibrary.entities.CreditResults;
 import com.b12kab.tmdblibrary.entities.Images;
@@ -37,15 +38,11 @@ import com.b12kab.tmdblibrary.entities.WatchProviders;
 import com.b12kab.tmdblibrary.enumerations.AppendToResponseItem;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import retrofit2.Call;
-import retrofit2.Response;
-
+import static com.b12kab.tmdblibrary.assertations.MovieAsserts.assertImageType;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -54,7 +51,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MoviesServiceTest extends BaseTestCase {
-    private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
 
     @Test
     public void test_summary() throws ParseException {
@@ -65,12 +61,10 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertMovie(funcName, movie);
-        assertNotNull(movie.getOriginal_title(),funcName + "movie original_title is null");
-        assertEquals(movie.getOriginal_title(), TestData.MOVIE_TITLE, funcName + "movie original_title is not " + TestData.MOVIE_TITLE);
+        MovieAsserts.assertMovieTestData(movie, funcName);
     }
 
     @Test
@@ -84,13 +78,11 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_language: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
-
-        assertNotNull(movie.getTitle(),funcName + "movie title is null");
-        assertEquals(movie.getTitle(), movieTitle,
+        MovieAsserts.assertMovie(movie, false);
+        assertEquals(movieTitle, movie.getTitle(),
                 funcName + "movie original_title is not " + movieTitle);
     }
 
@@ -106,11 +98,10 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_with_collection: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
-        assertNotNull(movie.getTitle(),funcName + "movie title is null");
+        MovieAsserts.assertMovie(movie, true);
         assertEquals(movie.getTitle(), TestData.MOVIE_WITH_COLLECTION_TITLE, funcName + "movie title is not " + TestData.MOVIE_WITH_COLLECTION_TITLE);
         assertNotNull(movie.getBelongs_to_collection(), funcName + "movie belongs_to_collection is null");
         assertNotNull(movie.getBelongs_to_collection().id, funcName + "movie belongs_to_collection.id is null");
@@ -119,40 +110,8 @@ public class MoviesServiceTest extends BaseTestCase {
         assertEquals(movie.getBelongs_to_collection().name, movieCollectionName, funcName + "movie belongs_to_collection.name is not " + movieCollectionName);
     }
 
-    private void assertMovie(String funcName, MovieFull movie) throws ParseException {
-        final int movieBudget = 63000000;
-        final int movieRevenue = 100853753;
-        final int movieRuntime = 139;
-        final String movieReleaseDate = "1999-10-15";
-
-        assertNotNull(movie,funcName + "movie is null");
-        assertEquals(movie.getId(), TestData.MOVIE_ID, funcName + "movie id is not " + TestData.MOVIE_ID);
-        assertNotNull(movie.getTitle(), funcName + "movie title is null");
-        assertEquals(movie.getTitle(), TestData.MOVIE_TITLE, funcName + "movie title is not " + TestData.MOVIE_TITLE);
-        assertNotNull(movie.getOverview(), funcName + "movie overview is null" );
-        assertFalse(movie.getOverview().isEmpty(), funcName + "movie overview is empty");
-        assertNotNull(movie.getTagline(), funcName + "movie tagline is null");
-        assertFalse(movie.getTagline().isEmpty(), funcName + "movie tagline is empty");
-        assertFalse(movie.isAdult(), funcName + "movie adult is not false");
-        assertNotNull(movie.getBackdrop_path(), funcName + "movie backdrop_path is null");
-        assertFalse(movie.getBackdrop_path().isEmpty(), funcName + "movie backdrop_path is empty");
-        assertEquals(movie.getBudget(), movieBudget, funcName + "movie budget is not equal to " + movieBudget);
-        assertNotNull(movie.getImdb_id(), funcName + "movie imdb_id is null");
-        assertEquals(movie.getImdb_id(), TestData.MOVIE_IMDB, funcName + "movie imdb_id is not equal to " + TestData.MOVIE_IMDB);
-        assertNotNull(movie.getPoster_path(), funcName + "movie poster_path is null");
-        assertNotNull( movie.getRelease_date(), funcName + "movie release_date is null");
-        assertEquals(movie.getRelease_date(), JSON_STRING_DATE.parse(movieReleaseDate),
-                funcName + "movie release_date is not equal to " + movieReleaseDate);
-        assertEquals(movie.getRevenue(), movieRevenue, funcName + "movie revenue is not equal to " + movieRevenue);
-        assertEquals(movie.getRuntime(), movieRuntime, funcName + "movie runtime is not equal to " + movieRuntime);
-
-        assertNotNull(movie.getVote_average(),funcName + "movie vote_average is null");
-        assertTrue(movie.getVote_average() > 0, funcName + "movie vote_average is < 1");
-        assertTrue(movie.getVote_count() > 0, funcName + "movie vote_count is < 1" );
-    }
-
     @Test
-    public void test_summary_append_credits() {
+    public void test_summary_append_credits() throws ParseException {
         final String funcName = "test_summary_append_credits ";
         MovieFull movie = null;
         try {
@@ -161,15 +120,17 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_credits: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
-        assertNotNull(movie.getCredits(),funcName + "movie credits is null");
+        MovieAsserts.assertMovie(movie, false);
+        assertNotNull(movie.credits.getCrew(), funcName + "movie credits crew is null");
+        assertTrue(movie.credits.getCrew().size() > 0, funcName + "movie credits crew size is 0");
+        MovieAsserts.assertCredits(movie.credits, funcName);
     }
 
     @Test
-    public void test_summary_append_images() {
+    public void test_summary_append_images() throws ParseException {
         final String funcName = "test_summary_append_images ";
         MovieFull movie = null;
 
@@ -179,15 +140,23 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_images: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
-        assertNotNull(movie.getImages(),funcName + "movie images is null");
+        MovieAsserts.assertMovie(movie, false);
+        assertNotNull(movie.images.backdrops, funcName + "movie images backdrops is null");
+        assertTrue(movie.images.backdrops.size() > 0, funcName + "movie images backdrops is 0");
+        MovieAsserts.assertImageType(movie.images.backdrops, funcName, "backdrops");
+        assertNotNull(movie.images.posters, funcName + "movie images posters is null");
+        assertTrue(movie.images.posters.size() > 0, funcName + "movie images posters is 0");
+        assertImageType(movie.images.posters, funcName, "posters");
+        assertNotNull(movie.images.logos, funcName + "movie images stills is null");
+        assertTrue(movie.images.logos.size() > 0, funcName + "movie images stills is 0");
+        assertImageType(movie.images.logos, funcName, "logos");
     }
 
     @Test
-    public void test_summary_append_releases() {
+    public void test_summary_append_releases() throws ParseException {
         final String funcName = "test_summary_append_releases ";
         MovieFull movie = null;
 
@@ -197,15 +166,17 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_releases: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
-        assertNotNull(movie.getRelease_dates(), funcName + "movie release_dates is null");
+        MovieAsserts.assertMovie(movie, false);
+        assertNotNull(movie.release_dates.getResults(), funcName + "movie release dates results is null");
+        assertTrue(movie.release_dates.getResults().size() > 0, funcName + "movie release dates results is 0");
+        MovieAsserts.assertReleaseDateResults(movie.release_dates.getResults(), funcName);
     }
 
     @Test
-    public void test_summary_append_videos() {
+    public void test_summary_append_videos() throws ParseException {
         final String funcName = "test_summary_append_videos ";
         MovieFull movie = null;
         try {
@@ -214,15 +185,17 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_videos: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
-        assertNotNull(movie.getVideos(),funcName + "movie videos is null");
+        MovieAsserts.assertMovie(movie, false);
+        assertNotNull(movie.videos.getResults(), funcName + "movie videos results is null");
+        assertTrue(movie.videos.getResults().size() > 0, funcName + "movie videos results size is 0");
+        MovieAsserts.assertVideos(movie.videos.getResults(), funcName);
     }
 
     @Test
-    public void test_summary_append_reviews() {
+    public void test_summary_append_reviews() throws ParseException {
         final String funcName = "test_summary_append_videos ";
         MovieFull movie = null;
         try {
@@ -231,15 +204,17 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_reviews: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
-        assertNotNull(movie.getReviews(),funcName + "movie reviews is null");
+        MovieAsserts.assertMovie(movie, false);
+        assertNotNull(movie.reviews.results, funcName + "movie reviews results list is null");
+        assertTrue(movie.reviews.results.size() > 0, funcName + "movie reviews results list is 0");
+        MovieAsserts.assertReviews(movie.reviews.results, funcName);
     }
 
     @Test
-    public void test_summary_append_similar() {
+    public void test_summary_append_similar() throws ParseException {
         final String funcName = "test_summary_append_similar ";
         MovieFull movie = null;
 
@@ -249,17 +224,24 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_similar: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
-        assertNotNull(movie.getSimilar(),funcName + "movie similar is null");
-    }
+        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovieTestDataAppended(movie, funcName,
+        false,
+                false,
+                false,
+                false,
+                false,
+                false,
+        true);
+        }
 
     @Test
     public void test_summary_append_states_no_session() {
         final String funcName = "test_summary_append_states_no_session ";
-        AppendToResponse atr = new AppendToResponse( AppendToResponseItem.STATES);
+        AppendToResponse atr = new AppendToResponse( AppendToResponseItem.ACCT_STATES);
         MovieFull movie = null;
 
         try {
@@ -268,33 +250,61 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_states_no_session: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
+        MovieAsserts.assertMovie(movie, false);
         assertNull(movie.getAccount_states(),funcName + "movie similar is not null");
     }
 
     @Test
-    public void test_summary_append_states_session() {
-        final String funcName = "test_summary_append_states ";
-        AppendToResponse atr = new AppendToResponse( AppendToResponseItem.STATES);
+    public void test_summary_append_states_null_session() {
+        final String funcName = "test_summary_append_states_no_session ";
+        AppendToResponse atr = new AppendToResponse( AppendToResponseItem.ACCT_STATES);
         MovieFull movie = null;
 
         try {
             movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
-                atr).execute().body();
+                    atr, null ).execute().body();
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_states_session: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
+        MovieAsserts.assertMovie(movie, false);
+        assertNull(movie.getAccount_states(),funcName + "movie similar is not null");
     }
 
     @Test
-    public void test_summary_append_all() {
+    public void test_summary_append_states_valid_session() throws ParseException {
+        final String funcName = "test_summary_append_states ";
+        AppendToResponse atr = new AppendToResponse( AppendToResponseItem.ACCT_STATES);
+        MovieFull movie = null;
+
+        try {
+            movie = getManager().moviesService().summary(TestData.MOVIE_ID, null,
+                atr, this.createTmdbSession()).execute().body();
+        }
+        catch (Exception e)
+        {
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+
+        MovieAsserts.assertMovie(movie, false);
+        assertNotNull(movie.getAccount_states(),funcName + "movie similar is not null");
+        MovieAsserts.assertMovieTestDataAppended(movie, funcName,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false);
+    }
+
+    @Test
+    public void test_summary_append_all() throws ParseException {
         final String funcName = "test_summary_append_all ";
         MovieFull movie = null;
 
@@ -310,16 +320,18 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_all: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        assertNotNull(movie, funcName + "movie is null");
-        assertNotNull(movie.getCredits(),funcName + "movie credits is null");
-        assertNotNull(movie.getImages(),funcName + "movie images is null");
-        assertNotNull(movie.getRelease_dates(),funcName + "movie release_dates is null");
-        assertNotNull(movie.getVideos(), funcName + "movie videos is null");
-        assertNotNull(movie.getReviews(),funcName + "movie reviews is null");
-        assertNotNull(movie.getSimilar(),funcName + "movie similar is null");
+        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovieTestDataAppended(movie, funcName,
+                false,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true);
     }
 
     @Test
@@ -342,7 +354,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_summary_append_all_session: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(movie, funcName + "movie is null");
@@ -366,7 +378,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_alternative_titles: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(titles, funcName + "titles is null");
@@ -390,7 +402,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_credits: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(credits, funcName + "credits is null");
@@ -415,7 +427,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_externalIds: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(externalIds, funcName + "externalIds is null");
@@ -432,7 +444,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_images: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(images,funcName + "images is null");
@@ -488,7 +500,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_keywords: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(keywords, funcName + "keywords is null");
@@ -518,7 +530,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_releases: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(releases, funcName + "releases is null");
@@ -555,7 +567,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_videos: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(videos, funcName + "videos is null");
@@ -583,7 +595,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_translations: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(translations, funcName + "translations is null");
@@ -609,7 +621,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_similar: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(results,funcName + "results is null");
@@ -646,7 +658,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_reviews: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(results, funcName + "results is null");
@@ -674,7 +686,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_lists: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(results, funcName + "results is null");
@@ -705,7 +717,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_latest: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         // Latest movie might not have a complete TMDb entry, but should at least some basic properties.
@@ -722,7 +734,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_upcoming: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(page, funcName + "page is null");
@@ -740,7 +752,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail("Exception occurred on test_nowPlaying: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(page, funcName + "page is null");
@@ -758,7 +770,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            Assertions.fail( "Exception occurred on test_popular: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(page, funcName + "page is null");
@@ -775,7 +787,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            assertTrue(false, "Exception occurred on test_topRated: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(page, funcName + "page is null");
@@ -793,7 +805,7 @@ public class MoviesServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            assertTrue(false, "Exception occurred on test_watchProviders: " + e.toString());
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
         assertNotNull(providers, funcName + "providers is null");

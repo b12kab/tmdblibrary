@@ -33,7 +33,6 @@ import com.b12kab.tmdblibrary.entities.Video;
 import com.b12kab.tmdblibrary.entities.VideoResults;
 import com.b12kab.tmdblibrary.enumerations.AppendToResponseItem;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -94,7 +93,7 @@ public class TvEpisodesServiceTest extends BaseTestCase {
 
         // images
         assertNotNull(episode.images, funcName + "episode images is null");
-        assertImages(funcName,episode.images.stills);
+        assertImages(funcName, episode.images.stills);
 
         // external ids
         assertNotNull(episode.external_ids, funcName + "episode external_ids is null");

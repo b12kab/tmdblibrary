@@ -19,7 +19,7 @@ import java.util.Date;
  *
  */
 
-public abstract class MovieBase {
+public abstract class BaseMovie {
     int id;
 
     Boolean adult;

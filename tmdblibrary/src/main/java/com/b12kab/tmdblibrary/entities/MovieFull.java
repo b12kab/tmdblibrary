@@ -20,16 +20,16 @@ package com.b12kab.tmdblibrary.entities;
 
 import java.util.List;
 
-public class MovieFull extends MovieBase {
+public class MovieFull extends BaseMovie {
     Collection belongs_to_collection;
-    int budget;
+    Integer budget;
     List<Genre> genres;
     String homepage;
     String imdb_id;
     List<ProductionCompany> production_companies;
     List<ProductionCountry> production_countries;
-    int revenue;
-    int runtime;
+    Integer revenue;
+    Integer runtime;
     List<SpokenLanguage> spoken_languages;
     String status;
     String tagline;
@@ -41,6 +41,7 @@ public class MovieFull extends MovieBase {
     public VideoResults videos;
     public ReviewResultsPage reviews;
     public MovieResultsPage similar;
+    // this will not work unless logged in
     public AccountState account_states;
 
     public Collection getBelongs_to_collection() {
@@ -51,11 +52,11 @@ public class MovieFull extends MovieBase {
         this.belongs_to_collection = belongs_to_collection;
     }
 
-    public int getBudget() {
+    public Integer getBudget() {
         return budget;
     }
 
-    public void setBudget(int budget) {
+    public void setBudget(Integer budget) {
         this.budget = budget;
     }
 
@@ -99,19 +100,19 @@ public class MovieFull extends MovieBase {
         this.production_countries = production_countries;
     }
 
-    public int getRevenue() {
+    public Integer getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(int revenue) {
+    public void setRevenue(Integer revenue) {
         this.revenue = revenue;
     }
 
-    public int getRuntime() {
+    public Integer getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(int runtime) {
+    public void setRuntime(Integer runtime) {
         this.runtime = runtime;
     }
 

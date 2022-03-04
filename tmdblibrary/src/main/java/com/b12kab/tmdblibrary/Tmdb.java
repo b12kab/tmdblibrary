@@ -37,6 +37,7 @@ import com.b12kab.tmdblibrary.services.WatchService;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -148,8 +149,9 @@ public class Tmdb {
     protected OkHttpClient.Builder okHttpClientBuilder() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.addInterceptor(new Interceptor() {
+            @NonNull
             @Override
-            public Response intercept(Chain chain) throws IOException {
+            public Response intercept(@NonNull Chain chain) throws IOException {
                 Request request = chain.request();
 
                 HttpUrl.Builder urlBuilder = request.url().newBuilder();

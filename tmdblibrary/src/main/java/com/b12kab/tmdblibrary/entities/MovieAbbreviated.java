@@ -20,7 +20,7 @@ package com.b12kab.tmdblibrary.entities;
 
 import java.util.List;
 
-public class MovieAbbreviated extends MovieBase {
+public class MovieAbbreviated extends BaseMovie {
     List<Integer> genre_ids;
 
     // this might be able to be removed

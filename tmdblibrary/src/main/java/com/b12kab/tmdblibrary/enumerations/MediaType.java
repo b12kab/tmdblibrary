@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+
 public enum MediaType {
     @SerializedName("movie")
     MOVIE("movie"),
@@ -33,6 +35,7 @@ public enum MediaType {
         this.value = value;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return value;

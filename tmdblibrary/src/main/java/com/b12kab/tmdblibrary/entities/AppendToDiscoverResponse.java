@@ -17,6 +17,9 @@
 
 package com.b12kab.tmdblibrary.entities;
 
+import androidx.annotation.Nullable;
+
+@SuppressWarnings("NullableProblems")
 public class AppendToDiscoverResponse {
 
     private final Integer[] items;
@@ -25,6 +28,7 @@ public class AppendToDiscoverResponse {
         this.items = items;
     }
 
+    @Nullable
     @Override
     public String toString() {
         if (items != null && items.length > 0) {

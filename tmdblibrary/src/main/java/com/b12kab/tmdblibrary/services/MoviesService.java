@@ -57,6 +57,25 @@ public interface MoviesService {
             @Query("append_to_response") AppendToResponse appendToResponse
     );
 
+    /***
+     * Get the full movie information for a specific movie id.
+     * ++++++If you are logged in, use this method+++++++++++
+     * @see <a href="https://developers.themoviedb.org/3/movies/get-movie-details">Documentation</a>
+     *
+     * @param tmdbId TMDb id.
+     * @param language <em>Optional.</em> ISO 639-1 code.
+     * @param appendToResponse <em>Optional.</em> extra requests to append to the result.
+     * @param session TMDB session Id
+     * @return MovieFull
+     */
+    @GET("movie/{id}")
+    Call<MovieFull> summary(
+            @Path("id") int tmdbId,
+            @Query("language") String language,
+            @Query("append_to_response") AppendToResponse appendToResponse,
+            @Query("session_id") String session
+    );
+
     /**
      * Get the alternative titles for a specific movie id.
      * @see <a href="https://developers.themoviedb.org/3/movies/get-movie-alternative-titles">Documentation</a>

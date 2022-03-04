@@ -258,6 +258,7 @@ public class SessionHelper extends NetworkHelper {
 
     /***
      * Try to associate token with userid / password
+     * This will try to loop thru up to 3 times
      *
      * @param tmdb tmdb
      * @param userId user id
@@ -312,6 +313,7 @@ public class SessionHelper extends NetworkHelper {
 
     /***
      * Step 2 - Associate the token with the user ID & password
+     *
      * @param tmdb Tmdb
      * @param userId user id
      * @param passwd password
@@ -340,8 +342,9 @@ public class SessionHelper extends NetworkHelper {
 
     /***
      * Try to create session
+     * This will try to loop thru up to 3 times
      *
-     * @param tmdb tmdb
+     * @param tmdb Tmdb
      * @param token Token associated in step 2
      * @return Session Id
      * @throws IOException
@@ -393,6 +396,7 @@ public class SessionHelper extends NetworkHelper {
 
     /***
      * Step 3 - Create the new session from the token
+     *
      * @param tmdb Tmdb
      * @param token Associated userid / password token from step 2 (and step 1)
      * @return AuthenticateSessionNewResponse

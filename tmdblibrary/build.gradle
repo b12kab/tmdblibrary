@@ -13,7 +13,7 @@ android {
     // Move to JUnit 5 - https://github.com/mannodermaus/android-junit5
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 32
 
         //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

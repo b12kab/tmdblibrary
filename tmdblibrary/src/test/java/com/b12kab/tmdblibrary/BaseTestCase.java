@@ -28,6 +28,7 @@ public abstract class BaseTestCase {
     public String createTmdbSession() throws IOException {
         synchronized (locker) {
             if (this.sessionId == null) {
+                this.sleepSetup(5);
 
                 CreateNewTokenResponse newToken = this.getManager().authenticationService().createToken().execute().body();
                 AuthenticateTokenValidateWithLoginResponse authToken = this.getManager().authenticationService().authorizeTokenWithLogin(newToken.getRequestToken(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_GOOD_PSWD).execute().body();
@@ -40,6 +41,14 @@ public abstract class BaseTestCase {
                 sessionId = authSession.getSessionId();
             }
             return sessionId;
+        }
+    }
+
+    public void sleepSetup(int secs) {
+        try {
+            Thread.sleep(secs * 1000);
+        } catch (InterruptedException e){
+            System.out.println(e);
         }
     }
 }

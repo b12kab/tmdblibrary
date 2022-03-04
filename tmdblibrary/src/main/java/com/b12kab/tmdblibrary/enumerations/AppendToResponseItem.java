@@ -17,9 +17,12 @@
 
 package com.b12kab.tmdblibrary.enumerations;
 
+import androidx.annotation.NonNull;
+
 public enum AppendToResponseItem {
 
-    STATES("account_states"),
+    // Must have a session for this to work
+    ACCT_STATES("account_states"),
     // Applies to Movies, TV Shows, TV Episodes, TV Seasons, People, Collections
     IMAGES("images"),
 
@@ -64,6 +67,7 @@ public enum AppendToResponseItem {
         this.value = value;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return value;
