@@ -27,6 +27,18 @@ public abstract class NetworkHelper {
         }
     }
 
+    public static class TmdbCodes {
+        public static int TMDB_CODE_API_KEY_INVALID = 700;
+        public static int TMDB_CODE_PASSWORD_RELATED = 701;
+        public static int TMDB_CODE_TOKEN_RELATED = 702;
+        public static int TMDB_CODE_SESSION_RELATED = 703;
+
+        public static int TMDB_CODE_PAGE_RELATED = 710;
+        public static int TMDB_CODE_MOVIE_TYPE_RELATED = 711;
+
+        public static String TMDB_API_ERR_MSG = "API key was not set, call setApiKey() prior to this.";
+    }
+
     /***
      * Process a non-good error result
      *

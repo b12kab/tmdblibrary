@@ -28,15 +28,12 @@ import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.PersonResultsPage;
 import com.b12kab.tmdblibrary.entities.TvResultsPage;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -186,7 +183,7 @@ public class SearchServiceTest extends BaseTestCase {
         assertTrue(tvResults.results.size() > 0, funcName + "tvResults results List < 1");
         assertNotNull(tvResults.results.get(0), funcName + "tvResults get(0) is null");
         assertNotNull(tvResults.results.get(0).name, funcName + "tvResults name is null");
-        assertEquals(tvResults.results.get(0).name, TestData.TVSHOW_TITLE, funcName + "tvResults name is not equal to " + TestData.TVSHOW_TITLE);
+        assertEquals(TestData.TVSHOW_TITLE, tvResults.results.get(0).name, funcName + "tvResults name is not equal to " + TestData.TVSHOW_TITLE);
     }
 
     private void assertResultsPage(String funcName, BaseResultsPage results) {

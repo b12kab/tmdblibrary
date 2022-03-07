@@ -10,6 +10,7 @@ import com.b12kab.tmdblibrary.entities.Status;
 import com.b12kab.tmdblibrary.implementation.SessionHelper;
 
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -32,6 +33,11 @@ public class AuthenticationServiceTest extends BaseTestCase {
     AuthenticationServiceTest() {
         networkTestHelper = new NetworkTestHelper();
         sessionHelper = new SessionHelper();
+    }
+
+    @BeforeEach
+    void init() {
+        this.sleepSetup(3);
     }
 
     @Test

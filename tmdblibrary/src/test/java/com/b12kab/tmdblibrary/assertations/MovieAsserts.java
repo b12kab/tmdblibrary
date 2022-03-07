@@ -30,28 +30,30 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class MovieAsserts {
     private static final SimpleDateFormat JSON_STRING_DATE = new SimpleDateFormat("yyy-MM-dd");
 
-    public static void assertBaseMovie(BaseMovie movie, boolean imagesOptional) {
-        assertNotNull(movie, "movie");
-        assertNotNull(movie.isAdult(), "movie adult");
+    public static void assertBaseMovie(BaseMovie movie, boolean imagesOptional, boolean releaseDateOptional) {
+        assertNotNull(movie, "movie null");
+        assertNotNull(movie.isAdult(), "movie adult null");
         if (!imagesOptional) {
-            assertNotNull(movie.getBackdrop_path(), "movie backdrop");
+            assertNotNull(movie.getBackdrop_path(), "movie backdrop null");
         }
-        assertNotNull(movie.getOriginal_language(), "movie original language");
-        assertNotNull(movie.getOverview(), "movie overview");
-        assertNotNull(movie.getPopularity(), "movie popularity");
+        assertNotNull(movie.getOriginal_language(), "movie original language null");
+        assertNotNull(movie.getOverview(), "movie overview null");
+        assertNotNull(movie.getPopularity(), "movie popularity null");
         if (!imagesOptional) {
-            assertNotNull(movie.getPoster_path(), "movie poster");
+            assertNotNull(movie.getPoster_path(), "movie poster null");
         }
-        assertNotNull(movie.getRelease_date(), "movie release");
-        assertNotNull(movie.getTitle(), "movie title");
-        assertNotNull(movie.isVideo(), "movie video");
-        assertNotNull(movie.getVote_average(), "movie average");
-        assertNotNull(movie.getVote_count(), "movie count");
+        if (!releaseDateOptional) {
+            assertNotNull(movie.getRelease_date(), "movie release date null");
+        }
+        assertNotNull(movie.getTitle(), "movie title null");
+        assertNotNull(movie.isVideo(), "movie video null");
+        assertNotNull(movie.getVote_average(), "movie average null");
+        assertNotNull(movie.getVote_count(), "movie count null");
         assertTrue(movie.getVote_average() >= 0, "movie average < 0");
         assertTrue(movie.getVote_count() >= 0, "movie count < 0");
     }
 
-    public static void assertMovieResultsPage(MovieResultsPage resultsPage, boolean imagesOptional) {
+    public static void assertMovieResultsPage(MovieResultsPage resultsPage, boolean imagesOptional, boolean releaseDateOptional) {
         assertNotNull(resultsPage, "results page is null");
         assertNotNull(resultsPage.page, "results page page # is null");
         assertNotNull(resultsPage.total_pages, "results page total pages is null");
@@ -59,34 +61,35 @@ public class MovieAsserts {
         assertNotNull(resultsPage.getResults(), "results page results is null");
         assertTrue(resultsPage.getResults().size() > 0, "results page results size = 0");
         for (MovieAbbreviated movie: resultsPage.getResults()) {
-            assertMovieAbbr(movie, imagesOptional);
+            assertMovieAbbr(movie, imagesOptional, releaseDateOptional);
         }
     }
 
-    public static void assertMovieAbbr(MovieAbbreviated movie, boolean imagesOptional) {
-        assertBaseMovie(movie, imagesOptional);
+    public static void assertMovieAbbr(MovieAbbreviated movie, boolean imagesOptional, boolean releaseDateOptional) {
+        assertBaseMovie(movie, imagesOptional, releaseDateOptional);
         assertNotNull(movie.getGenre_ids(), "movie genre id");
 //        assertTrue(movie.getGenre_ids().size() > 0, "movie genre id size");
     }
 
-    public static void assertMovie(MovieFull movie, boolean collectionPopulated) {
-        assertBaseMovie(movie, false);
+    public static void assertMovie(MovieFull movie, boolean collectionPopulated, boolean imagesOptional, boolean releaseDateOptional) {
+        assertNotNull(movie, "movie null");
+        assertBaseMovie(movie, imagesOptional, releaseDateOptional);
         if (collectionPopulated)
-            assertNotNull(movie.getBelongs_to_collection(), "movie belongs to collection");
-        assertNotNull(movie.getBudget(), "movie budget");
-        assertNotNull(movie.getGenres(), "movie genre");
+            assertNotNull(movie.getBelongs_to_collection(), "movie belongs to collection  null");
+        assertNotNull(movie.getBudget(), "movie budget null");
+        assertNotNull(movie.getGenres(), "movie genre null");
         assertTrue(movie.getGenres().size() > 0, "movie genre size");
-        assertNotNull(movie.getHomepage(), "movie homepage");
-        assertNotNull(movie.getImdb_id(), "movie imdb page");
-        assertNotNull(movie.getProduction_companies(), "movie production companies");
+        assertNotNull(movie.getHomepage(), "movie homepage null");
+        assertNotNull(movie.getImdb_id(), "movie imdb page null");
+        assertNotNull(movie.getProduction_companies(), "movie production companies null");
         assertTrue(movie.getProduction_companies().size() > 0, "movie production companies size");
-        assertNotNull(movie.getProduction_countries(), "movie production countries");
+        assertNotNull(movie.getProduction_countries(), "movie production countries null");
         assertTrue(movie.getProduction_countries().size() > 0, "movie production countries size");
-        assertNotNull(movie.getRevenue(), "movie revenue");
-        assertNotNull(movie.getRuntime(), "movie runtime");
-        assertNotNull(movie.getSpoken_languages(), "movie languages");
-        assertNotNull(movie.getStatus(), "movie status");
-        assertNotNull(movie.getTagline(), "movie tagline");
+        assertNotNull(movie.getRevenue(), "movie revenue null");
+        assertNotNull(movie.getRuntime(), "movie runtime null");
+        assertNotNull(movie.getSpoken_languages(), "movie languages null");
+        assertNotNull(movie.getStatus(), "movie status null");
+        assertNotNull(movie.getTagline(), "movie tagline null");
     }
 
 
@@ -96,7 +99,7 @@ public class MovieAsserts {
         final int movieRuntime = 139;
         final String movieReleaseDate = "1999-10-15";
 
-        assertMovie(movie, false);
+        assertMovie(movie, false, false, false);
         assertNull(movie.getBelongs_to_collection(), funcName + "movie collection is not null");
         assertEquals(false, movie.isAdult(), funcName + "movie id is adult");
         assertEquals(TestData.MOVIE_ID, movie.getId(), funcName + "movie id is not " + TestData.MOVIE_ID);
@@ -251,7 +254,6 @@ public class MovieAsserts {
             assertNotNull(item.getType(), funcName + "video type is null");
             assertNotNull(item.getOfficial(), funcName + "video official is null");
             assertNotNull(item.getPublished_at(), funcName + "video published is null");
-
         }
     }
 
@@ -319,7 +321,6 @@ public class MovieAsserts {
         assertNotNull(item.getPopularity(), funcName +  " " + type +  " popularity is null");
         // assertNotNull(item.getProfile_path(), funcName +  " " + type + " profile path is null");
         assertNotNull(item.getCredit_id(), funcName + " " + type + " credit id is null");
-
     }
 
 }

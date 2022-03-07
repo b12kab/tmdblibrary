@@ -11,13 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
-import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.ACCT_STATES;
-import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.CREDITS;
-import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.IMAGES;
-import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.RELEASE_DATES;
-import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.REVIEWS;
 import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.SIMILAR;
-import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.VIDEOS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -50,7 +44,7 @@ public class MovieDetailHelperTest extends BaseTestCase {
             helper.ProcessMovieDetail(this.getManager(), 0, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(e.getCode(), 34, funcName + "code doesn't match");
+            assertEquals(34, e.getCode(), funcName + "code doesn't match");
             assertNotNull(e.getMessage(), funcName + "message is null");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
@@ -66,7 +60,7 @@ public class MovieDetailHelperTest extends BaseTestCase {
             helper.ProcessMovieDetail(this.getManager(), 0, null, this.createTmdbSession(), null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(e.getCode(), 34, funcName + "code doesn't match");
+            assertEquals(34, e.getCode(),funcName + "code doesn't match");
             assertNotNull(e.getMessage(), funcName + "message is null");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());

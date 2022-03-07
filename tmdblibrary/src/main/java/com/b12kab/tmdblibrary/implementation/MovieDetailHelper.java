@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_API_ERR_MSG;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_INVALID;
 import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.CREDITS;
 import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.IMAGES;
 import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.RELEASE_DATES;
@@ -38,6 +40,10 @@ public class MovieDetailHelper extends NetworkHelper {
     public MovieFull ProcessMovieDetail(Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
+        }
+
+        if (!tmdb.checkTmdbAPIKeyPopulated()) {
+            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
         }
 
         MovieFull movieFull = this.ObtainMovieDetail(tmdb, movieId, language, session, additionalAppends);

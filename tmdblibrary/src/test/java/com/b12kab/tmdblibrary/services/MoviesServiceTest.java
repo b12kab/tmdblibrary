@@ -43,7 +43,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static com.b12kab.tmdblibrary.assertations.MovieAsserts.assertImageType;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -81,7 +80,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         assertEquals(movieTitle, movie.getTitle(),
                 funcName + "movie original_title is not " + movieTitle);
     }
@@ -101,13 +100,13 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, true);
+        MovieAsserts.assertMovie(movie, true, false, false);
         assertEquals(movie.getTitle(), TestData.MOVIE_WITH_COLLECTION_TITLE, funcName + "movie title is not " + TestData.MOVIE_WITH_COLLECTION_TITLE);
         assertNotNull(movie.getBelongs_to_collection(), funcName + "movie belongs_to_collection is null");
         assertNotNull(movie.getBelongs_to_collection().id, funcName + "movie belongs_to_collection.id is null");
-        assertEquals((int) movie.getBelongs_to_collection().id, movieCollectionId, funcName + "movie belongs_to_collection.id is not " + movieCollectionId);
+        assertEquals(movieCollectionId, (int) movie.getBelongs_to_collection().id, funcName + "movie belongs_to_collection.id is not " + movieCollectionId);
         assertNotNull(movie.getBelongs_to_collection().name, funcName + "movie belongs_to_collection.name is null");
-        assertEquals(movie.getBelongs_to_collection().name, movieCollectionName, funcName + "movie belongs_to_collection.name is not " + movieCollectionName);
+        assertEquals(movieCollectionName, movie.getBelongs_to_collection().name, funcName + "movie belongs_to_collection.name is not " + movieCollectionName);
     }
 
     @Test
@@ -123,7 +122,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         assertNotNull(movie.credits.getCrew(), funcName + "movie credits crew is null");
         assertTrue(movie.credits.getCrew().size() > 0, funcName + "movie credits crew size is 0");
         MovieAsserts.assertCredits(movie.credits, funcName);
@@ -143,7 +142,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         assertNotNull(movie.images.backdrops, funcName + "movie images backdrops is null");
         assertTrue(movie.images.backdrops.size() > 0, funcName + "movie images backdrops is 0");
         MovieAsserts.assertImageType(movie.images.backdrops, funcName, "backdrops");
@@ -169,7 +168,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         assertNotNull(movie.release_dates.getResults(), funcName + "movie release dates results is null");
         assertTrue(movie.release_dates.getResults().size() > 0, funcName + "movie release dates results is 0");
         MovieAsserts.assertReleaseDateResults(movie.release_dates.getResults(), funcName);
@@ -188,7 +187,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         assertNotNull(movie.videos.getResults(), funcName + "movie videos results is null");
         assertTrue(movie.videos.getResults().size() > 0, funcName + "movie videos results size is 0");
         MovieAsserts.assertVideos(movie.videos.getResults(), funcName);
@@ -207,7 +206,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         assertNotNull(movie.reviews.results, funcName + "movie reviews results list is null");
         assertTrue(movie.reviews.results.size() > 0, funcName + "movie reviews results list is 0");
         MovieAsserts.assertReviews(movie.reviews.results, funcName);
@@ -227,7 +226,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         MovieAsserts.assertMovieTestDataAppended(movie, funcName,
         false,
                 false,
@@ -253,7 +252,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         assertNull(movie.getAccount_states(),funcName + "movie similar is not null");
     }
 
@@ -272,7 +271,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         assertNull(movie.getAccount_states(),funcName + "movie similar is not null");
     }
 
@@ -291,7 +290,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         assertNotNull(movie.getAccount_states(),funcName + "movie similar is not null");
         MovieAsserts.assertMovieTestDataAppended(movie, funcName,
                 true,
@@ -323,7 +322,7 @@ public class MoviesServiceTest extends BaseTestCase {
             Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
         }
 
-        MovieAsserts.assertMovie(movie, false);
+        MovieAsserts.assertMovie(movie, false, false, false);
         MovieAsserts.assertMovieTestDataAppended(movie, funcName,
                 false,
                 true,
@@ -383,7 +382,7 @@ public class MoviesServiceTest extends BaseTestCase {
 
         assertNotNull(titles, funcName + "titles is null");
         assertNotNull(titles.id, funcName + "titles id is null");
-        assertEquals((int) titles.id, TestData.MOVIE_ID, funcName + "titles id is not equal to " + TestData.MOVIE_ID);
+        assertEquals(TestData.MOVIE_ID, (int) titles.id, funcName + "titles id is not equal to " + TestData.MOVIE_ID);
         assertNotNull(titles.titles, funcName + "titles titles is null");
         assertTrue(titles.titles.size() > 0, funcName + "titles titles List < 1");
         assertNotNull(titles.titles.get(0), funcName + "titles titles get(0) is null");
@@ -407,12 +406,12 @@ public class MoviesServiceTest extends BaseTestCase {
 
         assertNotNull(credits, funcName + "credits is null");
         assertNotNull(credits.getId(), funcName + "credits id is null");
-        assertEquals((int) credits.getId(), TestData.MOVIE_ID, funcName + "credits id is not equal to " + TestData.MOVIE_ID);
+        assertEquals(TestData.MOVIE_ID, (int) credits.getId(),funcName + "credits id is not equal to " + TestData.MOVIE_ID);
         assertNotNull(credits.getCast(), funcName + "credits cast is null");
         assertTrue(credits.getCast().size() > 0, funcName + "credits cast List < 1" );
         assertNotNull(credits.getCast().get(0), funcName + "credits cast get(0) is null");
         assertNotNull(credits.getCast().get(0).name, funcName + "credits name is null");
-        assertEquals(credits.getCast().get(0).name, creditName, funcName + "credits name not equal " + creditName);
+        assertEquals(creditName, credits.getCast().get(0).name, funcName + "credits name not equal " + creditName);
         assertNotNull(credits.getCrew(), funcName + "credits crew is null");
     }
 
@@ -449,14 +448,14 @@ public class MoviesServiceTest extends BaseTestCase {
 
         assertNotNull(images,funcName + "images is null");
         assertNotNull(images.id, funcName + "images id is null");
-        assertEquals((int) images.id, TestData.MOVIE_ID, funcName + "images id is not equal to " + TestData.MOVIE_ID);
+        assertEquals(TestData.MOVIE_ID, (int) images.id, funcName + "images id is not equal to " + TestData.MOVIE_ID);
 
         assertNotNull(images.backdrops, funcName + "images backdrops is null");
         assertTrue(images.backdrops.size() > 0, funcName + "images backdrops List < 1");
         assertNotNull(images.backdrops.get(0), funcName + "images backdrops get(0) is null");
         assertNotNull(images.backdrops.get(0).file_path, funcName + "images backdrops file_path is null");
         assertFalse(images.backdrops.get(0).file_path.isEmpty(), funcName + "images backdrops file_path is empty");
-        assertEquals((int) images.id, TestData.MOVIE_ID, funcName + "images id is not equal to " + TestData.MOVIE_ID);
+        assertEquals(TestData.MOVIE_ID, (int) images.id, funcName + "images id is not equal to " + TestData.MOVIE_ID);
         assertNotNull(images.backdrops.get(0).width, funcName + "Images backdrops width is null");
         assertTrue(images.backdrops.get(0).width > 1200, funcName + "Images backdrops width not > 1200");
         assertNotNull(images.backdrops.get(0).height, funcName + "Images backdrops height is null");
@@ -505,7 +504,7 @@ public class MoviesServiceTest extends BaseTestCase {
 
         assertNotNull(keywords, funcName + "keywords is null");
         assertNotNull(keywords.id, funcName + "keywords id is null");
-        assertEquals((int) keywords.id, TestData.MOVIE_ID, funcName + "keywords id is != " + TestData.MOVIE_ID);
+        assertEquals(TestData.MOVIE_ID, (int) keywords.id, funcName + "keywords id is != " + TestData.MOVIE_ID);
         assertTrue(keywords.keywords.size() > 0, funcName + "keywords keywords size is 0");
         assertNotNull(keywords.keywords.get(0), funcName + "keywords keywords is null");
         assertNotNull(keywords.keywords.get(0).id, funcName + "keywords keywords id is null");
@@ -582,7 +581,7 @@ public class MoviesServiceTest extends BaseTestCase {
         assertEquals("YouTube", videos.getResults().get(0).getSite(), funcName + "videos site != 'YouTube'");
         assertNotNull(videos.getResults().get(0).getSize(), funcName + "videos size is null");
         assertNotNull(videos.getResults().get(0).getType(), funcName + "videos type is null");
-        assertEquals(videos.getResults().get(0).getType(), "Trailer", funcName + "videos type != 'Trailer'");
+        assertEquals("Trailer", videos.getResults().get(0).getType(), funcName + "videos type != 'Trailer'");
     }
 
     @Test
@@ -600,7 +599,7 @@ public class MoviesServiceTest extends BaseTestCase {
 
         assertNotNull(translations, funcName + "translations is null");
         assertNotNull(translations.id, funcName + "translations id is null");
-        assertEquals((Integer) translations.id, (Integer) TestData.MOVIE_ID, funcName + "translations id != " + TestData.MOVIE_ID);
+        assertEquals((Integer) TestData.MOVIE_ID,(Integer) translations.id, funcName + "translations id != " + TestData.MOVIE_ID);
         assertNotNull(translations.translations,funcName + "translations translations is null");
 
         for (Translations.Translation translation : translations.translations) {

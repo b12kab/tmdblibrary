@@ -17,6 +17,12 @@ import androidx.annotation.Nullable;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_API_ERR_MSG;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_INVALID;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PASSWORD_RELATED;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_SESSION_RELATED;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_TOKEN_RELATED;
+
 public class SessionHelper extends NetworkHelper {
 
     /***
@@ -32,9 +38,13 @@ public class SessionHelper extends NetworkHelper {
             throw new NullPointerException("Tmdb is null");
         }
 
+        if (!tmdb.checkTmdbAPIKeyPopulated()) {
+            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+        }
+
         // Check userid / passwd
         if (session == null || StringUtils.isBlank(session)) {
-            throw new TmdbException(26, "You must provide a populated TMDb session");
+            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
         }
 
         Boolean worked = this.ObtainLogout(tmdb, session);
@@ -143,32 +153,36 @@ public class SessionHelper extends NetworkHelper {
 
         // Check userid / passwd
         if ((userId == null || StringUtils.isBlank(userId)) && (passwd == null || StringUtils.isBlank(passwd))) {
-            throw new TmdbException(26, "You must provide a username and a password.");
+            throw new TmdbException(TMDB_CODE_PASSWORD_RELATED, "You must provide a username and a password.");
         }
 
         if (userId == null || StringUtils.isBlank(userId)) {
-            throw new TmdbException(26, "You must provide a username.");
+            throw new TmdbException(TMDB_CODE_PASSWORD_RELATED, "You must provide a username.");
         }
 
         if (passwd == null || StringUtils.isBlank(passwd)) {
-            throw new TmdbException(26, "You must provide a password.");
+            throw new TmdbException(TMDB_CODE_PASSWORD_RELATED, "You must provide a password.");
+        }
+
+        if (!tmdb.checkTmdbAPIKeyPopulated()) {
+            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
         }
 
         String token = this.ObtainToken(tmdb);
         if (token == null)
         {
-            throw new TmdbException(27, "Failed to create a new token");
+            throw new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to create a new token");
         }
 
         boolean worked = this.ObtainAssociation(tmdb, userId, passwd, token);
         if (!worked) {
-            throw new TmdbException(28, "Failed to associate token with userid / password");
+            throw new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to associate token with userid / password");
         }
 
         String sessionId = this.ObtainSession(tmdb, token);
         if (sessionId == null)
         {
-            throw new TmdbException(29, "Failed to create a session");
+            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "Failed to create a session");
         }
 
         return sessionId;

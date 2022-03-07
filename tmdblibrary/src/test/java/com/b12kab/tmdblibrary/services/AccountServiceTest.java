@@ -216,7 +216,7 @@ public class AccountServiceTest extends BaseTestCase {
         assertNull(errorBody, funcName + "error body is null");
         assertNotNull(acctState, funcName + "account state is null");
 
-        assertEquals(acctState.getId(), TestData.MOVIE_ID, "movie id does not match");
+        assertEquals(TestData.MOVIE_ID, acctState.getId(), "movie id does not match");
 //        assertNotNull(acctState.getRated(), funcName + "rating is null");
         assertNotNull(acctState.isWatchlist(), funcName + "watch list is null");
     }

@@ -35,6 +35,8 @@ import com.b12kab.tmdblibrary.services.TvSeasonsService;
 import com.b12kab.tmdblibrary.services.TvService;
 import com.b12kab.tmdblibrary.services.WatchService;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
@@ -103,7 +105,7 @@ public class Tmdb {
     public boolean checkTmdbAPIKeyPopulated() {
         boolean apiPopulated = false;
         if (apiKey != null) {
-            if (!apiKey.isEmpty()) {
+            if (!StringUtils.isBlank(apiKey)) {
                 apiPopulated = true;
             }
         }

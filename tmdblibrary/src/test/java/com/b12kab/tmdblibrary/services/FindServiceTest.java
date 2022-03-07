@@ -27,7 +27,6 @@ import com.b12kab.tmdblibrary.entities.TvSeason;
 import com.b12kab.tmdblibrary.entities.TvShow;
 import com.b12kab.tmdblibrary.enumerations.ExternalSource;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -35,7 +34,6 @@ import java.text.SimpleDateFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -78,7 +76,7 @@ public class FindServiceTest extends BaseTestCase {
         assertTrue(movie.getId() > 0, funcName + "movie id is < 1");
 
         assertNotNull(movie.getOriginal_title(), funcName + "movie getOriginal_title() is null");
-        assertEquals(movie.getOriginal_title(), movieTitle, funcName + "movie getOriginal_title() is not " + movieTitle);
+        assertEquals(movieTitle, movie.getOriginal_title(),funcName + "movie getOriginal_title() is not " + movieTitle);
 
         assertNotNull(movie.getRelease_date(), funcName + "movie getRelease_date() is null");
         assertEquals(JSON_STRING_DATE.parse("2009-08-19"), movie.getRelease_date(), funcName + "movie getRelease_date() is not 2009-08-21");
@@ -88,7 +86,7 @@ public class FindServiceTest extends BaseTestCase {
         assertNotNull(movie.getPopularity(), funcName + "movie getPopularity() is null");
 
         assertNotNull(movie.getTitle(), funcName + "movie getTitle() is null");
-        assertEquals(movie.getTitle(), movieTitle, funcName + "movie getTitle() is not " + movieTitle);
+        assertEquals(movieTitle, movie.getTitle(), funcName + "movie getTitle() is not " + movieTitle);
 
         assertNotNull( movie.getVote_average(), funcName + "movie vote_average is null");
         assertTrue(movie.getVote_average() > 0, funcName + "movie vote_average is < 1");
@@ -118,7 +116,7 @@ public class FindServiceTest extends BaseTestCase {
         assertNotNull(person, funcName + "person is null" );
         assertNotNull(person.id, funcName + "person id is null");
         assertNotNull(person.name, funcName + "person name is null");
-        assertEquals(person.name, TestData.PERSON_NAME, funcName + "person name is not the same as " + TestData.PERSON_NAME);
+        assertEquals(TestData.PERSON_NAME, person.name, funcName + "person name is not the same as " + TestData.PERSON_NAME);
         assertNotNull(person.profile_path, funcName + "person profile_path is null");
     }
     
@@ -142,8 +140,8 @@ public class FindServiceTest extends BaseTestCase {
         assertNotNull(show, funcName + "show is null");
         assertNotNull(show.id, funcName + "show id is null");
         assertNotNull(show.original_name, funcName + "show original_name is null");
-        assertEquals(show.original_name, ImdbTvIdName, funcName + "show original_name is not" + ImdbTvIdName);
-        assertEquals(show.name, ImdbTvIdName, funcName + "show name is not" + ImdbTvIdName);
+        assertEquals(ImdbTvIdName, show.original_name, funcName + "show original_name is not" + ImdbTvIdName);
+        assertEquals(ImdbTvIdName, show.name, funcName + "show name is not" + ImdbTvIdName);
         assertNotNull(show.first_air_date, funcName + "show first_air_date is null");
         assertNotNull(show.backdrop_path, funcName + "show backdrop_path is null");
         assertNotNull(show.poster_path, funcName + "show poster_path is null");
