@@ -2,9 +2,13 @@ package com.b12kab.tmdblibrary.implementation;
 
 import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
+import com.b12kab.tmdblibrary.entities.AccountFavorite;
 import com.b12kab.tmdblibrary.entities.AccountResponse;
+import com.b12kab.tmdblibrary.entities.AccountState;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
+import com.b12kab.tmdblibrary.entities.Status;
 import com.b12kab.tmdblibrary.enumerations.AccountFetchType;
+import com.b12kab.tmdblibrary.enumerations.MediaType;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,16 +23,18 @@ import retrofit2.Response;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_API_ERR_MSG;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_ACCOUNT_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_INVALID;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_FAVORITE_RELATED;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_MOVIE_ID_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_SESSION_RELATED;
 
 public class AccountHelper extends NetworkHelper {
     @FunctionalInterface
     interface GetAccountMovieInfo {
-        Call<MovieResultsPage> initialMovies(Tmdb tmdb, int accountId, String session, int page, String sortBy, String language);
+        Call<MovieResultsPage> initialMovies(Tmdb tmdb, String session, int accountId, int page, String sortBy, String language);
     }
-    GetAccountMovieInfo fetchFavored = (t, a, se, p, so, l) -> t.accountService().getAccountFavoredMovies(a, se, p, so, l);
-    GetAccountMovieInfo fetchRated = (t, a, se, p, so, l) -> t.accountService().getAccountRatedMovie(a, se, p, so, l);
+    GetAccountMovieInfo fetchFavored = (t, se, a, p, so, l) -> t.accountService().getAccountFavoredMovies(a, se, p, so, l);
+    GetAccountMovieInfo fetchRated = (t, se, a, p, so, l) -> t.accountService().getAccountRatedMovie(a, se, p, so, l);
 
     private int maxPageFetch = 100;
 
@@ -52,7 +58,7 @@ public class AccountHelper extends NetworkHelper {
      * Get account information of the signed in user
      *
      * @param tmdb Tmdb
-     * @param session API Key
+     * @param session session Key
      * @return AccountResponse
      * @throws IOException TmdbException
      */
@@ -79,7 +85,7 @@ public class AccountHelper extends NetworkHelper {
      * Get account information of the signed in user
      *
      * @param tmdb Tmdb
-     * @param session API Key
+     * @param session session Key
      * @return AccountResponse
      * @throws IOException TmdbException
      */
@@ -131,7 +137,7 @@ public class AccountHelper extends NetworkHelper {
      * Get account information, especially the account id.
      *
      * @param tmdb Tmdb
-     * @param session API Key
+     * @param session session Key
      * @return AccountResponse
      * @throws IOException TmdbException
      */
@@ -158,8 +164,8 @@ public class AccountHelper extends NetworkHelper {
      *
      * @param tmdb Tmdb
      * @param fetchType Account data type to fetch
-     * @param session API Key
      * @param accountId User's account #
+     * @param session session Key
      * @param sortBy <em>Optional.</em> sort by
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return MovieResultsPage
@@ -203,7 +209,7 @@ public class AccountHelper extends NetworkHelper {
      *
      * @param function Method to call
      * @param tmdb Tmdb
-     * @param session API Key
+     * @param session session Key
      * @param accountId User's account #
      * @param sortBy <em>Optional.</em> sort by
      * @param language <em>Optional.</em> ISO 639-1 code.
@@ -241,7 +247,7 @@ public class AccountHelper extends NetworkHelper {
      *
      * @param function Method to call
      * @param tmdb Tmdb
-     * @param session API Key
+     * @param session session Key
      * @param accountId User's account #
      * @param page tmdb page #
      * @param sortBy <em>Optional.</em> sort by
@@ -298,7 +304,7 @@ public class AccountHelper extends NetworkHelper {
      *
      * @param function Method to call
      * @param tmdb Tmdb
-     * @param session API Key
+     * @param session session Key
      * @param accountId User's account #
      * @param page tmdb page #
      * @param sortBy <em>Optional.</em> sort by
@@ -308,7 +314,7 @@ public class AccountHelper extends NetworkHelper {
      */
     private MovieResultsPage GetAccountMovieInfoPage(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, int page, String sortBy, String language) throws IOException {
         try {
-            Call<MovieResultsPage> call = function.initialMovies(tmdb, accountId, session, page, sortBy, language);
+            Call<MovieResultsPage> call = function.initialMovies(tmdb, session, accountId, page, sortBy, language);
             Response<MovieResultsPage> response = call.execute();
             if (response.isSuccessful()) {
                 return response.body();
@@ -324,7 +330,250 @@ public class AccountHelper extends NetworkHelper {
         }
     }
 
+    /***
+     * Get the account movie information for the signed in user or guest user session
+     *
+     * @param tmdb Tmdb
+     * @param movieId Tmdb id
+     * @param session session Key
+     * @param guestSessionId guest session
+     * @return AccountState
+     * @throws IOException TmdbException
+     */
+    public AccountState ProcessAccountMovieInfoDetail(Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+        if (tmdb == null) {
+            throw new NullPointerException("Tmdb is null");
+        }
 
+        if (!tmdb.checkTmdbAPIKeyPopulated()) {
+            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+        }
+
+        if (movieId < 1) {
+            throw new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
+        }
+
+        if ((session == null || StringUtils.isBlank(session) && (guestSessionId == null || StringUtils.isBlank(guestSessionId)))) {
+            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
+        }
+
+        AccountState accountState = this.ObtainAccountMovieInfoDetail(tmdb, movieId, session, guestSessionId);
+
+        return accountState;
+    }
+
+    /***
+     * Get the account movie information
+     *
+     * @param tmdb Tmdb
+     * @param movieId Tmdb id
+     * @param session session Key
+     * @param guestSessionId guest session
+     * @return AccountState
+     * @throws IOException TmdbException
+     */
+    private AccountState ObtainAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+        boolean retry;
+        int retryTime = 0;
+
+        for (int loopCount = 0; loopCount < 3; loopCount++) {
+            retry = false;
+            try {
+                AccountState accountState = this.GetAccountMovieInfoDetail(tmdb, movieId, session, guestSessionId);
+
+                if (accountState != null) {
+                    return accountState;
+                }
+
+                // result not success, retry - it can't hurt
+                retry = true;
+                retryTime = 2;
+            } catch (Exception ex) {
+                if (ex instanceof TmdbException)
+                {
+                    TmdbException tmdbException = (TmdbException) ex;
+                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
+                    if (!checkReturn.retry)
+                        throw ex;
+
+                    retry = true;
+                    retryTime = checkReturn.retryTime;
+                } else {
+                    throw ex;
+                }
+            }
+
+            if (retry) {
+                try {
+                    Thread.sleep((int) ((retryTime + 0.5) * 1000));
+                } catch (InterruptedException e) { }
+            } else {
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /***
+     * Get the account movie information
+     *
+     * @param tmdb Tmdb
+     * @param movieId Tmdb id
+     * @param session session Key
+     * @param guestSessionId guest session
+     * @return AccountState
+     * @throws IOException TmdbException
+     */
+    private AccountState GetAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+        try {
+            Call<AccountState> call = tmdb.accountService().getMovieAccountState(movieId, session, guestSessionId);
+            Response<AccountState> response = call.execute();
+            if (response.isSuccessful()) {
+                return response.body();
+            }
+            this.ProcessError(response);
+            // this will never return, but the compiler wants a return
+            return null;
+        } catch (Exception exception) {
+            if (exception instanceof TmdbException)
+                throw exception;
+
+            throw this.GetFailure(exception);
+        }
+    }
+
+    /***
+     * Set the user's favorite on their account
+     *
+     * @param tmdb Tmdb
+     * @param session session Key
+     * @param accountId User's account #
+     * @param favorite AccountFavorite
+     * @return Status Set status
+     * @throws IOException TmdbException
+     */
+    public Status ProcessAccountFavorite(Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
+        if (tmdb == null) {
+            throw new NullPointerException("Tmdb is null");
+        }
+
+        if (!tmdb.checkTmdbAPIKeyPopulated()) {
+            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+        }
+
+        // Check userid / passwd
+        if (session == null || StringUtils.isBlank(session)) {
+            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+        }
+
+        if (accountId < 1) {
+            throw new TmdbException(TMDB_CODE_ACCOUNT_RELATED, "Invalid TMDb account id");
+        }
+
+        if (favorite == null) {
+            throw new NullPointerException("AccountFavorite is null");
+        } else {
+            if (favorite.getMediaType() == null || StringUtils.isBlank(favorite.getMediaType())) {
+                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite media type");
+            } else if (!(favorite.getMediaType().equals(MediaType.MOVIE.toString()) || favorite.getMediaType().equals(MediaType.TV.toString()))) {
+                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Favorite media type must be either " + MediaType.MOVIE.toString() + " or " + MediaType.TV.toString());
+            }
+            if (favorite.getId() == null) {
+                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite media id");
+            } else if (favorite.getId() < 1) {
+                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Invalid favorite media id");
+            }
+            if (favorite.getFavorite() == null) {
+                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite setting");
+            }
+        }
+
+        Status status = this.TryAccountFavorite(tmdb, session, accountId, favorite);
+
+        return status;
+    }
+
+    /***
+     * Try to set the favorite on the user's account
+     *
+     * @param tmdb Tmdb
+     * @param session session Key
+     * @param accountId User's account #
+     * @param favorite AccountFavorite
+     * @return Status Set status
+     * @throws IOException TmdbException
+     */
+    private Status TryAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
+        boolean retry;
+        int retryTime = 0;
+
+        for (int loopCount = 0; loopCount < 3; loopCount++) {
+            retry = false;
+            try {
+                Status state = this.SetAccountFavorite(tmdb, session, accountId, favorite);
+
+                if (state != null) {
+                    return state;
+                }
+
+                // result not success, retry - it can't hurt
+                retry = true;
+                retryTime = 2;
+            } catch (Exception ex) {
+                if (ex instanceof TmdbException)
+                {
+                    TmdbException tmdbException = (TmdbException) ex;
+                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
+                    if (!checkReturn.retry)
+                        throw ex;
+
+                    retry = true;
+                    retryTime = checkReturn.retryTime;
+                } else {
+                    throw ex;
+                }
+            }
+
+            if (retry) {
+                try {
+                    Thread.sleep((int) ((retryTime + 0.5) * 1000));
+                } catch (InterruptedException e) { }
+            } else {
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /***
+     * Set the account favorite
+     *
+     * @param tmdb Tmdb
+     * @param session session Key
+     * @param accountId User's account #
+     * @param favorite AccountFavorite
+     * @return Status Set status
+     * @throws IOException TmdbException
+     */
+    private Status SetAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
+        try {
+            Call<Status> call = tmdb.accountService().setAccountFavorite(accountId, session, favorite);
+            Response<Status> response = call.execute();
+            if (response.isSuccessful()) {
+                return response.body();
+            }
+            this.ProcessError(response);
+            // this will never return, but the compiler wants a return
+            return null;
+        } catch (Exception exception) {
+            if (exception instanceof TmdbException)
+                throw exception;
+
+            throw this.GetFailure(exception);
+        }
+    }
 
 
 

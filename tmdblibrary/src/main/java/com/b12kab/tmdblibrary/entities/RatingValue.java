@@ -16,7 +16,7 @@
 
 package com.b12kab.tmdblibrary.entities;
 
-public class MovieRatingValue {
+public class RatingValue {
     float value;
 
     public float getValue() {

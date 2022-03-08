@@ -1,5 +1,6 @@
 package com.b12kab.tmdblibrary.entities;
 
+import com.b12kab.tmdblibrary.enumerations.MediaType;
 import com.google.gson.annotations.SerializedName;
 
 public class AccountFavorite {
@@ -18,6 +19,13 @@ public class AccountFavorite {
 
     public void setMediaType(String mediaType) {
         this.mediaType = mediaType;
+    }
+
+    public void setMediaType(MediaType mediaType) {
+        if (mediaType == null)
+            return;
+
+        this.setMediaType(mediaType.toString());
     }
 
     public Integer getId() {

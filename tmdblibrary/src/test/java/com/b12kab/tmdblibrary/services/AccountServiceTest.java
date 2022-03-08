@@ -6,7 +6,7 @@ import com.b12kab.tmdblibrary.entities.AccountFavorite;
 import com.b12kab.tmdblibrary.entities.AccountResponse;
 import com.b12kab.tmdblibrary.entities.AccountState;
 import com.b12kab.tmdblibrary.entities.ListResultsPage;
-import com.b12kab.tmdblibrary.entities.MovieRatingValue;
+import com.b12kab.tmdblibrary.entities.RatingValue;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.Status;
 import com.b12kab.tmdblibrary.enumerations.MediaType;
@@ -178,7 +178,7 @@ public class AccountServiceTest extends BaseTestCase {
         accountFavorite.setId(TestData.MOVIE_ID);
 
         try {
-            call = this.getManager().accountService().setFavorite(acctId, session, accountFavorite );
+            call = this.getManager().accountService().setAccountFavorite(acctId, session, accountFavorite );
             response = call.execute();
             status = response.body();
             errorBody = response.errorBody();
@@ -232,11 +232,11 @@ public class AccountServiceTest extends BaseTestCase {
         Response<Status> response = null;
         Status status = null;
 
-        MovieRatingValue movieRatingValue = new MovieRatingValue();
-        movieRatingValue.setValue(8.5F);
+        RatingValue ratingValue = new RatingValue();
+        ratingValue.setValue(8.5F);
 
         try {
-            call = this.getManager().accountService().setMovieRating(TestData.MOVIE_ID, session, null,  movieRatingValue);
+            call = this.getManager().accountService().setMovieRating(TestData.MOVIE_ID, session, null, ratingValue);
             response = call.execute();
             status = response.body();
             errorBody = response.errorBody();
@@ -262,11 +262,11 @@ public class AccountServiceTest extends BaseTestCase {
         Response<Status> response = null;
         Status status = null;
 
-        MovieRatingValue movieRatingValue = new MovieRatingValue();
-        movieRatingValue.setValue(8.5F);
+        RatingValue ratingValue = new RatingValue();
+        ratingValue.setValue(8.5F);
 
         try {
-            Status setStatus = this.getManager().accountService().setMovieRating(TestData.MOVIE_ID, session, null,  movieRatingValue).execute().body();
+            Status setStatus = this.getManager().accountService().setMovieRating(TestData.MOVIE_ID, session, null, ratingValue).execute().body();
             assertNotNull(setStatus, funcName + "set status is null");
             assertTrue(setStatus.getSuccess(), funcName + "set status success is false");
 

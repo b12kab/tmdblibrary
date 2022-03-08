@@ -167,4 +167,36 @@ public class TmdbApiCheck {
         }
     }
 
+    @Test
+    public void test_account_info_movieId_invalid_api_key() {
+        final String funcName = "test_account_info_invalid_api_key ";
+
+        try {
+            accountHelper.ProcessAccountMovieInfoDetail(tmdb,1,null, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getMessage(), funcName + "message is null");
+            assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_favorite_invalid_api_key() {
+        final String funcName = "test_account_favorite_invalid_api_key ";
+
+        try {
+            accountHelper.ProcessAccountFavorite(tmdb, null, -1, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getMessage(), funcName + "message is null");
+            assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
 }

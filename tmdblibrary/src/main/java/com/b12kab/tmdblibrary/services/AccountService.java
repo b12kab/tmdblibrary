@@ -19,11 +19,8 @@ package com.b12kab.tmdblibrary.services;
 import com.b12kab.tmdblibrary.entities.AccountFavorite;
 import com.b12kab.tmdblibrary.entities.AccountResponse;
 import com.b12kab.tmdblibrary.entities.AccountState;
-import com.b12kab.tmdblibrary.entities.AuthenticateSessionNewResponse;
-import com.b12kab.tmdblibrary.entities.CreateNewTokenResponse;
-import com.b12kab.tmdblibrary.entities.AuthenticateTokenValidateWithLoginResponse;
 import com.b12kab.tmdblibrary.entities.ListResultsPage;
-import com.b12kab.tmdblibrary.entities.MovieRatingValue;
+import com.b12kab.tmdblibrary.entities.RatingValue;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.entities.Status;
 
@@ -110,9 +107,9 @@ public interface AccountService {
      */
     @POST("account/{account_id}/favorite")
     @Headers("Content-Type: application/json;charset=utf-8")
-    Call<Status> setFavorite(@Path("account_id") Integer userId,
-                             @Query("session_id") String sessionId,
-                             @Body AccountFavorite favorite);
+    Call<Status> setAccountFavorite(@Path("account_id") Integer userId,
+                                    @Query("session_id") String sessionId,
+                                    @Body AccountFavorite favorite);
 
     /***
      * This will get the movie's account state.
@@ -134,7 +131,7 @@ public interface AccountService {
      *
      * @param movieId movie id for account status
      * @param sessionId Obtained with authenticateSession
-     * @param movieRatingValue movie rating value
+     * @param ratingValue movie rating value
      * @param guestSessionId <em>Optional.</em>
      * @return Status account status of call
      */
@@ -143,7 +140,7 @@ public interface AccountService {
     Call<Status> setMovieRating(@Path("movie_id") int movieId,
                                 @Query("session_id") String sessionId,
                                 @Query("guest_session_id") String guestSessionId,
-                                @Body MovieRatingValue movieRatingValue);
+                                @Body RatingValue ratingValue);
 
     /***
      * Remove the user's rating for the movie.
