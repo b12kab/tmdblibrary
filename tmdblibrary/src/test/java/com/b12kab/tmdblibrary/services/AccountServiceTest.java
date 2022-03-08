@@ -143,7 +143,7 @@ public class AccountServiceTest extends BaseTestCase {
         MovieResultsPage movieResultsPage = null;
 
         try {
-            call = this.getManager().accountService().getFavoritedMovies(acctId, session, 1, null, null );
+            call = this.getManager().accountService().getAccountFavoredMovies(acctId, session, 1, null, null );
             response = call.execute();
             movieResultsPage = response.body();
             errorBody = response.errorBody();

@@ -95,7 +95,7 @@ public class MovieDetailHelper extends NetworkHelper {
                 if (ex instanceof TmdbException)
                 {
                     TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = CheckForNetworkRetry(tmdbException);
+                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
                     if (!checkReturn.retry)
                         throw ex;
 
@@ -110,7 +110,6 @@ public class MovieDetailHelper extends NetworkHelper {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
                 } catch (InterruptedException e) { }
-                retry = false;
             } else {
                 break;
             }

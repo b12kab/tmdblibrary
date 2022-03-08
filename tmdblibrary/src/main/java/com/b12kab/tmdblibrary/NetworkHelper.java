@@ -35,6 +35,7 @@ public abstract class NetworkHelper {
 
         public static int TMDB_CODE_PAGE_RELATED = 710;
         public static int TMDB_CODE_MOVIE_TYPE_RELATED = 711;
+        public static int TMDB_CODE_ACCOUNT_RELATED = 712;
 
         public static String TMDB_API_ERR_MSG = "API key was not set, call setApiKey() prior to this.";
     }

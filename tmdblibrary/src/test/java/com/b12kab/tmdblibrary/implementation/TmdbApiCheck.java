@@ -23,6 +23,7 @@ public class TmdbApiCheck {
     private final MovieHelper movieHelper;
     private final MovieDetailHelper detailHelper;
     private final SessionHelper sessionHelper;
+    private final AccountHelper accountHelper;
 
     public TmdbApiCheck() {
         tmdb = new Tmdb();
@@ -34,6 +35,7 @@ public class TmdbApiCheck {
         movieHelper = new MovieHelper();
         detailHelper = new MovieDetailHelper();
         sessionHelper = new SessionHelper();
+        accountHelper = new AccountHelper();
     }
 
     @Test
@@ -118,7 +120,7 @@ public class TmdbApiCheck {
     }
 
     @Test
-    public void test_destroy_tmdb_invalid_api_key() {
+    public void test_session_destroy_tmdb_invalid_api_key() {
         final String funcName = "test_destroy_tmdb_invalid_api_key ";
 
         try {
@@ -133,5 +135,36 @@ public class TmdbApiCheck {
         }
     }
 
+    @Test
+    public void test_account_movie_info_invalid_api_key() {
+        final String funcName = "test_account_movie_info_invalid_api_key ";
+
+        try {
+            accountHelper.ProcessAccountMovieInfo(tmdb, null, null, 0, null, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getMessage(), funcName + "message is null");
+            assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_info_invalid_api_key() {
+        final String funcName = "test_account_info_invalid_api_key ";
+
+        try {
+            accountHelper.ProcessAccountInfo(tmdb, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getMessage(), funcName + "message is null");
+            assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
 
 }

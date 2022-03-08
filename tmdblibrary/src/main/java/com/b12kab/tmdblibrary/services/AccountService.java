@@ -93,11 +93,11 @@ public interface AccountService {
      * @return MovieResultPage
      */
     @GET("account/{account_id}/favorite/movies")
-    Call<MovieResultsPage> getFavoritedMovies(@Path("account_id") Integer userId,
-                                                 @Query("session_id") String sessionId,
-                                                 @Query("page") Integer page,
-                                                 @Query("sort_by") String sortBy,
-                                                 @Query("language") String language);
+    Call<MovieResultsPage> getAccountFavoredMovies(@Path("account_id") Integer userId,
+                                                   @Query("session_id") String sessionId,
+                                                   @Query("page") Integer page,
+                                                   @Query("sort_by") String sortBy,
+                                                   @Query("language") String language);
 
     /***
      * This will set the movie / TV favorite
