@@ -3,14 +3,13 @@ tmdblibrary
 
 A Java wrapper around the [TMDb v3 API][1] using [retrofit][2].
 
-The reason for (this) separate library vs. using the [tmdb-java][3] library was I found that when pulling lists of movie information from TMDb, the genere information was in an Integer array. The information was not moved into the Genre object by Retrofit. The only way around this was to remove the Movie object and replace it with a list movie object: MovieResult and movie detail MovieFull.
+For test usage, you must define in your personal gradle.properties (not this project's file):<p>
+* TMDB\_TEST\_ID = TMDb user id<p>
+* TMDB\_TEST\_GOOD\_PSWD = password for bullet 1<p>
+* TMDB\_TEST\_BAD\_PSWD = invalid password for bullet 1<p>
+* TMDB\_TEST\_API\_KEY = your TMDb v3 api key<p>
+<p>
 
-The partial addition of the Account calls allows the TMDb user to log in as well as set/unset movie favorites and set/remove movie rating value.
-
-Note: This version uses API 29; converted to androidx; upgraded to use JUnit 5; now requires Java 8 (because of JUnit 5).
-
-Usage
------
 
 ##How To Include It:
 ```
@@ -25,18 +24,12 @@ Usage
 Add this library to your dependencies:
 
 ```groovy
-  implementation 'com.github.b12kab.tmdblibrary:tmdblibrary:0.11.8'
+  implementation 'com.github.b12kab.tmdblibrary:tmdblibrary:0.12.0'
 ```
 
 Dependencies
 ------------
-Gradle:
-
-```groovy
-implementation 'com.squareup.retrofit:retrofit:1.9.0'
-implementation 'com.squareup.okhttp:okhttp:2.7.4'
-implementation 'com.google.code.gson:gson:2.8.5'
-```
+See project gradle files
 
 
 Example

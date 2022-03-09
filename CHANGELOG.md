@@ -1,6 +1,20 @@
 Change Log
 ==========
+0.12.0
+----------------
+* Upgraded project to use Retrofit 2 / OkHttp 3
+* Upgraded gradle in project
+* Synchronized structures with current TMDb v3 API
+* Updated unit tests
+* Added helpers for implementations of services
+* Created unit tests for new helpers
+
+0.11.9
+----------------
+* Upgrade to API 32
+
 0.11.8
+----------------
 * Updated to remove bintray upload
 
 0.11.7

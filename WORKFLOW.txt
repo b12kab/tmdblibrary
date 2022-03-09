@@ -1,11 +1,9 @@
 Workflow
 ========
 
-1) Increment versionCode number in tmdblibrary-tmdblibrary (build.gradle)
-2) Update version function getLibVersionName in tmdblibrary-tmdblibrary (build.gradle)
 * Validate changes are as you wish
-3) Update CHANGELOG.md
-4) Update README.md
-5) add & commit
-6) push to Github master
-7) Create Github release and push it
+1) Update CHANGELOG.md
+2) Update README.md
+3) add & commit
+4) push to Github master
+5) Create Github release - be sure to name in #.##.# format
