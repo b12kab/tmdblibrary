@@ -37,7 +37,7 @@ public class MovieDetailHelper extends NetworkHelper {
      * @return MovieFull
      * @throws IOException TmdbException
      */
-    public MovieFull ProcessMovieDetail(Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
+    public MovieFull processMovieDetail(Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -46,7 +46,7 @@ public class MovieDetailHelper extends NetworkHelper {
             throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
         }
 
-        MovieFull movieFull = this.ObtainMovieDetail(tmdb, movieId, language, session, additionalAppends);
+        MovieFull movieFull = this.obtainMovieDetail(tmdb, movieId, language, session, additionalAppends);
 
         return movieFull;
     }
@@ -64,7 +64,7 @@ public class MovieDetailHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    private MovieFull ObtainMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
+    private MovieFull obtainMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
         boolean retry;
         int retryTime = 0;
 
@@ -82,7 +82,7 @@ public class MovieDetailHelper extends NetworkHelper {
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                MovieFull movieFull = this.GetMovieDetail(tmdb, movieId, language, session, mergedResponse);
+                MovieFull movieFull = this.getMovieDetail(tmdb, movieId, language, session, mergedResponse);
 
                 if (movieFull != null) {
                     return movieFull;
@@ -129,7 +129,7 @@ public class MovieDetailHelper extends NetworkHelper {
      * @return MovieFull
      * @throws IOException TmdbException
      */
-    private MovieFull GetMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse appendToResponse) throws IOException {
+    private MovieFull getMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse appendToResponse) throws IOException {
         try {
 
             Call<MovieFull> call;

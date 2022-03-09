@@ -28,7 +28,7 @@ public class MovieHelperTest extends BaseTestCase {
         final String funcName = "test_movie_tmdb_is_null ";
 
         try {
-            helper.ProcessInitialMovies(null, MovieFetchType.Upcoming, null, null, 0);
+            helper.processInitialMovies(null, MovieFetchType.Upcoming, null, null, 0);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -41,7 +41,7 @@ public class MovieHelperTest extends BaseTestCase {
         final String funcName = "test_movie_initial_page_is_too_low ";
 
         try {
-            helper.ProcessInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 0);
+            helper.processInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
@@ -54,14 +54,15 @@ public class MovieHelperTest extends BaseTestCase {
 
     @Test
     public void test_movie_initial_null_movie_type() {
-        final String funcName = "test_movie_initial_page_is_too_low ";
+        final String funcName = "test_movie_initial_null_movie_type ";
 
         try {
-            helper.ProcessInitialMovies(this.getManager(), null, null, null, 0);
+            helper.processInitialMovies(this.getManager(), null, null, null, 1111);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
             assertNotNull(e.getMessage(), funcName + "message is null");
+            assertTrue(e.getMessage().contains("Invalid fetch type"), funcName + "message incorrect");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -73,7 +74,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 1);
+            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 1);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -86,7 +87,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 18);
+            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 18);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -99,7 +100,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessInitialMovies(this.getManager(), MovieFetchType.Popular, null, null, 2);
+            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.Popular, null, null, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -112,7 +113,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessInitialMovies(this.getManager(), MovieFetchType.NowPlaying, null, null, 2);
+            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.NowPlaying, null, null, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -125,7 +126,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessInitialMovies(this.getManager(), MovieFetchType.TopRated, null, null, 2);
+            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.TopRated, null, null, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -138,7 +139,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessAdditionalMovies(null, null, null, null, 0, 0);
+            resultsPage = helper.processAdditionalMovies(null, null, null, null, 0, 0);
         } catch (NullPointerException e) {
         } catch (Exception e) {
             fail("Non NullPointerException exception occurred on " + funcName + ": " + e);
@@ -150,7 +151,7 @@ public class MovieHelperTest extends BaseTestCase {
         final String funcName = "test_movie_additional_start_page_greater_than_end_page ";
 
         try {
-            helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 1);
+            helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 1);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
@@ -166,7 +167,7 @@ public class MovieHelperTest extends BaseTestCase {
         final String funcName = "test_movie_additional_start_page_is_minus_1_end_page_0 ";
 
         try {
-            helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, -1, 0);
+            helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, -1, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
@@ -182,7 +183,7 @@ public class MovieHelperTest extends BaseTestCase {
         final String funcName = "test_movie_additional_start_page_is_minus_1_end_page_0 ";
 
         try {
-            helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 0, 1);
+            helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 0, 1);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
@@ -198,7 +199,7 @@ public class MovieHelperTest extends BaseTestCase {
         final String funcName = "test_movie_additional_start_page_is_minus_1_end_page_0 ";
 
         try {
-            helper.ProcessAdditionalMovies(this.getManager(), null, null, null, 2, 2);
+            helper.processAdditionalMovies(this.getManager(), null, null, null, 2, 2);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_MOVIE_TYPE_RELATED, e.getCode(), funcName + "code doesn't match");
@@ -219,7 +220,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 2);
+            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -247,7 +248,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 4);
+            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 4);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -280,7 +281,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.NowPlaying, null, null, 2, 2);
+            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.NowPlaying, null, null, 2, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -308,7 +309,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.NowPlaying, null, null, 2, 4);
+            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.NowPlaying, null, null, 2, 4);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -342,7 +343,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.Popular, null, null, 2, 2);
+            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.Popular, null, null, 2, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -370,7 +371,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.Popular, null, null, 2, 4);
+            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.Popular, null, null, 2, 4);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -404,7 +405,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.TopRated, null, null, 2, 2);
+            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.TopRated, null, null, 2, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -432,7 +433,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.ProcessAdditionalMovies(this.getManager(), MovieFetchType.TopRated, null, null, 2, 4);
+            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.TopRated, null, null, 2, 4);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }

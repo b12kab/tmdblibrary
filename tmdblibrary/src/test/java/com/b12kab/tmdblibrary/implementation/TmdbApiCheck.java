@@ -43,7 +43,7 @@ public class TmdbApiCheck {
         final String funcName = "test_movie_initial_invalid_api_key ";
 
         try {
-            movieHelper.ProcessInitialMovies(tmdb, MovieFetchType.Upcoming, null, null, 0);
+            movieHelper.processInitialMovies(tmdb, MovieFetchType.Upcoming, null, null, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -60,7 +60,7 @@ public class TmdbApiCheck {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = movieHelper.ProcessAdditionalMovies(tmdb, null, null, null, 0, 0);
+            resultsPage = movieHelper.processAdditionalMovies(tmdb, null, null, null, 0, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -76,7 +76,7 @@ public class TmdbApiCheck {
         final String funcName = "test_movie_detail_tmdb_null_api_key ";
 
         try {
-            detailHelper.ProcessMovieDetail(tmdbApiNull, 0, null, null, null);
+            detailHelper.processMovieDetail(tmdbApiNull, 0, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -92,7 +92,7 @@ public class TmdbApiCheck {
         final String funcName = "test_movie_detail_tmdb_invalid_api_key ";
 
         try {
-            detailHelper.ProcessMovieDetail(tmdb, 0, null, null, null);
+            detailHelper.processMovieDetail(tmdb, 0, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -108,7 +108,7 @@ public class TmdbApiCheck {
         final String funcName = "test_session_create_tmdb_invalid_api_key ";
 
         try {
-            sessionHelper.CreateTmdbSession(tmdb, "blah", BuildConfig.TMDB_TEST_BAD_PSWD);
+            sessionHelper.createTmdbSession(tmdb, "blah", BuildConfig.TMDB_TEST_BAD_PSWD);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -124,7 +124,7 @@ public class TmdbApiCheck {
         final String funcName = "test_destroy_tmdb_invalid_api_key ";
 
         try {
-            sessionHelper.DestroyTmdbSession(tmdb, null);
+            sessionHelper.destroyTmdbSession(tmdb, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -140,7 +140,7 @@ public class TmdbApiCheck {
         final String funcName = "test_account_movie_info_invalid_api_key ";
 
         try {
-            accountHelper.ProcessAccountMovieInfo(tmdb, null, null, 0, null, null);
+            accountHelper.processAccountMovieInfo(tmdb, null, null, 0, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -156,7 +156,7 @@ public class TmdbApiCheck {
         final String funcName = "test_account_info_invalid_api_key ";
 
         try {
-            accountHelper.ProcessAccountInfo(tmdb, null);
+            accountHelper.processAccountInfo(tmdb, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -172,7 +172,7 @@ public class TmdbApiCheck {
         final String funcName = "test_account_info_invalid_api_key ";
 
         try {
-            accountHelper.ProcessAccountMovieInfoDetail(tmdb,1,null, null);
+            accountHelper.processAccountMovieInfoDetail(tmdb,1,null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -188,7 +188,7 @@ public class TmdbApiCheck {
         final String funcName = "test_account_favorite_invalid_api_key ";
 
         try {
-            accountHelper.ProcessAccountFavorite(tmdb, null, -1, null);
+            accountHelper.processAccountFavorite(tmdb, null, -1, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
@@ -204,7 +204,7 @@ public class TmdbApiCheck {
         final String funcName = "test_account_movie_invalid_api_key ";
 
         try {
-            accountHelper.ProcessMovieRating(tmdb, -1, null, null, null);
+            accountHelper.processMovieRating(tmdb, -1, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");

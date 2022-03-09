@@ -33,7 +33,7 @@ public class SessionHelper extends NetworkHelper {
      * @return true = worked, false = didn't work
      * @throws IOException TmdbException
      */
-    public boolean DestroyTmdbSession(Tmdb tmdb, String session) throws IOException {
+    public boolean destroyTmdbSession(Tmdb tmdb, String session) throws IOException {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -47,7 +47,7 @@ public class SessionHelper extends NetworkHelper {
             throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
         }
 
-        Boolean worked = this.ObtainLogout(tmdb, session);
+        Boolean worked = this.obtainLogout(tmdb, session);
         if (worked == null)
             return false;
 
@@ -64,14 +64,14 @@ public class SessionHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    private Boolean ObtainLogout(Tmdb tmdb, String session) throws IOException {
+    private Boolean obtainLogout(Tmdb tmdb, String session) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                Status status = this.ProcessLogout(tmdb, session);
+                Status status = this.processLogout(tmdb, session);
 
                 if (status != null) {
                     if (status.getSuccess()) {
@@ -104,7 +104,6 @@ public class SessionHelper extends NetworkHelper {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
                 } catch (InterruptedException e) { }
-                retry = false;
             } else {
                 break;
             }
@@ -121,7 +120,7 @@ public class SessionHelper extends NetworkHelper {
      * @return Status
      * @throws IOException TmdbException
      */
-    private Status ProcessLogout(@NonNull Tmdb tmdb, String session) throws IOException {
+    private Status processLogout(@NonNull Tmdb tmdb, String session) throws IOException {
         try {
             Call<Status> call = tmdb.authenticationService().logoutSession(session);
             Response<Status> response = call.execute();
@@ -146,7 +145,7 @@ public class SessionHelper extends NetworkHelper {
      * @param passwd password
      * @throws IOException TmdbException
      */
-    public String CreateTmdbSession(Tmdb tmdb, String userId, String passwd) throws IOException {
+    public String createTmdbSession(Tmdb tmdb, String userId, String passwd) throws IOException {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -168,18 +167,18 @@ public class SessionHelper extends NetworkHelper {
             throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
         }
 
-        String token = this.ObtainToken(tmdb);
+        String token = this.obtainToken(tmdb);
         if (token == null)
         {
             throw new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to create a new token");
         }
 
-        boolean worked = this.ObtainAssociation(tmdb, userId, passwd, token);
+        boolean worked = this.obtainAssociation(tmdb, userId, passwd, token);
         if (!worked) {
             throw new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to associate token with userid / password");
         }
 
-        String sessionId = this.ObtainSession(tmdb, token);
+        String sessionId = this.obtainSession(tmdb, token);
         if (sessionId == null)
         {
             throw new TmdbException(TMDB_CODE_SESSION_RELATED, "Failed to create a session");
@@ -197,14 +196,14 @@ public class SessionHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    private String ObtainToken(@NonNull Tmdb tmdb) throws IOException {
+    private String obtainToken(@NonNull Tmdb tmdb) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                CreateNewTokenResponse authenticateToken = this.GetToken(tmdb);
+                CreateNewTokenResponse authenticateToken = this.getToken(tmdb);
 
                 if (authenticateToken != null) {
                     if (authenticateToken.getSuccess() &&
@@ -236,7 +235,6 @@ public class SessionHelper extends NetworkHelper {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
                 } catch (InterruptedException e) { }
-                retry = false;
             } else {
                 break;
             }
@@ -252,7 +250,7 @@ public class SessionHelper extends NetworkHelper {
      * @return AuthenticateTokenNewResponse
      * @throws IOException TmdbException
      */
-    private CreateNewTokenResponse GetToken(@NonNull Tmdb tmdb) throws IOException {
+    private CreateNewTokenResponse getToken(@NonNull Tmdb tmdb) throws IOException {
         try {
             Call<CreateNewTokenResponse> call = tmdb.authenticationService().createToken();
             Response<CreateNewTokenResponse> response = call.execute();
@@ -281,14 +279,14 @@ public class SessionHelper extends NetworkHelper {
      * @return true = success; false = failure
      * @throws IOException TmdbException
      */
-    private boolean ObtainAssociation(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws IOException {
+    private boolean obtainAssociation(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                AuthenticateTokenValidateWithLoginResponse associateToken = this.AssociateToken(tmdb, userId, passwd, token);
+                AuthenticateTokenValidateWithLoginResponse associateToken = this.associateToken(tmdb, userId, passwd, token);
 
                 if (associateToken != null) {
                     if (associateToken.getSuccess()) {
@@ -318,7 +316,6 @@ public class SessionHelper extends NetworkHelper {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
                 } catch (InterruptedException e) { }
-                retry = false;
             } else {
                 break;
             }
@@ -338,7 +335,7 @@ public class SessionHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    private AuthenticateTokenValidateWithLoginResponse AssociateToken(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws IOException {
+    private AuthenticateTokenValidateWithLoginResponse associateToken(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws IOException {
         try {
             Call<AuthenticateTokenValidateWithLoginResponse> call = tmdb.authenticationService().authorizeTokenWithLogin(token, userId, passwd);
             Response<AuthenticateTokenValidateWithLoginResponse> response = call.execute();
@@ -366,14 +363,14 @@ public class SessionHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    private String ObtainSession(@NonNull Tmdb tmdb, String token) throws IOException {
+    private String obtainSession(@NonNull Tmdb tmdb, String token) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                AuthenticateSessionNewResponse createSession = this.CreateSessionFromToken(tmdb, token);
+                AuthenticateSessionNewResponse createSession = this.createSessionFromToken(tmdb, token);
 
                 if (createSession != null) {
                     if (createSession.getSuccess()) {
@@ -403,7 +400,6 @@ public class SessionHelper extends NetworkHelper {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
                 } catch (InterruptedException e) { }
-                retry = false;
             } else {
                 break;
             }
@@ -421,7 +417,7 @@ public class SessionHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    private AuthenticateSessionNewResponse CreateSessionFromToken(@NonNull Tmdb tmdb, String token) throws IOException {
+    private AuthenticateSessionNewResponse createSessionFromToken(@NonNull Tmdb tmdb, String token) throws IOException {
         try {
             Call<AuthenticateSessionNewResponse> call = tmdb.authenticationService().createSession(token);
             Response<AuthenticateSessionNewResponse> response = call.execute();

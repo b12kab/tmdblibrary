@@ -247,9 +247,9 @@ public class TvServiceTest extends BaseTestCase {
         assertNotNull(tvResultsPage.results, funcName + "tvResultsPage results is null");
         assertTrue(tvResultsPage.results.size() > 2, funcName + "tvResultsPage results is < 1");
         assertNotNull(tvResultsPage.results.get(1).id, funcName + "tvResultsPage id is null");
-        assertNotNull(tvResultsPage.results.get(1).backdrop_path, funcName + "tvResultsPage backdrop_path is null");
+        //assertNotNull(tvResultsPage.results.get(1).backdrop_path, funcName + "tvResultsPage backdrop_path is null");
         assertNotNull(tvResultsPage.results.get(1).name, funcName + "tvResultsPage name is null");
-        assertNotNull(tvResultsPage.results.get(1).poster_path, funcName + "tvResultsPage poster_path is null");
+        //assertNotNull(tvResultsPage.results.get(1).poster_path, funcName + "tvResultsPage poster_path is null");
         assertNotNull(tvResultsPage.results.get(1).popularity, funcName + "tvResultsPage popularity is null");
         assertNotNull(tvResultsPage.results.get(1).name, funcName + "tvResultsPage name is null");
         assertNotNull(tvResultsPage.results.get(1).vote_average, funcName + "tvResultsPage vote_average is null");

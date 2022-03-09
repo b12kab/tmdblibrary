@@ -9,6 +9,7 @@ import com.b12kab.tmdblibrary.exceptions.TmdbException;
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -40,7 +41,7 @@ public class MovieHelper extends NetworkHelper {
      * @return MovieResultsPage
      * @throws IOException TmdbException
      */
-    public MovieResultsPage ProcessInitialMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int initialFetchPages) throws IOException {
+    public MovieResultsPage processInitialMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int initialFetchPages) throws IOException {
         GetInitialMovieType pass = null;
 
         if (tmdb == null) {
@@ -71,7 +72,7 @@ public class MovieHelper extends NetworkHelper {
             throw new TmdbException(TMDB_CODE_PAGE_RELATED, "Invalid fetch type");
         }
 
-        MovieResultsPage movieFull = this.ObtainInitialMoviePages(pass, tmdb, language, region, initialFetchPages);
+        MovieResultsPage movieFull = this.obtainInitialMoviePages(pass, tmdb, language, region, initialFetchPages);
 
         return movieFull;
     }
@@ -87,13 +88,13 @@ public class MovieHelper extends NetworkHelper {
      * @return MovieResultsPage
      * @throws IOException TmdbException
      */
-    private MovieResultsPage ObtainInitialMoviePages(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int initialFetchPages) throws IOException {
-        MovieResultsPage results = null;
+    private MovieResultsPage obtainInitialMoviePages(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int initialFetchPages) throws IOException {
+        MovieResultsPage results = MovieResultsPage.build();
         boolean initResults = false;
 
         // TMDb pages start at 1
         for (int pageCount = 1; pageCount <= initialFetchPages; pageCount++) {
-            MovieResultsPage resultsPage = this.ObtainMoviePage(function, tmdb, language, region, pageCount);
+            MovieResultsPage resultsPage = this.obtainMoviePage(function, tmdb, language, region, pageCount);
 
             if (resultsPage != null && resultsPage.results != null && resultsPage.results.size() > 0) {
                 if (!initResults) {
@@ -115,6 +116,7 @@ public class MovieHelper extends NetworkHelper {
 
     /***
      * Get specific TMDb page
+     * This will try to loop thru up to 3 times
      *
      * @param function Method to call
      * @param tmdb Tmdb
@@ -124,14 +126,15 @@ public class MovieHelper extends NetworkHelper {
      * @return MovieResultsPage
      * @throws IOException TmdbException
      */
-    private MovieResultsPage ObtainMoviePage(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int page) throws IOException {
+    @Nullable
+    private MovieResultsPage obtainMoviePage(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int page) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                MovieResultsPage movieFull = this.GetMoviePage(function, tmdb, language, region, page);
+                MovieResultsPage movieFull = this.getMoviePage(function, tmdb, language, region, page);
 
                 if (movieFull != null) {
                     return movieFull;
@@ -179,7 +182,7 @@ public class MovieHelper extends NetworkHelper {
      * @return MovieResultsPage
      * @throws IOException TmdbException
      */
-    private MovieResultsPage GetMoviePage(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int page) throws IOException {
+    private MovieResultsPage getMoviePage(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int page) throws IOException {
         try {
             Call<MovieResultsPage> call = function.initialMovies(tmdb, language, region, page);
             Response<MovieResultsPage> response = call.execute();
@@ -209,7 +212,7 @@ public class MovieHelper extends NetworkHelper {
      * @return MovieResultsPage
      * @throws IOException TmdbException
      */
-    public MovieResultsPage ProcessAdditionalMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int startPage, int endPage) throws IOException {
+    public MovieResultsPage processAdditionalMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int startPage, int endPage) throws IOException {
         GetInitialMovieType pass = null;
 
         if (tmdb == null) {
@@ -244,7 +247,7 @@ public class MovieHelper extends NetworkHelper {
             throw new TmdbException(TMDB_CODE_MOVIE_TYPE_RELATED, "Invalid type");
         }
 
-        MovieResultsPage movieFull = this.ObtainAdditionalMovies(pass, tmdb, language, region, startPage, endPage);
+        MovieResultsPage movieFull = this.obtainAdditionalMovies(pass, tmdb, language, region, startPage, endPage);
 
         return movieFull;
     }
@@ -261,12 +264,12 @@ public class MovieHelper extends NetworkHelper {
      * @return MovieResultsPage
      * @throws IOException TmdbException
      */
-    private MovieResultsPage ObtainAdditionalMovies(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int startPage, int endPage) throws IOException {
-        MovieResultsPage results = null;
+    private MovieResultsPage obtainAdditionalMovies(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int startPage, int endPage) throws IOException {
+        MovieResultsPage results = MovieResultsPage.build();
         boolean initResults = false;
 
         for (int pageCount = startPage; pageCount <= endPage; pageCount++) {
-            MovieResultsPage resultsPage = this.ObtainMoviePage(function, tmdb, language, region, pageCount);
+            MovieResultsPage resultsPage = this.obtainMoviePage(function, tmdb, language, region, pageCount);
 
             if (resultsPage != null && resultsPage.results != null && resultsPage.results.size() > 0) {
                 if (!initResults) {

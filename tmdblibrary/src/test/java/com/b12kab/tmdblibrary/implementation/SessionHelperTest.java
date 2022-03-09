@@ -37,7 +37,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_create_tmdb_is_null ";
 
         try {
-            sessionHelper.CreateTmdbSession(null, null, null);
+            sessionHelper.createTmdbSession(null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -50,7 +50,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_id_null_pswd_null ";
 
         try {
-            sessionHelper.CreateTmdbSession(this.getManager(), null, null);
+            sessionHelper.createTmdbSession(this.getManager(), null, null);
             fail("Exception did not occur on " + funcName);
         } catch (Exception e) {
             if (!(e instanceof TmdbException)) {
@@ -69,7 +69,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_id_empty_pswd_null ";
 
         try {
-            sessionHelper.CreateTmdbSession(this.getManager(), "", null);
+            sessionHelper.createTmdbSession(this.getManager(), "", null);
             fail("Exception did not occur on " + funcName);
         } catch (Exception e) {
             if (!(e instanceof TmdbException)) {
@@ -88,7 +88,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_id_empty_pswd_null ";
 
         try {
-            sessionHelper.CreateTmdbSession(this.getManager(), "", "");
+            sessionHelper.createTmdbSession(this.getManager(), "", "");
             fail("Exception did not occur on " + funcName);
         } catch (Exception e) {
             if (!(e instanceof TmdbException)) {
@@ -107,7 +107,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_id_valid_pswd_empty ";
 
         try {
-            sessionHelper.CreateTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, "");
+            sessionHelper.createTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, "");
             fail("Exception did not occur on " + funcName);
         } catch (Exception e) {
             if (!(e instanceof TmdbException)) {
@@ -126,7 +126,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_id_empty_pswd_invalid ";
 
         try {
-            sessionHelper.CreateTmdbSession(this.getManager(), "", BuildConfig.TMDB_TEST_BAD_PSWD);
+            sessionHelper.createTmdbSession(this.getManager(), "", BuildConfig.TMDB_TEST_BAD_PSWD);
             fail("Exception did not occur on " + funcName);
         } catch (Exception e) {
             if (!(e instanceof TmdbException)) {
@@ -145,7 +145,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_id_unknown_pswd_invalid ";
 
         try {
-            sessionHelper.CreateTmdbSession(this.getManager(), "blah", BuildConfig.TMDB_TEST_BAD_PSWD);
+            sessionHelper.createTmdbSession(this.getManager(), "blah", BuildConfig.TMDB_TEST_BAD_PSWD);
             fail("Exception did not occur on " + funcName);
         } catch (Exception e) {
             if (!(e instanceof TmdbException)) {
@@ -164,7 +164,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_id_valid_pswd_invalid ";
 
         try {
-            sessionHelper.CreateTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_BAD_PSWD);
+            sessionHelper.createTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_BAD_PSWD);
             fail("Exception did not occur on " + funcName);
         } catch (Exception e) {
             if (!(e instanceof TmdbException)) {
@@ -184,7 +184,7 @@ public class SessionHelperTest extends BaseTestCase {
         String sessionId = null;
 
         try {
-            sessionId = sessionHelper.CreateTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_GOOD_PSWD);
+            sessionId = sessionHelper.createTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_GOOD_PSWD);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e.toString());
         }
@@ -198,7 +198,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_destroy_tmdb_is_null ";
 
         try {
-            sessionHelper.DestroyTmdbSession(null, null);
+            sessionHelper.destroyTmdbSession(null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
             int a = 1 + 1;
@@ -212,7 +212,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_null_session_logout ";
 
         try {
-            sessionHelper.DestroyTmdbSession(this.getManager(), null);
+            sessionHelper.destroyTmdbSession(this.getManager(), null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -229,7 +229,7 @@ public class SessionHelperTest extends BaseTestCase {
         final String funcName = "test_empty_session_logout ";
 
         try {
-            sessionHelper.DestroyTmdbSession(this.getManager(), "");
+            sessionHelper.destroyTmdbSession(this.getManager(), "");
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -247,7 +247,7 @@ public class SessionHelperTest extends BaseTestCase {
         boolean status = false;
 
         try {
-            status = sessionHelper.DestroyTmdbSession(this.getManager(), "badsession");
+            status = sessionHelper.destroyTmdbSession(this.getManager(), "badsession");
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e.toString());
         }
@@ -261,7 +261,7 @@ public class SessionHelperTest extends BaseTestCase {
         boolean status = false;
 
         try {
-            status = sessionHelper.DestroyTmdbSession(this.getManager(), sessionHelper.CreateTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_GOOD_PSWD));
+            status = sessionHelper.destroyTmdbSession(this.getManager(), sessionHelper.createTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_GOOD_PSWD));
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e.toString());
         }

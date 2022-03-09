@@ -28,7 +28,7 @@ public class MovieDetailHelperTest extends BaseTestCase {
         final String funcName = "test_movie_detail_tmdb_is_null ";
 
         try {
-            helper.ProcessMovieDetail(null, 0, null, null, null);
+            helper.processMovieDetail(null, 0, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -41,7 +41,7 @@ public class MovieDetailHelperTest extends BaseTestCase {
         final String funcName = "test_movie_detail_movieId_missing_no_session ";
 
         try {
-            helper.ProcessMovieDetail(this.getManager(), 0, null, null, null);
+            helper.processMovieDetail(this.getManager(), 0, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(34, e.getCode(), funcName + "code doesn't match");
@@ -57,7 +57,7 @@ public class MovieDetailHelperTest extends BaseTestCase {
 
         try {
             this.sleepSetup(3);
-            helper.ProcessMovieDetail(this.getManager(), 0, null, this.createTmdbSession(), null);
+            helper.processMovieDetail(this.getManager(), 0, null, this.createTmdbSession(), null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertEquals(34, e.getCode(),funcName + "code doesn't match");
@@ -74,7 +74,7 @@ public class MovieDetailHelperTest extends BaseTestCase {
         MovieFull movie = null;
 
         try {
-            movie = helper.ProcessMovieDetail(this.getManager(), TestData.MOVIE_ID, null, null, null);
+            movie = helper.processMovieDetail(this.getManager(), TestData.MOVIE_ID, null, null, null);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e.toString());
         }
@@ -98,7 +98,7 @@ public class MovieDetailHelperTest extends BaseTestCase {
 
         try {
             this.sleepSetup(3);
-            movie = helper.ProcessMovieDetail(this.getManager(), TestData.MOVIE_ID, null, this.createTmdbSession(), additionalResponse);
+            movie = helper.processMovieDetail(this.getManager(), TestData.MOVIE_ID, null, this.createTmdbSession(), additionalResponse);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e.toString());
         }
@@ -122,7 +122,7 @@ public class MovieDetailHelperTest extends BaseTestCase {
 
         try {
             this.sleepSetup(3);
-            movie = helper.ProcessMovieDetail(this.getManager(), TestData.MOVIE_ID, null, this.createTmdbSession(), additionalResponse);
+            movie = helper.processMovieDetail(this.getManager(), TestData.MOVIE_ID, null, this.createTmdbSession(), additionalResponse);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e.toString());
         }

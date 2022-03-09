@@ -222,7 +222,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
     public void test_tmdb_logout() throws IOException {
         final String funcName = "test_movie_logout ";
 
-        String session = sessionHelper.CreateTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_GOOD_PSWD);
+        String session = sessionHelper.createTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_GOOD_PSWD);
 
         Call<Status> call = null;
         ResponseBody errorBody = null;

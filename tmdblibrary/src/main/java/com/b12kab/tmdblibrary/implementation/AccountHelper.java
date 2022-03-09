@@ -64,7 +64,8 @@ public class AccountHelper extends NetworkHelper {
      * @return AccountResponse
      * @throws IOException TmdbException
      */
-    public AccountResponse ProcessAccountInfo(Tmdb tmdb, String session) throws IOException {
+    @Nullable
+    public AccountResponse processAccountInfo(Tmdb tmdb, String session) throws IOException {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -78,7 +79,7 @@ public class AccountHelper extends NetworkHelper {
             throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
         }
 
-        AccountResponse movieFull = this.ObtainAccountInfo(tmdb, session);
+        AccountResponse movieFull = this.obtainAccountInfo(tmdb, session);
 
         return movieFull;
     }
@@ -92,14 +93,14 @@ public class AccountHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    private AccountResponse ObtainAccountInfo(@NonNull Tmdb tmdb, String session) throws IOException {
+    private AccountResponse obtainAccountInfo(@NonNull Tmdb tmdb, String session) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                AccountResponse accountResponse = this.GetAccountMovieInfoPage(tmdb, session);
+                AccountResponse accountResponse = this.getAccountInfo(tmdb, session);
 
                 if (accountResponse != null) {
                     return accountResponse;
@@ -143,7 +144,7 @@ public class AccountHelper extends NetworkHelper {
      * @return AccountResponse
      * @throws IOException TmdbException
      */
-    private AccountResponse GetAccountMovieInfoPage(@NonNull Tmdb tmdb, String session) throws IOException {
+    private AccountResponse getAccountInfo(@NonNull Tmdb tmdb, String session) throws IOException {
         try {
             Call<AccountResponse> call = tmdb.accountService().getAccountInfo(session);
             Response<AccountResponse> response = call.execute();
@@ -173,7 +174,8 @@ public class AccountHelper extends NetworkHelper {
      * @return MovieResultsPage
      * @throws IOException TmdbException
      */
-    public MovieResultsPage ProcessAccountMovieInfo(Tmdb tmdb, AccountFetchType fetchType, String session, int accountId, String sortBy, String language) throws IOException {
+    @Nullable
+    public MovieResultsPage processAccountMovieInfo(Tmdb tmdb, AccountFetchType fetchType, String session, int accountId, String sortBy, String language) throws IOException {
         GetAccountMovieInfo pass = null;
 
         if (tmdb == null) {
@@ -201,7 +203,7 @@ public class AccountHelper extends NetworkHelper {
             throw new TmdbException(TMDB_CODE_ACCOUNT_RELATED, "Invalid TMDb account");
         }
 
-        MovieResultsPage movieFull = this.ObtainAccountMovieInfoPages(pass, tmdb, session, accountId, sortBy, language);
+        MovieResultsPage movieFull = this.obtainAccountMovieInfoPages(pass, tmdb, session, accountId, sortBy, language);
 
         return movieFull;
     }
@@ -218,13 +220,14 @@ public class AccountHelper extends NetworkHelper {
      * @return MovieResultsPage
      * @throws IOException TmdbException
      */
-    private MovieResultsPage ObtainAccountMovieInfoPages(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, String sortBy, String language) throws IOException {
+    @Nullable
+    private MovieResultsPage obtainAccountMovieInfoPages(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, String sortBy, String language) throws IOException {
         MovieResultsPage results = null;
         boolean initResults = false;
 
         // TMDb pages start at 1
         for (int pageCount = 1; pageCount <= this.getMaxPageFetch(); pageCount++) {
-            MovieResultsPage resultsPage = this.ObtainAccountMovieInfoPage(function, tmdb, session, accountId, pageCount, sortBy, language);
+            MovieResultsPage resultsPage = this.obtainAccountMovieInfoPage(function, tmdb, session, accountId, pageCount, sortBy, language);
 
             if (resultsPage != null && resultsPage.results != null && resultsPage.results.size() > 0) {
                 if (!initResults) {
@@ -246,6 +249,7 @@ public class AccountHelper extends NetworkHelper {
 
     /***
      * Get specific TMDb page
+     * This will try to loop thru up to 3 times
      *
      * @param function Method to call
      * @param tmdb Tmdb
@@ -258,14 +262,14 @@ public class AccountHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    private MovieResultsPage ObtainAccountMovieInfoPage(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, int page, String sortBy, String language) throws IOException {
+    private MovieResultsPage obtainAccountMovieInfoPage(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, int page, String sortBy, String language) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                MovieResultsPage resultsPage = this.GetAccountMovieInfoPage(function, tmdb, session, accountId, page, sortBy, language);
+                MovieResultsPage resultsPage = this.getAccountMovieInfoPage(function, tmdb, session, accountId, page, sortBy, language);
 
                 if (resultsPage != null) {
                     return resultsPage;
@@ -314,7 +318,7 @@ public class AccountHelper extends NetworkHelper {
      * @return MovieResultsPage
      * @throws IOException TmdbException
      */
-    private MovieResultsPage GetAccountMovieInfoPage(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, int page, String sortBy, String language) throws IOException {
+    private MovieResultsPage getAccountMovieInfoPage(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, int page, String sortBy, String language) throws IOException {
         try {
             Call<MovieResultsPage> call = function.initialMovies(tmdb, session, accountId, page, sortBy, language);
             Response<MovieResultsPage> response = call.execute();
@@ -342,7 +346,8 @@ public class AccountHelper extends NetworkHelper {
      * @return AccountState
      * @throws IOException TmdbException
      */
-    public AccountState ProcessAccountMovieInfoDetail(Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    @Nullable
+    public AccountState processAccountMovieInfoDetail(Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -359,13 +364,14 @@ public class AccountHelper extends NetworkHelper {
             throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
         }
 
-        AccountState accountState = this.ObtainAccountMovieInfoDetail(tmdb, movieId, session, guestSessionId);
+        AccountState accountState = this.obtainAccountMovieInfoDetail(tmdb, movieId, session, guestSessionId);
 
         return accountState;
     }
 
     /***
      * Get the account movie information
+     * This will try to loop thru up to 3 times
      *
      * @param tmdb Tmdb
      * @param movieId Tmdb movie id
@@ -374,14 +380,15 @@ public class AccountHelper extends NetworkHelper {
      * @return AccountState
      * @throws IOException TmdbException
      */
-    private AccountState ObtainAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    @Nullable
+    private AccountState obtainAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                AccountState accountState = this.GetAccountMovieInfoDetail(tmdb, movieId, session, guestSessionId);
+                AccountState accountState = this.getAccountMovieInfoDetail(tmdb, movieId, session, guestSessionId);
 
                 if (accountState != null) {
                     return accountState;
@@ -427,7 +434,7 @@ public class AccountHelper extends NetworkHelper {
      * @return AccountState
      * @throws IOException TmdbException
      */
-    private AccountState GetAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    private AccountState getAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
         try {
             Call<AccountState> call = tmdb.accountService().getMovieAccountState(movieId, session, guestSessionId);
             Response<AccountState> response = call.execute();
@@ -455,7 +462,8 @@ public class AccountHelper extends NetworkHelper {
      * @return Status Set status
      * @throws IOException TmdbException
      */
-    public Status ProcessAccountFavorite(Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
+    @Nullable
+    public Status processAccountFavorite(Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -491,13 +499,14 @@ public class AccountHelper extends NetworkHelper {
             }
         }
 
-        Status status = this.TryAccountFavorite(tmdb, session, accountId, favorite);
+        Status status = this.tryAccountFavorite(tmdb, session, accountId, favorite);
 
         return status;
     }
 
     /***
      * Try to set the favorite on the user's account
+     * This will try to loop thru up to 3 times
      *
      * @param tmdb Tmdb
      * @param session session Key
@@ -506,14 +515,15 @@ public class AccountHelper extends NetworkHelper {
      * @return Status Set status
      * @throws IOException TmdbException
      */
-    private Status TryAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
+    @Nullable
+    private Status tryAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                Status state = this.SetAccountFavorite(tmdb, session, accountId, favorite);
+                Status state = this.setAccountFavorite(tmdb, session, accountId, favorite);
 
                 if (state != null) {
                     return state;
@@ -559,7 +569,7 @@ public class AccountHelper extends NetworkHelper {
      * @return Status Set status
      * @throws IOException TmdbException
      */
-    private Status SetAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
+    private Status setAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
         try {
             Call<Status> call = tmdb.accountService().setAccountFavorite(accountId, session, favorite);
             Response<Status> response = call.execute();
@@ -588,7 +598,8 @@ public class AccountHelper extends NetworkHelper {
      * @return Status
      * @throws IOException TmdbException
      */
-    public Status ProcessMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+    @Nullable
+    public Status processMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -613,13 +624,14 @@ public class AccountHelper extends NetworkHelper {
             }
         }
 
-        Status status = this.TryMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
+        Status status = this.tryMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
 
         return status;
     }
 
     /***
      * Try to set the movie rating on the user's account
+     * This will try to loop thru up to 3 times
      *
      * @param tmdb Tmdb
      * @param movieId Tmdb movie id
@@ -629,14 +641,15 @@ public class AccountHelper extends NetworkHelper {
      * @return Status
      * @throws IOException TmdbException
      */
-    private Status TryMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+    @Nullable
+    private Status tryMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                Status state = this.SetMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
+                Status state = this.setMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
 
                 if (state != null) {
                     return state;
@@ -683,7 +696,7 @@ public class AccountHelper extends NetworkHelper {
      * @return Status
      * @throws IOException TmdbException
      */
-    private Status SetMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+    private Status setMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
         try {
             Call<Status> call = tmdb.accountService().setMovieRating(movieId, session, guestSessionId, ratingValue);
             Response<Status> response = call.execute();
@@ -702,6 +715,33 @@ public class AccountHelper extends NetworkHelper {
     }
 
 
+    /***
+     * Remove the movie rating
+     *
+     * @param tmdb Tmdb
+     * @param movieId Tmdb movie id
+     * @param session session Key
+     * @param guestSessionId guest session
+     * @return Status
+     * @throws IOException TmdbException
+     */
+    private Status removeMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+        try {
+            Call<Status> call = tmdb.accountService().removeMovieRating(movieId, session, guestSessionId);
+            Response<Status> response = call.execute();
+            if (response.isSuccessful()) {
+                return response.body();
+            }
+            this.ProcessError(response);
+            // this will never return, but the compiler wants a return
+            return null;
+        } catch (Exception exception) {
+            if (exception instanceof TmdbException)
+                throw exception;
+
+            throw this.GetFailure(exception);
+        }
+    }
 
 
 

@@ -17,7 +17,10 @@
 
 package com.b12kab.tmdblibrary.entities;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 public class MovieResultsPage extends BaseResultsPage {
 
@@ -29,5 +32,20 @@ public class MovieResultsPage extends BaseResultsPage {
 
     public void setResults(List<MovieAbbreviated> results) {
         this.results = results;
+    }
+
+    /***
+     * Create empty MovieResultsPage
+     * @return MovieResultsPage
+     */
+    @NonNull
+    public static MovieResultsPage build() {
+        MovieResultsPage movieResultsPage = new MovieResultsPage();
+        movieResultsPage.setResults(new ArrayList<>());
+        movieResultsPage.setPage(0);
+        movieResultsPage.setTotal_results(0);
+        movieResultsPage.setTotal_pages(0);
+
+        return movieResultsPage;
     }
 }

@@ -46,7 +46,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_tmdb_is_null ";
 
         try {
-            helper.ProcessAccountMovieInfo(null, null, null, 0, null, null);
+            helper.processAccountMovieInfo(null, null, null, 0, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_invalid_fetch ";
 
         try {
-            helper.ProcessAccountMovieInfo(this.getManager(), null, null, 0, null, null);
+            helper.processAccountMovieInfo(this.getManager(), null, null, 0, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -76,7 +76,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_invalid_session ";
 
         try {
-            helper.ProcessAccountMovieInfo(this.getManager(), AccountFetchType.Rated, null, 0, null, null);
+            helper.processAccountMovieInfo(this.getManager(), AccountFetchType.Rated, null, 0, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -93,7 +93,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_invalid_account ";
 
         try {
-            helper.ProcessAccountMovieInfo(this.getManager(), AccountFetchType.Rated, "xxx", 0, null, null);
+            helper.processAccountMovieInfo(this.getManager(), AccountFetchType.Rated, "xxx", 0, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -114,7 +114,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            resultsPage = helper.ProcessAccountMovieInfo(this.getManager(), AccountFetchType.Favored, session, accountResponse.getId(), null, null);
+            resultsPage = helper.processAccountMovieInfo(this.getManager(), AccountFetchType.Favored, session, accountResponse.getId(), null, null);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -131,7 +131,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            resultsPage = helper.ProcessAccountMovieInfo(this.getManager(), AccountFetchType.Rated, session, accountResponse.getId(), null, null);
+            resultsPage = helper.processAccountMovieInfo(this.getManager(), AccountFetchType.Rated, session, accountResponse.getId(), null, null);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -152,7 +152,7 @@ public class AccountHelperTest extends BaseTestCase {
             AccountResponse accountResponse = this.getAccount(session);
             helper.setMaxPageFetch(1);
 
-            resultsPage = helper.ProcessAccountMovieInfo(this.getManager(), AccountFetchType.Rated, session, accountResponse.getId(), null, null);
+            resultsPage = helper.processAccountMovieInfo(this.getManager(), AccountFetchType.Rated, session, accountResponse.getId(), null, null);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -171,7 +171,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_info_tmdb_is_null ";
 
         try {
-            helper.ProcessAccountInfo(null, null);
+            helper.processAccountInfo(null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -184,7 +184,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_info_invalid_session ";
 
         try {
-            helper.ProcessAccountInfo(this.getManager(), null);
+            helper.processAccountInfo(this.getManager(), null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -201,7 +201,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_info_invalid_session ";
 
         try {
-            helper.ProcessAccountInfo(this.getManager(), "xxx");
+            helper.processAccountInfo(this.getManager(), "xxx");
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -221,7 +221,7 @@ public class AccountHelperTest extends BaseTestCase {
         try {
             this.sleepSetup(2);
             String session = this.createTmdbSession();
-            accountResponse = helper.ProcessAccountInfo(this.getManager(), session);
+            accountResponse = helper.processAccountInfo(this.getManager(), session);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -235,7 +235,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_info_tmdb_is_null ";
 
         try {
-            helper.ProcessAccountMovieInfoDetail(null, 0, null, null);
+            helper.processAccountMovieInfoDetail(null, 0, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -248,7 +248,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_info_movieId_invalid ";
 
         try {
-            helper.ProcessAccountMovieInfoDetail(this.getManager(), 0, null, null);
+            helper.processAccountMovieInfoDetail(this.getManager(), 0, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -265,7 +265,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_info_null_session ";
 
         try {
-            helper.ProcessAccountMovieInfoDetail(this.getManager(), 1, null, null);
+            helper.processAccountMovieInfoDetail(this.getManager(), 1, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -282,7 +282,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_info_invalid_session ";
 
         try {
-            helper.ProcessAccountMovieInfoDetail(this.getManager(), TestData.MOVIE_ID,"xxx", null);
+            helper.processAccountMovieInfoDetail(this.getManager(), TestData.MOVIE_ID,"xxx", null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -302,7 +302,7 @@ public class AccountHelperTest extends BaseTestCase {
         try {
             this.sleepSetup(2);
             String session = this.createTmdbSession();
-            accountState = helper.ProcessAccountMovieInfoDetail(this.getManager(), TestData.MOVIE_ID, session, null);
+            accountState = helper.processAccountMovieInfoDetail(this.getManager(), TestData.MOVIE_ID, session, null);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -320,7 +320,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_favorite_tmdb_is_null ";
 
         try {
-            helper.ProcessAccountFavorite(null, null, -1, null);
+            helper.processAccountFavorite(null, null, -1, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -333,7 +333,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_favorite_null_session ";
 
         try {
-            helper.ProcessAccountFavorite(this.getManager(), null, 0, null);
+            helper.processAccountFavorite(this.getManager(), null, 0, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -353,7 +353,7 @@ public class AccountHelperTest extends BaseTestCase {
             this.sleepSetup(2);
             String session = this.createTmdbSession();
 
-            helper.ProcessAccountFavorite(this.getManager(), session, 0, null);
+            helper.processAccountFavorite(this.getManager(), session, 0, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -374,7 +374,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            helper.ProcessAccountFavorite(this.getManager(), session, accountResponse.getId(), null);
+            helper.processAccountFavorite(this.getManager(), session, accountResponse.getId(), null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -393,7 +393,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            helper.ProcessAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
+            helper.processAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -416,7 +416,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            helper.ProcessAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
+            helper.processAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -439,7 +439,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            helper.ProcessAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
+            helper.processAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -462,7 +462,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            helper.ProcessAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
+            helper.processAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -486,7 +486,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            helper.ProcessAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
+            helper.processAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -510,7 +510,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            helper.ProcessAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
+            helper.processAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -532,7 +532,7 @@ public class AccountHelperTest extends BaseTestCase {
 
         try {
             this.sleepSetup(2);
-            helper.ProcessAccountFavorite(this.getManager(),"xxx", 1, favorite);
+            helper.processAccountFavorite(this.getManager(),"xxx", 1, favorite);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -557,7 +557,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            status = helper.ProcessAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
+            status = helper.processAccountFavorite(this.getManager(), session, accountResponse.getId(), favorite);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -573,7 +573,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_rating_tmdb_is_null ";
 
         try {
-            helper.ProcessMovieRating(null, -1, null, null, null);
+            helper.processMovieRating(null, -1, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -586,7 +586,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_rating_movieId_invalid ";
 
         try {
-            helper.ProcessMovieRating(this.getManager(), 0, null, null, null);
+            helper.processMovieRating(this.getManager(), 0, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -603,7 +603,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_rating_null_session ";
 
         try {
-            helper.ProcessMovieRating(this.getManager(), 1, null, null, null);
+            helper.processMovieRating(this.getManager(), 1, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -620,7 +620,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_rating_empty_session ";
 
         try {
-            helper.ProcessMovieRating(this.getManager(), 1, "", "", null);
+            helper.processMovieRating(this.getManager(), 1, "", "", null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -637,7 +637,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_rating_null_rating ";
 
         try {
-            helper.ProcessMovieRating(this.getManager(), 1, "xxx", null, null);
+            helper.processMovieRating(this.getManager(), 1, "xxx", null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -652,7 +652,7 @@ public class AccountHelperTest extends BaseTestCase {
         RatingValue ratingValue = new RatingValue();
 
         try {
-            helper.ProcessMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
+            helper.processMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -672,7 +672,7 @@ public class AccountHelperTest extends BaseTestCase {
         ratingValue.setValue(10.01F);
 
         try {
-            helper.ProcessMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
+            helper.processMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -692,7 +692,7 @@ public class AccountHelperTest extends BaseTestCase {
         ratingValue.setValue(8);
 
         try {
-            helper.ProcessMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
+            helper.processMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -715,7 +715,7 @@ public class AccountHelperTest extends BaseTestCase {
             String session = this.createTmdbSession();
             AccountResponse accountResponse = this.getAccount(session);
 
-            resultsPage = helper.ProcessAccountMovieInfo(this.getManager(), AccountFetchType.Rated, session, accountResponse.getId(), null, null);
+            resultsPage = helper.processAccountMovieInfo(this.getManager(), AccountFetchType.Rated, session, accountResponse.getId(), null, null);
             Optional<MovieAbbreviated> item = resultsPage.getResults().stream().filter(c -> c.getId() == TestData.MOVIE_RATING_TEST_ID)
                     .findFirst();
 
@@ -729,7 +729,7 @@ public class AccountHelperTest extends BaseTestCase {
             }
             ratingValue.setValue(value);
 
-            Status status = helper.ProcessMovieRating(this.getManager(), TestData.MOVIE_RATING_TEST_ID, session, null, ratingValue);
+            Status status = helper.processMovieRating(this.getManager(), TestData.MOVIE_RATING_TEST_ID, session, null, ratingValue);
 
             assertNotNull(status, funcName + "status is null");
             assertNotNull(status.getStatusCode(), funcName + "status status code is null");

@@ -611,6 +611,26 @@ public class MoviesServiceTest extends BaseTestCase {
     }
 
     @Test
+    public void test_MovieResultsPage_build() {
+        final String funcName = "test_MovieResultsPage_build ";
+
+        try {
+            MovieResultsPage results = MovieResultsPage.build();
+            assertNotNull(results, funcName + "results is null");
+            assertNotNull(results.getPage(), funcName + "results page is null");
+            assertNotNull(results.getTotal_pages(), funcName + "results page total pages is null");
+            assertNotNull(results.getTotal_results(), funcName + "results page total results is null");
+            assertNotNull(results.getResults(), funcName + "results page results is null");
+            assertEquals(0, results.getPage(), funcName + "results page is 0");
+            assertEquals(0, results.getTotal_pages(), funcName + "results page total pages is 0");
+            assertEquals(0, results.getTotal_results(), funcName + "results page total results is 0");
+            assertEquals(0, results.getResults().size(), funcName + "results page results size is 0");
+        } catch (Exception e) {
+            Assertions.fail("Exception occurred on " + funcName + ": " + e.toString());
+        }
+    }
+
+    @Test
     public void test_similar() {
         final String funcName = "test_similar ";
         MovieResultsPage results = null;
