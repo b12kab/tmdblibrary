@@ -19,12 +19,17 @@
 package com.b12kab.tmdblibrary.services;
 
 import com.b12kab.tmdblibrary.BaseTestCase;
+import com.b12kab.tmdblibrary.assertations.ConfigurationAsserts;
 import com.b12kab.tmdblibrary.entities.Configuration;
+import com.b12kab.tmdblibrary.entities.ConfigurationCountries;
+import com.b12kab.tmdblibrary.entities.ConfigurationLanguages;
 import com.b12kab.tmdblibrary.entities.Jobs;
+import com.b12kab.tmdblibrary.entities.Timezones;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -47,32 +52,21 @@ public class ConfigurationServiceTest extends BaseTestCase {
             fail("Exception occurred on test_configuration: " + e.toString());
         }
 
-        assertNotNull(config, "Configuration is null");
-        assertNotNull(config.images, "Configuration images is null");
+        ConfigurationAsserts.assertApiConfiguration(config);
+    }
 
-        assertNotNull(config.images.base_url, "Configuration images base_url is null");
-        assertFalse(config.images.base_url.isEmpty(), "Configuration images base_url string length is empty" );
+    @Test
+    public void test_config_countries() {
+        List<ConfigurationCountries> configuration = null;
 
-        assertNotNull(config.images.secure_base_url, "Configuration images secure_base_url is null");
-        assertFalse(config.images.secure_base_url.isEmpty(), "Configuration images secure_base_url string is empty" );
+        try {
+            configuration = getManager().configurationService().countries().execute().body();
+        } catch (Exception e) {
+            fail("Exception occurred on test_config_countries: " + e.toString());
+        }
 
-        assertNotNull(config.images.poster_sizes, "Configuration images poster_sizes is null");
-        assertNotEquals(config.images.poster_sizes.size(), 0, "Configuration images poster_sizes List length is 0" );
-
-        assertNotNull(config.images.backdrop_sizes, "Configuration images backdrop_sizes is null");
-        assertNotEquals(config.images.backdrop_sizes.size(), 0, "Configuration images backdrop_sizes List length is 0");
-
-        assertNotNull(config.images.profile_sizes, "Configuration images profile_sizes is null");
-        assertNotEquals(config.images.profile_sizes.size(), 0, "Configuration images profile_sizes List length is 0");
-
-        assertNotNull(config.images.logo_sizes, "Configuration images logo_sizes is null");
-        assertNotEquals(config.images.logo_sizes.size(), 0, "Configuration images logo_sizes List length is 0");
-
-        assertNotNull(config.images.still_sizes, "Configuration images still_sizes is null");
-        assertNotEquals(config.images.still_sizes.size(), 0, "Configuration images still_sizes List length is 0");
-
-        assertNotNull(config.change_keys, "Configuration images change_keys is null");
-        assertNotEquals(config.change_keys.size(), 0, "Configuration images change_keys List length is 0");
+        assertNotNull(configuration, "countries is null");
+        assertTrue(configuration.size() > 0, "countries is empty");
     }
 
     @Test
@@ -82,10 +76,58 @@ public class ConfigurationServiceTest extends BaseTestCase {
         try {
             jobsList = getManager().configurationService().jobs().execute().body();
         } catch (Exception e) {
-            fail("Exception occurred on test_configuration: " + e.toString());
+            fail("Exception occurred on test_config_jobs: " + e.toString());
         }
 
         assertNotNull(jobsList, "jobs is null");
-        assertTrue(jobsList.size() > 0, "Configuration images is null");
+        assertTrue(jobsList.size() > 0, "jobs is empty");
+    }
+
+    @Test
+    public void test_config_languages() {
+        ConfigurationLanguages configuration = null;
+
+        try {
+            configuration = getManager().configurationService().languages().execute().body();
+        } catch (Exception e) {
+            fail("Exception occurred on test_config_languages: " + e.toString());
+        }
+
+        ConfigurationAsserts.assertConfigLanguage(configuration);
+    }
+
+    @Test
+    public void test_config_translations() {
+        List<String> configuration = null;
+
+        try {
+            configuration = getManager().configurationService().translations().execute().body();
+        } catch (Exception e) {
+            fail("Exception occurred on test_config_translations: " + e.toString());
+        }
+
+        assertNotNull(configuration, "translations is null");
+        assertTrue(configuration.size() > 0, "translations is empty");
+    }
+
+    @Test
+    public void test_config_timezones() {
+        Timezones configuration = null;
+
+        try {
+            configuration = getManager().configurationService().timezones().execute().body();
+        } catch (Exception e) {
+            fail("Exception occurred on test_config_languages: " + e.toString());
+        }
+
+        assertNotNull(configuration, "translations is null");
+        assertTrue(configuration.size() > 0, "translations is empty");
+        assertNotNull(configuration.get(0).iso_3166_1);
+        assertNotNull(configuration.get(0).zones);
+        HashMap<String, List<String>> mappy = configuration.createMap();
+        int a = 1;
+        assertNotNull(mappy);
+        assertNotNull(mappy.get("US"));
+        assertTrue(mappy.get("US").size() > 0);
     }
 }

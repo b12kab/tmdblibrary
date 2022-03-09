@@ -241,8 +241,7 @@ public interface MoviesService {
     );
 
     /**
-     * Get the list of upcoming movies. This list refreshes every day. The maximum number of items this list will
-     * include is 100.
+     * Get the list of upcoming movies. This list refreshes every day.
      * @see <a href="https://developers.themoviedb.org/3/movies/get-upcoming">Documentation</a>
      *
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
@@ -258,8 +257,7 @@ public interface MoviesService {
     );
 
     /**
-     * Get the list of movies playing in theaters. This list refreshes every day. The maximum number of items this list
-     * will include is 100.
+     * Get the list of movies playing in theaters. This list refreshes every day.
      * @see <a href="https://developers.themoviedb.org/3/movies/get-now-playing">Documentation</a>
      *
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.
@@ -291,8 +289,8 @@ public interface MoviesService {
     );
 
     /**
-     * Get the list of top rated movies. By default, this list will only include movies that have 10 or more votes. This
-     * list refreshes every day.
+     * Get the list of top rated movies. By default, this list will only include movies that have 10 or more votes.
+     * This list refreshes every day.
      * @see <a href="https://developers.themoviedb.org/3/movies/get-top-rated-movies">Documentation</a>
      *
      * @param page <em>Optional.</em> Minimum value is 1, expected value is an integer.

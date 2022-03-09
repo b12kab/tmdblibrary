@@ -18,7 +18,10 @@
 package com.b12kab.tmdblibrary.services;
 
 import com.b12kab.tmdblibrary.entities.Configuration;
+import com.b12kab.tmdblibrary.entities.ConfigurationCountries;
+import com.b12kab.tmdblibrary.entities.ConfigurationLanguages;
 import com.b12kab.tmdblibrary.entities.Jobs;
+import com.b12kab.tmdblibrary.entities.Timezones;
 
 import java.util.List;
 
@@ -43,6 +46,15 @@ public interface ConfigurationService {
     @GET("configuration")
     Call<Configuration> configuration();
 
+    /***
+     * Get the list of countries (ISO 3166-1 tags) used throughout TMDB.
+     * @see <a href="https://developers.themoviedb.org/3/configuration/get-countries">Documentation</a>
+     *
+     * @return List<ConfigurationCountries>
+     */
+    @GET("configuration/countries")
+    Call<List<ConfigurationCountries>> countries();
+
     /**
      * Get a list of the jobs and departments we use on TMDb.
      * @see <a href="https://developers.themoviedb.org/3/configuration/get-jobs">Documentation</a>
@@ -51,4 +63,31 @@ public interface ConfigurationService {
      */
     @GET("configuration/jobs")
     Call<List<Jobs>> jobs();
+
+    /***
+     * Get the list of languages (ISO 639-1 tags) used throughout TMDB.
+     * @see <a href="https://developers.themoviedb.org/3/configuration/get-languages">Documentation</a>
+     *
+     * @return ConfigurationLanguages
+     */
+    @GET("configuration/languages")
+    Call<ConfigurationLanguages> languages();
+
+    /***
+     * Get a list of the officially supported translations on TMDB.
+     * @see <a href="https://developers.themoviedb.org/3/configuration/get-primary-translations">Documentation</a>
+     *
+     * @return List<String>
+     */
+    @GET("configuration/primary_translations")
+    Call<List<String>> translations();
+
+    /***
+     * Get the list of timezones used throughout TMDB.
+     * @see <a href="https://developers.themoviedb.org/3/configuration/get-timezones">Documentation</a>
+     *
+     * @return Call<List<Timezones>>
+     */
+    @GET("configuration/timezones")
+    Call<Timezones> timezones();
 }
