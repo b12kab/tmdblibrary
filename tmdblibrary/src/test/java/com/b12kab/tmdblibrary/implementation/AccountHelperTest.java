@@ -8,6 +8,7 @@ import com.b12kab.tmdblibrary.entities.AccountResponse;
 import com.b12kab.tmdblibrary.entities.AccountState;
 import com.b12kab.tmdblibrary.entities.MovieAbbreviated;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
+import com.b12kab.tmdblibrary.entities.RatingValue;
 import com.b12kab.tmdblibrary.entities.Status;
 import com.b12kab.tmdblibrary.enumerations.AccountFetchType;
 import com.b12kab.tmdblibrary.enumerations.MediaType;
@@ -15,10 +16,13 @@ import com.b12kab.tmdblibrary.exceptions.TmdbException;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_ACCOUNT_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_FAVORITE_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_MOVIE_ID_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELATED;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_RATING_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_SESSION_RELATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -562,6 +566,179 @@ public class AccountHelperTest extends BaseTestCase {
         assertTrue(status.getSuccess(), funcName + "status success is false");
         assertNotNull(status.getStatusMessage(), funcName + "status status message is null");
         assertEquals(13, status.getStatusCode(), funcName + "status status code is not 12");
+    }
+
+    @Test
+    public void test_account_movie_rating_tmdb_is_null() {
+        final String funcName = "test_account_movie_rating_tmdb_is_null ";
+
+        try {
+            helper.ProcessMovieRating(null, -1, null, null, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (NullPointerException e) {
+        } catch (Exception e) {
+            fail("Non NullPointerException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_movieId_invalid() {
+        final String funcName = "test_account_movie_rating_movieId_invalid ";
+
+        try {
+            helper.ProcessMovieRating(this.getManager(), 0, null, null, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(TMDB_CODE_MOVIE_ID_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertTrue(exception.getMessage().contains("movie id"), funcName + "message does not contain user");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_null_session() {
+        final String funcName = "test_account_movie_rating_null_session ";
+
+        try {
+            helper.ProcessMovieRating(this.getManager(), 1, null, null, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + "message does not contain session");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_empty_session() {
+        final String funcName = "test_account_movie_rating_empty_session ";
+
+        try {
+            helper.ProcessMovieRating(this.getManager(), 1, "", "", null);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + "message does not contain session");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_null_rating() {
+        final String funcName = "test_account_movie_rating_null_rating ";
+
+        try {
+            helper.ProcessMovieRating(this.getManager(), 1, "xxx", null, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (NullPointerException e) {
+        } catch (Exception e) {
+            fail("Non NullPointerException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_0_rating() {
+        final String funcName = "test_account_movie_rating_0_rating ";
+
+        RatingValue ratingValue = new RatingValue();
+
+        try {
+            helper.ProcessMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(TMDB_CODE_RATING_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertTrue(exception.getMessage().contains("expected to be between 0.5 and 10.0"), funcName + "message does not contain 'expected to be between 0.5 and 10.0'");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_10_rating() {
+        final String funcName = "test_account_movie_rating_10_rating ";
+
+        RatingValue ratingValue = new RatingValue();
+        ratingValue.setValue(10.01F);
+
+        try {
+            helper.ProcessMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(TMDB_CODE_RATING_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertTrue(exception.getMessage().contains("expected to be between 0.5 and 10.0"), funcName + "message does not contain 'expected to be between 0.5 and 10.0'");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_invalid_session() {
+        final String funcName = "test_account_movie_rating_invalid_session ";
+
+        RatingValue ratingValue = new RatingValue();
+        ratingValue.setValue(8);
+
+        try {
+            helper.ProcessMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(3, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_valid_session() {
+        final String funcName = "test_account_movie_rating_valid_session ";
+
+        MovieResultsPage resultsPage = null;
+        RatingValue ratingValue = new RatingValue();
+
+        try {
+            this.sleepSetup(4);
+            String session = this.createTmdbSession();
+            AccountResponse accountResponse = this.getAccount(session);
+
+            resultsPage = helper.ProcessAccountMovieInfo(this.getManager(), AccountFetchType.Rated, session, accountResponse.getId(), null, null);
+            Optional<MovieAbbreviated> item = resultsPage.getResults().stream().filter(c -> c.getId() == TestData.MOVIE_RATING_TEST_ID)
+                    .findFirst();
+
+            float value = 5;
+            if (item.isPresent()) {
+                value = item.get().getRating();
+                value += 0.5;
+            }
+            if (value > 10) {
+                value = 5;
+            }
+            ratingValue.setValue(value);
+
+            Status status = helper.ProcessMovieRating(this.getManager(), TestData.MOVIE_RATING_TEST_ID, session, null, ratingValue);
+
+            assertNotNull(status, funcName + "status is null");
+            assertNotNull(status.getStatusCode(), funcName + "status status code is null");
+            assertTrue(status.getSuccess(), funcName + "status success is false");
+            assertNotNull(status.getStatusMessage(), funcName + "status status message is null");
+            assertTrue(status.getStatusMessage().contains("uccess"), funcName + "status status message is not success");
+        } catch (Exception e) {
+            fail("Exception occurred on " + funcName + ": " + e);
+        }
     }
 
 

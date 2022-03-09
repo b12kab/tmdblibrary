@@ -31,6 +31,9 @@ public interface TestData {
     int MOVIE_COLLECTION_ID = 1241;
     String MOVIE_COLLECTION_TITLE = "Harry Potter Collection";
 
+    int MOVIE_RATING_TEST_ID = 497;
+    String MOVIE_RATING_TEST_TITLE = "The Green Mile";
+
     String PERSON_NAME = "Brad Pitt";
     String TVSHOW_TITLE = "Breaking Bad";
     int TVSHOW_ID = 1396;

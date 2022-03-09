@@ -6,6 +6,7 @@ import com.b12kab.tmdblibrary.entities.AccountFavorite;
 import com.b12kab.tmdblibrary.entities.AccountResponse;
 import com.b12kab.tmdblibrary.entities.AccountState;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
+import com.b12kab.tmdblibrary.entities.RatingValue;
 import com.b12kab.tmdblibrary.entities.Status;
 import com.b12kab.tmdblibrary.enumerations.AccountFetchType;
 import com.b12kab.tmdblibrary.enumerations.MediaType;
@@ -26,6 +27,7 @@ import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_I
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_FAVORITE_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_MOVIE_ID_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELATED;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_RATING_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_SESSION_RELATED;
 
 public class AccountHelper extends NetworkHelper {
@@ -334,7 +336,7 @@ public class AccountHelper extends NetworkHelper {
      * Get the account movie information for the signed in user or guest user session
      *
      * @param tmdb Tmdb
-     * @param movieId Tmdb id
+     * @param movieId Tmdb movie id
      * @param session session Key
      * @param guestSessionId guest session
      * @return AccountState
@@ -366,7 +368,7 @@ public class AccountHelper extends NetworkHelper {
      * Get the account movie information
      *
      * @param tmdb Tmdb
-     * @param movieId Tmdb id
+     * @param movieId Tmdb movie id
      * @param session session Key
      * @param guestSessionId guest session
      * @return AccountState
@@ -419,7 +421,7 @@ public class AccountHelper extends NetworkHelper {
      * Get the account movie information
      *
      * @param tmdb Tmdb
-     * @param movieId Tmdb id
+     * @param movieId Tmdb movie id
      * @param session session Key
      * @param guestSessionId guest session
      * @return AccountState
@@ -574,6 +576,132 @@ public class AccountHelper extends NetworkHelper {
             throw this.GetFailure(exception);
         }
     }
+
+    /***
+     * Set the user's movie rating on their account
+     *
+     * @param tmdb Tmdb
+     * @param movieId Tmdb movie id
+     * @param session session Key
+     * @param guestSessionId guest session
+     * @param ratingValue RatingValue
+     * @return Status
+     * @throws IOException TmdbException
+     */
+    public Status ProcessMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+        if (tmdb == null) {
+            throw new NullPointerException("Tmdb is null");
+        }
+
+        if (!tmdb.checkTmdbAPIKeyPopulated()) {
+            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+        }
+
+        if (movieId < 1) {
+            throw new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
+        }
+
+        if ((session == null || StringUtils.isBlank(session) && (guestSessionId == null || StringUtils.isBlank(guestSessionId)))) {
+            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
+        }
+
+        if (ratingValue == null) {
+            throw new NullPointerException("RatingValue is null");
+        } else {
+            if (ratingValue.getValue() < 0.5 || ratingValue.getValue() > 10) {
+                throw new TmdbException(TMDB_CODE_RATING_RELATED, "The rating value is expected to be between 0.5 and 10.0.");
+            }
+        }
+
+        Status status = this.TryMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
+
+        return status;
+    }
+
+    /***
+     * Try to set the movie rating on the user's account
+     *
+     * @param tmdb Tmdb
+     * @param movieId Tmdb movie id
+     * @param session session Key
+     * @param guestSessionId guest session
+     * @param ratingValue RatingValue
+     * @return Status
+     * @throws IOException TmdbException
+     */
+    private Status TryMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+        boolean retry;
+        int retryTime = 0;
+
+        for (int loopCount = 0; loopCount < 3; loopCount++) {
+            retry = false;
+            try {
+                Status state = this.SetMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
+
+                if (state != null) {
+                    return state;
+                }
+
+                // result not success, retry - it can't hurt
+                retry = true;
+                retryTime = 2;
+            } catch (Exception ex) {
+                if (ex instanceof TmdbException)
+                {
+                    TmdbException tmdbException = (TmdbException) ex;
+                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
+                    if (!checkReturn.retry)
+                        throw ex;
+
+                    retry = true;
+                    retryTime = checkReturn.retryTime;
+                } else {
+                    throw ex;
+                }
+            }
+
+            if (retry) {
+                try {
+                    Thread.sleep((int) ((retryTime + 0.5) * 1000));
+                } catch (InterruptedException e) { }
+            } else {
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /***
+     * Set the movie rating
+     *
+     * @param tmdb Tmdb
+     * @param movieId Tmdb movie id
+     * @param session session Key
+     * @param guestSessionId guest session
+     * @param ratingValue RatingValue
+     * @return Status
+     * @throws IOException TmdbException
+     */
+    private Status SetMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+        try {
+            Call<Status> call = tmdb.accountService().setMovieRating(movieId, session, guestSessionId, ratingValue);
+            Response<Status> response = call.execute();
+            if (response.isSuccessful()) {
+                return response.body();
+            }
+            this.ProcessError(response);
+            // this will never return, but the compiler wants a return
+            return null;
+        } catch (Exception exception) {
+            if (exception instanceof TmdbException)
+                throw exception;
+
+            throw this.GetFailure(exception);
+        }
+    }
+
+
 
 
 
