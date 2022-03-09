@@ -73,7 +73,7 @@ public class AccountHelperTest extends BaseTestCase {
 
     @Test
     public void test_account_movie_null_session() {
-        final String funcName = "test_account_movie_invalid_session ";
+        final String funcName = "test_account_movie_null_session ";
 
         try {
             helper.processAccountMovieInfo(this.getManager(), AccountFetchType.Rated, null, 0, null, null);
@@ -181,7 +181,7 @@ public class AccountHelperTest extends BaseTestCase {
 
     @Test
     public void test_account_info_null_session() {
-        final String funcName = "test_account_info_invalid_session ";
+        final String funcName = "test_account_info_null_session ";
 
         try {
             helper.processAccountInfo(this.getManager(), null);
@@ -201,6 +201,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_info_invalid_session ";
 
         try {
+            this.sleepSetup(3);
             helper.processAccountInfo(this.getManager(), "xxx");
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
@@ -282,6 +283,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_movie_info_invalid_session ";
 
         try {
+            this.sleepSetup(3);
             helper.processAccountMovieInfoDetail(this.getManager(), TestData.MOVIE_ID,"xxx", null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
@@ -569,11 +571,11 @@ public class AccountHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_account_movie_rating_tmdb_is_null() {
-        final String funcName = "test_account_movie_rating_tmdb_is_null ";
+    public void test_account_movie_rating_add_tmdb_is_null() {
+        final String funcName = "test_account_movie_rating_add_tmdb_is_null ";
 
         try {
-            helper.processMovieRating(null, -1, null, null, null);
+            helper.addMovieRating(null, -1, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -582,11 +584,11 @@ public class AccountHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_account_movie_rating_movieId_invalid() {
-        final String funcName = "test_account_movie_rating_movieId_invalid ";
+    public void test_account_movie_rating_add_movieId_invalid() {
+        final String funcName = "test_account_movie_rating_add_movieId_invalid ";
 
         try {
-            helper.processMovieRating(this.getManager(), 0, null, null, null);
+            helper.addMovieRating(this.getManager(), 0, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -599,11 +601,11 @@ public class AccountHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_account_movie_rating_null_session() {
-        final String funcName = "test_account_movie_rating_null_session ";
+    public void test_account_movie_rating_add_null_session() {
+        final String funcName = "test_account_movie_rating_add_null_session ";
 
         try {
-            helper.processMovieRating(this.getManager(), 1, null, null, null);
+            helper.addMovieRating(this.getManager(), 1, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -616,11 +618,11 @@ public class AccountHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_account_movie_rating_empty_session() {
-        final String funcName = "test_account_movie_rating_empty_session ";
+    public void test_account_movie_rating_add_empty_session() {
+        final String funcName = "test_account_movie_rating_add_empty_session ";
 
         try {
-            helper.processMovieRating(this.getManager(), 1, "", "", null);
+            helper.addMovieRating(this.getManager(), 1, "", "", null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -633,11 +635,11 @@ public class AccountHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_account_movie_rating_null_rating() {
-        final String funcName = "test_account_movie_rating_null_rating ";
+    public void test_account_movie_rating_add_null_rating() {
+        final String funcName = "test_account_movie_rating_add_null_rating ";
 
         try {
-            helper.processMovieRating(this.getManager(), 1, "xxx", null, null);
+            helper.addMovieRating(this.getManager(), 1, "xxx", null, null);
             fail("Exception did not occur on " + funcName);
         } catch (NullPointerException e) {
         } catch (Exception e) {
@@ -646,13 +648,13 @@ public class AccountHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_account_movie_rating_0_rating() {
-        final String funcName = "test_account_movie_rating_0_rating ";
+    public void test_account_movie_rating_add_0_rating() {
+        final String funcName = "test_account_movie_rating_add_0_rating ";
 
         RatingValue ratingValue = new RatingValue();
 
         try {
-            helper.processMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
+            helper.addMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -665,14 +667,14 @@ public class AccountHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_account_movie_rating_10_rating() {
-        final String funcName = "test_account_movie_rating_10_rating ";
+    public void test_account_movie_rating_add_10_rating() {
+        final String funcName = "test_account_movie_rating_add_10_rating ";
 
         RatingValue ratingValue = new RatingValue();
         ratingValue.setValue(10.01F);
 
         try {
-            helper.processMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
+            helper.addMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -685,14 +687,15 @@ public class AccountHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_account_movie_rating_invalid_session() {
-        final String funcName = "test_account_movie_rating_invalid_session ";
+    public void test_account_movie_rating_add_invalid_session() {
+        final String funcName = "test_account_movie_rating_add_invalid_session ";
 
         RatingValue ratingValue = new RatingValue();
         ratingValue.setValue(8);
 
         try {
-            helper.processMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
+            this.sleepSetup(3);
+            helper.addMovieRating(this.getManager(), 1, "xxx", "", ratingValue);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
@@ -704,8 +707,8 @@ public class AccountHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_account_movie_rating_valid_session() {
-        final String funcName = "test_account_movie_rating_valid_session ";
+    public void test_account_movie_rating_add_valid_session() {
+        final String funcName = "test_account_movie_rating_add_valid_session ";
 
         MovieResultsPage resultsPage = null;
         RatingValue ratingValue = new RatingValue();
@@ -729,7 +732,7 @@ public class AccountHelperTest extends BaseTestCase {
             }
             ratingValue.setValue(value);
 
-            Status status = helper.processMovieRating(this.getManager(), TestData.MOVIE_RATING_TEST_ID, session, null, ratingValue);
+            Status status = helper.addMovieRating(this.getManager(), TestData.MOVIE_RATING_TEST_ID, session, null, ratingValue);
 
             assertNotNull(status, funcName + "status is null");
             assertNotNull(status.getStatusCode(), funcName + "status status code is null");
@@ -741,5 +744,123 @@ public class AccountHelperTest extends BaseTestCase {
         }
     }
 
+    @Test
+    public void test_account_movie_rating_remove_tmdb_is_null() {
+        final String funcName = "test_account_movie_rating_remove_tmdb_is_null ";
+
+        try {
+            helper.removeMovieRating(null, -1, null, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (NullPointerException e) {
+        } catch (Exception e) {
+            fail("Non NullPointerException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_remove_movieId_invalid() {
+        final String funcName = "test_account_movie_rating_remove_movieId_invalid ";
+
+        try {
+            helper.removeMovieRating(this.getManager(), 0, null, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(TMDB_CODE_MOVIE_ID_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertTrue(exception.getMessage().contains("movie id"), funcName + "message does not contain user");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_remove_null_session() {
+        final String funcName = "test_account_movie_rating_remove_null_session ";
+
+        try {
+            helper.removeMovieRating(this.getManager(), 1, null, null);
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + "message does not contain session");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_remove_empty_session() {
+        final String funcName = "test_account_movie_rating_remove_empty_session ";
+
+        try {
+            helper.removeMovieRating(this.getManager(), 1, "", "");
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + "message does not contain session");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_remove_invalid_session() {
+        final String funcName = "test_account_movie_rating_remove_invalid_session ";
+
+        try {
+            this.sleepSetup(3);
+            helper.removeMovieRating(this.getManager(), 1, "xxx", "");
+            fail("Exception did not occur on " + funcName);
+        } catch (TmdbException e) {
+            TmdbException exception = (TmdbException)e;
+            assertEquals(3, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + "message is null");
+        } catch (Exception e) {
+            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
+        }
+    }
+
+    @Test
+    public void test_account_movie_rating_remove_valid_session() {
+        final String funcName = "test_account_movie_rating_remove_valid_session ";
+
+        MovieResultsPage resultsPage = null;
+
+        try {
+            this.sleepSetup(3);
+            String session = this.createTmdbSession();
+            AccountResponse accountResponse = this.getAccount(session);
+
+            resultsPage = helper.processAccountMovieInfo(this.getManager(), AccountFetchType.Rated, session, accountResponse.getId(), null, null);
+            Optional<MovieAbbreviated> item = resultsPage.getResults().stream().filter(c -> c.getId() == TestData.MOVIE_RATING_TEST_ID)
+                    .findFirst();
+
+            if (!item.isPresent()) {
+                // missing rating, add so that it can remove
+                RatingValue ratingValue = new RatingValue();
+                ratingValue.setValue(8);
+                Status setStatus = this.getManager().accountService().setMovieRating(TestData.MOVIE_RATING_TEST_ID, session, null, ratingValue).execute().body();
+                if (setStatus == null || !setStatus.getSuccess()) {
+                    fail("Missing user rating, and set rating failed");
+                }
+            }
+
+            Status status = helper.removeMovieRating(this.getManager(), TestData.MOVIE_RATING_TEST_ID, session, null);
+
+            assertNotNull(status, funcName + "status is null");
+            assertNotNull(status.getStatusCode(), funcName + "status status code is null");
+            assertTrue(status.getSuccess(), funcName + "status success is false");
+            assertNotNull(status.getStatusMessage(), funcName + "status status message is null");
+            assertEquals(13, status.getStatusCode(), "status status code is not 13");
+            assertTrue(status.getStatusMessage().contains("uccess"), funcName + "status status message is not success");
+        } catch (Exception e) {
+            fail("Exception occurred on " + funcName + ": " + e);
+        }
+    }
 
 }

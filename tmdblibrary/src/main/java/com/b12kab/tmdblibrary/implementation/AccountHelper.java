@@ -599,7 +599,7 @@ public class AccountHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    public Status processMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+    public Status addMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -624,7 +624,7 @@ public class AccountHelper extends NetworkHelper {
             }
         }
 
-        Status status = this.tryMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
+        Status status = this.attachMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
 
         return status;
     }
@@ -642,14 +642,14 @@ public class AccountHelper extends NetworkHelper {
      * @throws IOException TmdbException
      */
     @Nullable
-    private Status tryMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+    private Status attachMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
         boolean retry;
         int retryTime = 0;
 
         for (int loopCount = 0; loopCount < 3; loopCount++) {
             retry = false;
             try {
-                Status state = this.setMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
+                Status state = this.postMovieRating(tmdb, movieId, session, guestSessionId, ratingValue);
 
                 if (state != null) {
                     return state;
@@ -696,7 +696,7 @@ public class AccountHelper extends NetworkHelper {
      * @return Status
      * @throws IOException TmdbException
      */
-    private Status setMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+    private Status postMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
         try {
             Call<Status> call = tmdb.accountService().setMovieRating(movieId, session, guestSessionId, ratingValue);
             Response<Status> response = call.execute();
@@ -714,6 +714,93 @@ public class AccountHelper extends NetworkHelper {
         }
     }
 
+    /***
+     * Remove the movie rating on the user's account
+     *
+     * @param tmdb Tmdb
+     * @param movieId Tmdb movie id
+     * @param session session Key
+     * @param guestSessionId guest session
+     * @return Status
+     * @throws IOException TmdbException
+     */
+    @Nullable
+    public Status removeMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+        if (tmdb == null) {
+            throw new NullPointerException("Tmdb is null");
+        }
+
+        if (!tmdb.checkTmdbAPIKeyPopulated()) {
+            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+        }
+
+        if (movieId < 1) {
+            throw new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
+        }
+
+        if ((session == null || StringUtils.isBlank(session) && (guestSessionId == null || StringUtils.isBlank(guestSessionId)))) {
+            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
+        }
+
+        Status status = this.detachMovieRating(tmdb, movieId, session, guestSessionId);
+
+        return status;
+    }
+
+    /***
+     * Try to remove the movie rating on the user's account
+     * This will try to loop thru up to 3 times
+     *
+     * @param tmdb Tmdb
+     * @param movieId Tmdb movie id
+     * @param session session Key
+     * @param guestSessionId guest session
+     * @return Status
+     * @throws IOException TmdbException
+     */
+    @Nullable
+    private Status detachMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+        boolean retry;
+        int retryTime = 0;
+
+        for (int loopCount = 0; loopCount < 3; loopCount++) {
+            retry = false;
+            try {
+                Status state = this.deleteMovieRating(tmdb, movieId, session, guestSessionId);
+
+                if (state != null) {
+                    return state;
+                }
+
+                // result not success, retry - it can't hurt
+                retry = true;
+                retryTime = 2;
+            } catch (Exception ex) {
+                if (ex instanceof TmdbException)
+                {
+                    TmdbException tmdbException = (TmdbException) ex;
+                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
+                    if (!checkReturn.retry)
+                        throw ex;
+
+                    retry = true;
+                    retryTime = checkReturn.retryTime;
+                } else {
+                    throw ex;
+                }
+            }
+
+            if (retry) {
+                try {
+                    Thread.sleep((int) ((retryTime + 0.5) * 1000));
+                } catch (InterruptedException e) { }
+            } else {
+                break;
+            }
+        }
+
+        return null;
+    }
 
     /***
      * Remove the movie rating
@@ -725,7 +812,7 @@ public class AccountHelper extends NetworkHelper {
      * @return Status
      * @throws IOException TmdbException
      */
-    private Status removeMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    private Status deleteMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
         try {
             Call<Status> call = tmdb.accountService().removeMovieRating(movieId, session, guestSessionId);
             Response<Status> response = call.execute();
