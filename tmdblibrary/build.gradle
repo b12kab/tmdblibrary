@@ -49,11 +49,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            buildConfigField "String", "TMDB_TEST_ID", "\"ABCDEFGH\""
-            buildConfigField "String", "TMDB_TEST_GOOD_PSWD", "\"ABCDEFGH\""
-            buildConfigField "String", "TMDB_TEST_BAD_PSWD", "\"ABCDEFGH\""
-            buildConfigField "String", "TMDB_TEST_API_KEY",  "\"ABCDEFGH\""
         }
     }
 }

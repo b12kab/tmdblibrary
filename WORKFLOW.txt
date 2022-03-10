@@ -1,9 +1,13 @@
 Workflow
 ========
 
-* Validate changes are as you wish
-1) Update CHANGELOG.md
-2) Update README.md
-3) add & commit
-4) push to Github master
-5) Create Github release - be sure to name in #.##.# format
+1) Change :tmdblibrary build variant to release
+2) Comment out TMDB_ID, TMDB_GOOD_PSWD, TMDB_BAD_PSWD and TMDB_JAVA_LIBRARY_TEST_API_KEY in YOUR gradle.properties file. 
+3) Build -> Clean Project 
+4) Build -> Rebuild Project
+5) Validate library BuildConfig.java file is using the project file values (bad, etc).
+6) Update CHANGELOG.md
+7) Update README.md
+8) add & commit
+9) push to Github master
+A) Create Github release - be sure to name in #.##.# format

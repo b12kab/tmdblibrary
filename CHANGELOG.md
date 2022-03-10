@@ -1,5 +1,9 @@
 Change Log
 ==========
+0.12.1
+----------------
+* Change build.gradle and project gradle.properties to allow build via JitPack w/o TMDB_ID, TMDB_GOOD_PSWD, TMDB_BAD_PSWD and TMDB_JAVA_LIBRARY_TEST_API_KEY keys in developer gradle.properties file.
+
 0.12.0
 ----------------
 * Upgraded project to use Retrofit 2 / OkHttp 3

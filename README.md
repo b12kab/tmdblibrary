@@ -24,7 +24,7 @@ For test usage, you must define in your personal gradle.properties (not this pro
 Add this library to your dependencies:
 
 ```groovy
-  implementation 'com.github.b12kab.tmdblibrary:tmdblibrary:0.12.0'
+  implementation 'com.github.b12kab.tmdblibrary:tmdblibrary:0.12.1'
 ```
 
 Dependencies
