@@ -199,19 +199,23 @@ public abstract class NetworkHelper {
      */
     public TmdbException GetFailure(Throwable t) {
         TmdbException tmdbException = new TmdbException();
-        String errMsg = t.getCause() == null ? StringUtils.EMPTY : t.getCause().toString();
+        String errMsg = t.getCause() == null ? null : t.getCause().toString();
 
         if (t instanceof NetworkOnMainThreadException) {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.NetworkOnMain);
+            if (errMsg == null) errMsg = "NetworkOnMainThreadException";
             tmdbException.setMessage(errMsg);
         } else if (t instanceof IOException) {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.Timeout);
+            if (errMsg == null) errMsg = StringUtils.EMPTY;
             tmdbException.setMessage(errMsg);
         } else if (t instanceof IllegalStateException) {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.ConversionError);
+            if (errMsg == null) errMsg = "IllegalStateException";
             tmdbException.setMessage(errMsg);
         } else {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.Other);
+            if (errMsg == null) errMsg = StringUtils.EMPTY;
             tmdbException.setMessage(errMsg);
         }
 
