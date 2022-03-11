@@ -3,7 +3,7 @@ package com.b12kab.tmdblibrary.exceptions;
 import java.io.IOException;
 
 public class TmdbException extends IOException {
-    public enum RetrofitErrorKind { Unset, Retry, Timeout, ConversionError, Other };
+    public enum RetrofitErrorKind { Unset, NetworkOnMain, Retry, Timeout, ConversionError, Other };
     private TmdbException.RetrofitErrorKind errorKind;
 
     private int code;

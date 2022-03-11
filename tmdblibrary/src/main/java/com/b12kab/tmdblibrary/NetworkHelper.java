@@ -1,5 +1,7 @@
 package com.b12kab.tmdblibrary;
 
+import android.os.NetworkOnMainThreadException;
+
 import com.b12kab.tmdblibrary.entities.Status;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
 import com.google.gson.Gson;
@@ -197,16 +199,20 @@ public abstract class NetworkHelper {
      */
     public TmdbException GetFailure(Throwable t) {
         TmdbException tmdbException = new TmdbException();
-        if (t instanceof IOException) {
+        String errMsg = t.getCause() == null ? StringUtils.EMPTY : t.getCause().toString();
+
+        if (t instanceof NetworkOnMainThreadException) {
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.NetworkOnMain);
+            tmdbException.setMessage(errMsg);
+        } else if (t instanceof IOException) {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.Timeout);
-            tmdbException.setMessage(t.getCause() == null ? StringUtils.EMPTY : String.valueOf(t.getCause()));
-        }
-        else if (t instanceof IllegalStateException) {
+            tmdbException.setMessage(errMsg);
+        } else if (t instanceof IllegalStateException) {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.ConversionError);
-            tmdbException.setMessage(t.getCause() == null ? StringUtils.EMPTY : String.valueOf(t.getCause()));
+            tmdbException.setMessage(errMsg);
         } else {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.Other);
-            tmdbException.setMessage(t.getCause() == null ? StringUtils.EMPTY : String.valueOf(t.getCause()));
+            tmdbException.setMessage(errMsg);
         }
 
         return tmdbException;
