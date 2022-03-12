@@ -42,6 +42,8 @@ public abstract class NetworkHelper {
         public static int TMDB_CODE_FAVORITE_RELATED = 713;
         public static int TMDB_CODE_RATING_RELATED = 714;
 
+        public static int TMDB_CODE_EXCEPTION_UNKNOWN_CAUSE = 799;
+
         public static String TMDB_API_ERR_MSG = "API key was not set, call setApiKey() prior to this.";
     }
 
