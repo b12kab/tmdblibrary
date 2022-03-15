@@ -11,6 +11,8 @@ import com.b12kab.tmdblibrary.exceptions.TmdbException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,11 +21,37 @@ import retrofit2.Response;
 
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_API_ERR_MSG;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_INVALID;
-import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PASSWORD_RELATED;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_ID_OR_PASSWORD_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_SESSION_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_TOKEN_RELATED;
 
-public class SessionHelper extends NetworkHelper {
+public class SessionHelper extends NetworkHelper implements ISessionHelper {
+
+    /***
+     * This is a list of error status codes created by TMDb
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperTmdbErrorStatusCodes() {
+        return Arrays.asList(
+                6,  // invalid session logout
+                7,  // invalid API key
+                30, // invalid name / pw
+                34  // missing resource
+        );
+    }
+
+    /***
+     * This is a list of error status codes created by the helper
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperNonTmdbErrorStatusCodes() {
+        return Arrays.asList(
+                TMDB_CODE_API_KEY_INVALID,
+                TMDB_CODE_ID_OR_PASSWORD_RELATED
+        );
+    }
 
     /***
      * Log out of the Tmdb session, if possible
@@ -152,15 +180,15 @@ public class SessionHelper extends NetworkHelper {
 
         // Check userid / passwd
         if ((userId == null || StringUtils.isBlank(userId)) && (passwd == null || StringUtils.isBlank(passwd))) {
-            throw new TmdbException(TMDB_CODE_PASSWORD_RELATED, "You must provide a username and a password.");
+            throw new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a username and a password.");
         }
 
         if (userId == null || StringUtils.isBlank(userId)) {
-            throw new TmdbException(TMDB_CODE_PASSWORD_RELATED, "You must provide a username.");
+            throw new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a username.");
         }
 
         if (passwd == null || StringUtils.isBlank(passwd)) {
-            throw new TmdbException(TMDB_CODE_PASSWORD_RELATED, "You must provide a password.");
+            throw new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a password.");
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {

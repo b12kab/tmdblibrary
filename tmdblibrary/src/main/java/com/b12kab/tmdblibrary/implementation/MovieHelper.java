@@ -7,6 +7,8 @@ import com.b12kab.tmdblibrary.enumerations.MovieFetchType;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +20,7 @@ import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_I
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_MOVIE_TYPE_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELATED;
 
-public class MovieHelper extends NetworkHelper {
+public class MovieHelper extends NetworkHelper implements IMovieHelper {
     //https://stackoverflow.com/questions/2186931/java-pass-method-as-parameter
     @FunctionalInterface
     interface GetInitialMovieType {
@@ -29,6 +31,31 @@ public class MovieHelper extends NetworkHelper {
     GetInitialMovieType popular = (t, l, r, p) -> t.moviesService().popular(p,l,r);
     GetInitialMovieType topRated = (t, l, r, p) -> t.moviesService().topRated(p,l,r);
     GetInitialMovieType upcoming = (t, l, r, p) -> t.moviesService().upcoming(p,l,r);
+
+    /***
+     * This is a list of error status codes created by TMDb
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperTmdbErrorStatusCodes() {
+        return Arrays.asList(
+                7,  // invalid API key
+                34  // missing resource
+        );
+    }
+
+    /***
+     * This is a list of error status codes created by the helper
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperNonTmdbErrorStatusCodes() {
+        return Arrays.asList(
+                TMDB_CODE_API_KEY_INVALID,
+                TMDB_CODE_PAGE_RELATED,
+                TMDB_CODE_MOVIE_TYPE_RELATED
+        );
+    }
 
     /***
      * Perform the initial fetch movies pages
@@ -69,7 +96,7 @@ public class MovieHelper extends NetworkHelper {
         } else if (fetchType == MovieFetchType.Upcoming) {
             pass = upcoming;
         } else {
-            throw new TmdbException(TMDB_CODE_PAGE_RELATED, "Invalid fetch type");
+            throw new TmdbException(TMDB_CODE_MOVIE_TYPE_RELATED, "Invalid fetch type");
         }
 
         MovieResultsPage movieFull = this.obtainInitialMoviePages(pass, tmdb, language, region, initialFetchPages);

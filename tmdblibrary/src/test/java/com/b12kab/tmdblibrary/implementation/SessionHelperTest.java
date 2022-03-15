@@ -8,10 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PASSWORD_RELATED;
+import java.util.List;
+
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_ID_OR_PASSWORD_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_SESSION_RELATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -30,6 +33,24 @@ public class SessionHelperTest extends BaseTestCase {
         } catch (InterruptedException e){
             System.out.println(e);
         }
+    }
+
+    @Test
+    public void test_session_tmdb_error_status_cd() {
+        final String funcName = "test_session_tmdb_error_status_cd ";
+
+        List<Integer> codes = sessionHelper.getAssocHelperTmdbErrorStatusCodes();
+        assertNotNull(codes, funcName + "codes is null");
+        assertNotEquals(0, codes.size(), "codes size = 0");
+    }
+
+    @Test
+    public void test_session_non_tmdb_error_status_cd() {
+        final String funcName = "test_session_non_tmdb_error_status_cd ";
+
+        List<Integer> codes = sessionHelper.getAssocHelperNonTmdbErrorStatusCodes();
+        assertNotNull(codes, funcName + "codes is null");
+        assertNotEquals(0, codes.size(), "codes size = 0");
     }
 
     @Test
@@ -57,7 +78,7 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_PASSWORD_RELATED, exception.getCode(),funcName + "code doesn't match");
+            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(),funcName + "code doesn't match");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -76,7 +97,7 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_PASSWORD_RELATED, exception.getCode(),funcName + "code doesn't match");
+            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(),funcName + "code doesn't match");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -95,7 +116,7 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_PASSWORD_RELATED, exception.getCode(),funcName + "code doesn't match");
+            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(),funcName + "code doesn't match");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -114,7 +135,7 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_PASSWORD_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(), funcName + "code doesn't match");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertFalse(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -133,7 +154,7 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_PASSWORD_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(), funcName + "code doesn't match");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertFalse(exception.getMessage().contains("password"), funcName + "message does not contain user");

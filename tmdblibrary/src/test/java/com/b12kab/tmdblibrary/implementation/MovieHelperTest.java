@@ -9,9 +9,12 @@ import com.b12kab.tmdblibrary.exceptions.TmdbException;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_MOVIE_TYPE_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -21,6 +24,24 @@ public class MovieHelperTest extends BaseTestCase {
 
     public MovieHelperTest() {
         helper = new MovieHelper();
+    }
+
+    @Test
+    public void test_movie_tmdb_error_status_cd() {
+        final String funcName = "test_movie_tmdb_error_status_cd ";
+
+        List<Integer> codes = helper.getAssocHelperTmdbErrorStatusCodes();
+        assertNotNull(codes, funcName + "codes is null");
+        assertNotEquals(0, codes.size(), "codes size = 0");
+    }
+
+    @Test
+    public void test_movie_non_tmdb_error_status_cd() {
+        final String funcName = "test_movie_non_tmdb_error_status_cd ";
+
+        List<Integer> codes = helper.getAssocHelperNonTmdbErrorStatusCodes();
+        assertNotNull(codes, funcName + "codes is null");
+        assertNotEquals(0, codes.size(), "codes size = 0");
     }
 
     @Test
@@ -60,7 +81,7 @@ public class MovieHelperTest extends BaseTestCase {
             helper.processInitialMovies(this.getManager(), null, null, null, 1111);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
+            assertEquals(TMDB_CODE_MOVIE_TYPE_RELATED, e.getCode(),funcName + "code doesn't match");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains("Invalid fetch type"), funcName + "message incorrect");
         } catch (Exception e) {

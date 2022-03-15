@@ -7,6 +7,8 @@ import com.b12kab.tmdblibrary.entities.ConfigurationLanguages;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +18,30 @@ import retrofit2.Response;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_API_ERR_MSG;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_INVALID;
 
-public class ConfigurationHelper extends NetworkHelper {
+public class ConfigurationHelper extends NetworkHelper implements IConfigurationHelper {
+
+
+    /***
+     * This is a list of error status codes created by TMDb
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperTmdbErrorStatusCodes() {
+        return Arrays.asList(
+        );
+    }
+
+    /***
+     * This is a list of error status codes created by the helper
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperNonTmdbErrorStatusCodes() {
+        return Arrays.asList(
+                TMDB_CODE_API_KEY_INVALID
+        );
+    }
+
     /***
      * Get the configuration API
      *

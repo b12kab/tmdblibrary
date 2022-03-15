@@ -15,6 +15,8 @@ import com.b12kab.tmdblibrary.exceptions.TmdbException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +32,7 @@ import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELA
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_RATING_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_SESSION_RELATED;
 
-public class AccountHelper extends NetworkHelper {
+public class AccountHelper extends NetworkHelper implements IAccountHelper {
     @FunctionalInterface
     interface GetAccountMovieInfo {
         Call<MovieResultsPage> initialMovies(Tmdb tmdb, String session, int accountId, int page, String sortBy, String language);
@@ -54,6 +56,39 @@ public class AccountHelper extends NetworkHelper {
             return;
         }
         this.maxPageFetch = maxPageFetch;
+    }
+
+    /***
+     * This is a list of error status codes created by TMDb
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperTmdbErrorStatusCodes() {
+        return Arrays.asList(
+                1,  // success
+                3,  // authentication failed
+                7,  // invalid API key
+                12, // item updated OK
+                13, // item deleted OK
+                34  // missing resource
+        );
+    }
+
+    /***
+     * This is a list of error status codes created by the helper
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperNonTmdbErrorStatusCodes() {
+        return Arrays.asList(
+                TMDB_CODE_API_KEY_INVALID,
+                TMDB_CODE_PAGE_RELATED,
+                TMDB_CODE_SESSION_RELATED,
+                TMDB_CODE_ACCOUNT_RELATED,
+                TMDB_CODE_MOVIE_ID_RELATED,
+                TMDB_CODE_FAVORITE_RELATED,
+                TMDB_CODE_RATING_RELATED
+        );
     }
 
     /***

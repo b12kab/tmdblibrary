@@ -7,6 +7,11 @@ import com.b12kab.tmdblibrary.entities.ConfigurationLanguages;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ConfigurationHelperTest extends BaseTestCase {
@@ -14,6 +19,24 @@ public class ConfigurationHelperTest extends BaseTestCase {
 
     public ConfigurationHelperTest() {
         helper = new ConfigurationHelper();
+    }
+
+    @Test
+    public void test_configuration_tmdb_error_status_cd() {
+        final String funcName = "test_configuration_tmdb_error_status_cd ";
+
+        List<Integer> codes = helper.getAssocHelperTmdbErrorStatusCodes();
+        assertNotNull(codes, funcName + "codes is null");
+        assertEquals(0, codes.size(), "codes size != 0");
+    }
+
+    @Test
+    public void test_configuration_non_tmdb_error_status_cd() {
+        final String funcName = "test_configuration_non_tmdb_error_status_cd ";
+
+        List<Integer> codes = helper.getAssocHelperNonTmdbErrorStatusCodes();
+        assertNotNull(codes, funcName + "codes is null");
+        assertNotEquals(0, codes.size(), "codes size = 0");
     }
 
     @Test

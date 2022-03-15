@@ -16,6 +16,7 @@ import com.b12kab.tmdblibrary.exceptions.TmdbException;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_ACCOUNT_RELATED;
@@ -25,6 +26,7 @@ import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELA
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_RATING_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_SESSION_RELATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -40,6 +42,24 @@ public class AccountHelperTest extends BaseTestCase {
 //    void init() {
 //        this.sleepSetup(2);
 //    }
+
+    @Test
+    public void test_account_tmdb_error_status_cd() {
+        final String funcName = "test_account_tmdb_error_status_cd ";
+
+        List<Integer> codes = helper.getAssocHelperTmdbErrorStatusCodes();
+        assertNotNull(codes, funcName + "codes is null");
+        assertNotEquals(0, codes.size(), "codes size = 0");
+    }
+
+    @Test
+    public void test_account_non_tmdb_error_status_cd() {
+        final String funcName = "test_account_non_tmdb_error_status_cd ";
+
+        List<Integer> codes = helper.getAssocHelperNonTmdbErrorStatusCodes();
+        assertNotNull(codes, funcName + "codes is null");
+        assertNotEquals(0, codes.size(), "codes size = 0");
+    }
 
     @Test
     public void test_account_movie_tmdb_is_null() {

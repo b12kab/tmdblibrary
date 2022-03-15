@@ -9,6 +9,8 @@ import com.b12kab.tmdblibrary.exceptions.TmdbException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +26,30 @@ import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.REVIEWS;
 import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.ACCT_STATES;
 import static com.b12kab.tmdblibrary.enumerations.AppendToResponseItem.VIDEOS;
 
-public class MovieDetailHelper extends NetworkHelper {
+public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelper {
+
+    /***
+     * This is a list of error status codes created by TMDb
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperTmdbErrorStatusCodes() {
+        return Arrays.asList(
+                7,  // invalid API key
+                34  // missing resource
+        );
+    }
+
+    /***
+     * This is a list of error status codes created by the helper
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getAssocHelperNonTmdbErrorStatusCodes() {
+        return Arrays.asList(
+                TMDB_CODE_API_KEY_INVALID
+        );
+    }
 
     /***
      * Get movie detail

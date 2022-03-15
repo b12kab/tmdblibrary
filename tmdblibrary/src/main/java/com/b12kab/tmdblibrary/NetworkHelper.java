@@ -31,7 +31,7 @@ public abstract class NetworkHelper {
 
     public static class TmdbCodes {
         public static int TMDB_CODE_API_KEY_INVALID = 700;
-        public static int TMDB_CODE_PASSWORD_RELATED = 701;
+        public static int TMDB_CODE_ID_OR_PASSWORD_RELATED = 701;
         public static int TMDB_CODE_TOKEN_RELATED = 702;
         public static int TMDB_CODE_SESSION_RELATED = 703;
         public static int TMDB_CODE_MOVIE_ID_RELATED = 704;
