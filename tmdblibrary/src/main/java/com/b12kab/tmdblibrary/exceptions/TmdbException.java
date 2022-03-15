@@ -4,7 +4,9 @@ import java.io.IOException;
 
 public class TmdbException extends IOException {
     public enum RetrofitErrorKind { Unset, NetworkOnMain, Retry, Timeout, ConversionError, Other };
+    public enum UseMessage { Unset, Yes, No}
     private TmdbException.RetrofitErrorKind errorKind;
+    private TmdbException.UseMessage useMessage;
 
     private int code;
     private String message;
@@ -26,6 +28,7 @@ public class TmdbException extends IOException {
     private void initialize() {
         this.setCode(-1);
         this.setErrorKind(RetrofitErrorKind.Unset);
+        this.setUseMessage(UseMessage.Unset);
     }
 
     public int getCode() {
@@ -66,5 +69,13 @@ public class TmdbException extends IOException {
 
     public void setRetryTime(Integer retryTime) {
         this.retryTime = retryTime;
+    }
+
+    public UseMessage getUseMessage() {
+        return useMessage;
+    }
+
+    public void setUseMessage(UseMessage useMessage) {
+        this.useMessage = useMessage;
     }
 }
