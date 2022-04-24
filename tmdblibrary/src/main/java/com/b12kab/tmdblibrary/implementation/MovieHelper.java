@@ -1,5 +1,7 @@
 package com.b12kab.tmdblibrary.implementation;
 
+import android.util.Log;
+
 import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
@@ -21,6 +23,7 @@ import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_MOVIE_TYP
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELATED;
 
 public class MovieHelper extends NetworkHelper implements IMovieHelper {
+    private static final String TAG = MovieHelper.class.getSimpleName();
     //https://stackoverflow.com/questions/2186931/java-pass-method-as-parameter
     @FunctionalInterface
     interface GetInitialMovieType {
@@ -223,6 +226,7 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
             if (exception instanceof TmdbException)
                 throw exception;
 
+            Log.d( TAG,"getMoviePage - exception: " + exception.getMessage());
             throw this.GetFailure(exception);
         }
     }
