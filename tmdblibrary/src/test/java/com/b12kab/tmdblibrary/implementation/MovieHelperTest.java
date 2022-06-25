@@ -99,7 +99,7 @@ public class MovieHelperTest extends BaseTestCase {
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
-        MovieAsserts.assertMovieResultsPage(resultsPage, false, false);
+        MovieAsserts.assertMovieResultsPage(resultsPage, true, false);
     }
 
     @Test
@@ -259,7 +259,7 @@ public class MovieHelperTest extends BaseTestCase {
         assertTrue(resultsPage.getResults().size() > 0, funcName + "results page results size = 0");
         assertEquals(20, resultsPage.getResults().size(), funcName + "results page results size != 20");
         for (MovieAbbreviated movie: resultsPage.getResults()) {
-            MovieAsserts.assertMovieAbbr(movie, false, false);
+            MovieAsserts.assertMovieAbbr(movie, true, false);
         }
     }
 

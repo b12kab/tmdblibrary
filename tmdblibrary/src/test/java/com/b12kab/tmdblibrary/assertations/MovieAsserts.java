@@ -34,23 +34,23 @@ public class MovieAsserts {
         assertNotNull(movie, "movie null");
         assertNotNull(movie.isAdult(), "movie adult null");
         if (!imagesOptional) {
-            assertNotNull(movie.getBackdrop_path(), "movie backdrop null");
+            assertNotNull(movie.getBackdrop_path(), "movie backdrop null, id: " + movie.getId());
         }
-        assertNotNull(movie.getOriginal_language(), "movie original language null");
-        assertNotNull(movie.getOverview(), "movie overview null");
-        assertNotNull(movie.getPopularity(), "movie popularity null");
+        assertNotNull(movie.getOriginal_language(), "movie original language null, id: " + movie.getId());
+        assertNotNull(movie.getOverview(), "movie overview null, id: " + movie.getId());
+        assertNotNull(movie.getPopularity(), "movie popularity null, id: "+ movie.getId());
         if (!imagesOptional) {
-            assertNotNull(movie.getPoster_path(), "movie poster null");
+            assertNotNull(movie.getPoster_path(), "movie poster null, id: "+ movie.getId());
         }
         if (!releaseDateOptional) {
-            assertNotNull(movie.getRelease_date(), "movie release date null");
+            assertNotNull(movie.getRelease_date(), "movie release date null, id: "+ movie.getId());
         }
-        assertNotNull(movie.getTitle(), "movie title null");
-        assertNotNull(movie.isVideo(), "movie video null");
-        assertNotNull(movie.getVote_average(), "movie average null");
-        assertNotNull(movie.getVote_count(), "movie count null");
-        assertTrue(movie.getVote_average() >= 0, "movie average < 0");
-        assertTrue(movie.getVote_count() >= 0, "movie count < 0");
+        assertNotNull(movie.getTitle(), "movie title null, id: "+ movie.getId());
+        assertNotNull(movie.isVideo(), "movie video null, id: "+ movie.getId());
+        assertNotNull(movie.getVote_average(), "movie average null, id: "+ movie.getId());
+        assertNotNull(movie.getVote_count(), "movie count null, id: "+ movie.getId());
+        assertTrue(movie.getVote_average() >= 0, "movie average < 0, id: "+ movie.getId());
+        assertTrue(movie.getVote_count() >= 0, "movie count < 0, id: "+ movie.getId());
     }
 
     public static void assertMovieResultsPage(MovieResultsPage resultsPage, boolean imagesOptional, boolean releaseDateOptional) {
