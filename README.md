@@ -24,8 +24,12 @@ For test usage, you must define in your personal gradle.properties (not this pro
 Add this library to your dependencies:
 
 ```groovy
-  implementation 'com.github.b12kab.tmdblibrary:tmdblibrary:0.12.1'
+  implementation 'com.github.b12kab.tmdblibrary:tmdblibrary:TAG'
 ```
+
+##TAG
+[![](https://jitpack.io/v/b12kab/tmdblibrary.svg)](https://jitpack.io/#b12kab/tmdblibrary)
+
 
 Dependencies
 ------------

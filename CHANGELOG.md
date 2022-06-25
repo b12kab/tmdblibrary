@@ -1,5 +1,34 @@
 Change Log
 ==========
+
+0.12.8
+----------------
+Update dep's and move api from 32 to 33.
+
+0.12.7
+----------------
+Add logging to MovieHelper.
+
+0.12.6
+----------------
+Added new flag to tmdbexception.
+
+0.12.5
+----------------
+Add interface and error lists per helper.
+
+0.12.4
+----------------
+New user error code.
+
+0.12.3
+----------------
+Add additional network problem handling.
+
+0.12.2
+----------------
+Add network on main thread capture.
+
 0.12.1
 ----------------
 * Change build.gradle and project gradle.properties to allow build via JitPack w/o TMDB_ID, TMDB_GOOD_PSWD, TMDB_BAD_PSWD and TMDB_JAVA_LIBRARY_TEST_API_KEY keys in developer gradle.properties file.
