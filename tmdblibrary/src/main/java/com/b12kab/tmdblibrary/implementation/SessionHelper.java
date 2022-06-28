@@ -1,5 +1,7 @@
 package com.b12kab.tmdblibrary.implementation;
 
+import android.os.NetworkOnMainThreadException;
+
 import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.AuthenticateSessionNewResponse;
@@ -7,6 +9,7 @@ import com.b12kab.tmdblibrary.entities.AuthenticateTokenValidateWithLoginRespons
 import com.b12kab.tmdblibrary.entities.CreateNewTokenResponse;
 import com.b12kab.tmdblibrary.entities.Status;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
+import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -67,12 +70,16 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         // Check userid / passwd
         if (session == null || StringUtils.isBlank(session)) {
-            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         Boolean worked = this.obtainLogout(tmdb, session);
@@ -113,25 +120,20 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
                         retryTime = 2;
                     }
                 }
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -159,7 +161,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -180,36 +182,50 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
 
         // Check userid / passwd
         if ((userId == null || StringUtils.isBlank(userId)) && (passwd == null || StringUtils.isBlank(passwd))) {
-            throw new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a username and a password.");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a username and a password.");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (userId == null || StringUtils.isBlank(userId)) {
-            throw new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a username.");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a username.");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (passwd == null || StringUtils.isBlank(passwd)) {
-            throw new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a password.");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a password.");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         String token = this.obtainToken(tmdb);
         if (token == null)
         {
-            throw new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to create a new token");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to create a new token");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         boolean worked = this.obtainAssociation(tmdb, userId, passwd, token);
         if (!worked) {
-            throw new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to associate token with userid / password");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to associate token with userid / password");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         String sessionId = this.obtainSession(tmdb, token);
         if (sessionId == null)
         {
-            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "Failed to create a session");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "Failed to create a session");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         return sessionId;
@@ -244,25 +260,20 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
                         retryTime = 2;
                     }
                 }
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -285,11 +296,12 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
             if (response.isSuccessful()) {
                 return response.body();
             }
+
             this.ProcessError(response);
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -325,25 +337,20 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
                         retryTime = 2;
                     }
                 }
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -374,7 +381,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -409,25 +416,19 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
                         retryTime = 2;
                     }
                 }
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -456,7 +457,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);

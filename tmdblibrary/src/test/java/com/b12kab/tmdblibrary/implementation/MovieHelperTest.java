@@ -51,7 +51,7 @@ public class MovieHelperTest extends BaseTestCase {
         try {
             helper.processInitialMovies(null, MovieFetchType.Upcoming, null, null, 0);
             fail("Exception did not occur on " + funcName);
-        } catch (NullPointerException e) {
+        } catch (NullPointerException ignored) {
         } catch (Exception e) {
             fail("Non NullPointerException exception occurred on " + funcName + ": " + e);
         }
@@ -161,7 +161,7 @@ public class MovieHelperTest extends BaseTestCase {
 
         try {
             resultsPage = helper.processAdditionalMovies(null, null, null, null, 0, 0);
-        } catch (NullPointerException e) {
+        } catch (NullPointerException ignored) {
         } catch (Exception e) {
             fail("Non NullPointerException exception occurred on " + funcName + ": " + e);
         }

@@ -1,5 +1,6 @@
 package com.b12kab.tmdblibrary.implementation;
 
+import android.os.NetworkOnMainThreadException;
 import android.util.Log;
 
 import com.b12kab.tmdblibrary.NetworkHelper;
@@ -7,6 +8,7 @@ import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
 import com.b12kab.tmdblibrary.enumerations.MovieFetchType;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
+import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -69,7 +71,7 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
      * @param region <em>Optional.</em> ISO 3166-1 code; must be uppercase
      * @param initialFetchPages number of pages to fetch
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws IOException TmdbException or TmdbNetworkException
      */
     public MovieResultsPage processInitialMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int initialFetchPages) throws IOException {
         GetInitialMovieType pass = null;
@@ -79,11 +81,15 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (initialFetchPages < 1) {
-            throw new TmdbException(TMDB_CODE_PAGE_RELATED, "You must have at least 1 initial page");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "You must have at least 1 initial page");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         // all pages max out at 1000
@@ -99,7 +105,9 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
         } else if (fetchType == MovieFetchType.Upcoming) {
             pass = upcoming;
         } else {
-            throw new TmdbException(TMDB_CODE_MOVIE_TYPE_RELATED, "Invalid fetch type");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_TYPE_RELATED, "Invalid fetch type");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         MovieResultsPage movieFull = this.obtainInitialMoviePages(pass, tmdb, language, region, initialFetchPages);
@@ -116,7 +124,7 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
      * @param region <em>Optional.</em> ISO 3166-1 code; must be uppercase
      * @param initialFetchPages number of pages to fetch
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws IOException TmdbException or TmdbNetworkException
      */
     private MovieResultsPage obtainInitialMoviePages(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int initialFetchPages) throws IOException {
         MovieResultsPage results = MovieResultsPage.build();
@@ -154,7 +162,7 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
      * @param region <em>Optional.</em> ISO 3166-1 code; must be uppercase
      * @param page tmdb page #
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws IOException TmdbException or TmdbNetworkException
      */
     @Nullable
     private MovieResultsPage obtainMoviePage(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int page) throws IOException {
@@ -173,25 +181,20 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
                 // result not success, retry - it can't hurt
                 retry = true;
                 retryTime = 2;
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
                 retry = false;
             } else {
                 break;
@@ -210,7 +213,7 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
      * @param region <em>Optional.</em> ISO 3166-1 code; must be uppercase
      * @param page tmdb page #
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws IOException TmdbException or TmdbNetworkException
      */
     private MovieResultsPage getMoviePage(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int page) throws IOException {
         try {
@@ -223,7 +226,7 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             Log.d( TAG,"getMoviePage - exception: " + exception.getMessage());
@@ -241,7 +244,7 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
      * @param startPage TMDb movie start page
      * @param endPage TMDb movie end page
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws IOException TmdbException or TmdbNetworkException
      */
     public MovieResultsPage processAdditionalMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int startPage, int endPage) throws IOException {
         GetInitialMovieType pass = null;
@@ -251,19 +254,27 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (endPage < startPage) {
-            throw new TmdbException(TMDB_CODE_PAGE_RELATED, "End page (" + endPage + ") must equal or be greater than the start page (" + startPage + ")");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "End page (" + endPage + ") must equal or be greater than the start page (" + startPage + ")");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (endPage < 1) {
-            throw new TmdbException(TMDB_CODE_PAGE_RELATED, "End page (" + endPage + ") must equal or be greater than 1");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "End page (" + endPage + ") must equal or be greater than 1");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (startPage < 1) {
-            throw new TmdbException(TMDB_CODE_PAGE_RELATED, "Start page (" + startPage + ") must equal or be greater than 1");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "Start page (" + startPage + ") must equal or be greater than 1");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (fetchType == MovieFetchType.NowPlaying) {
@@ -275,7 +286,9 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
         } else if (fetchType == MovieFetchType.Upcoming) {
             pass = upcoming;
         } else {
-            throw new TmdbException(TMDB_CODE_MOVIE_TYPE_RELATED, "Invalid type");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_TYPE_RELATED, "Invalid type");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         MovieResultsPage movieFull = this.obtainAdditionalMovies(pass, tmdb, language, region, startPage, endPage);
@@ -293,7 +306,7 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
      * @param startPage TMDb movie start page
      * @param endPage TMDb movie end page
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws IOException TmdbException or TmdbNetworkException
      */
     private MovieResultsPage obtainAdditionalMovies(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int startPage, int endPage) throws IOException {
         MovieResultsPage results = MovieResultsPage.build();
@@ -319,6 +332,4 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
 
         return results;
     }
-
-
 }

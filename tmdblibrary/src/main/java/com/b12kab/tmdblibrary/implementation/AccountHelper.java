@@ -1,5 +1,7 @@
 package com.b12kab.tmdblibrary.implementation;
 
+import android.os.NetworkOnMainThreadException;
+
 import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.AccountFavorite;
@@ -11,6 +13,7 @@ import com.b12kab.tmdblibrary.entities.Status;
 import com.b12kab.tmdblibrary.enumerations.AccountFetchType;
 import com.b12kab.tmdblibrary.enumerations.MediaType;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
+import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -106,12 +109,16 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         // Check userid / passwd
         if (session == null || StringUtils.isBlank(session)) {
-            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         AccountResponse movieFull = this.obtainAccountInfo(tmdb, session);
@@ -144,25 +151,20 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
                 // result not success, retry - it can't hurt
                 retry = true;
                 retryTime = 2;
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -190,7 +192,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -218,7 +220,9 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (fetchType == AccountFetchType.Favored) {
@@ -226,16 +230,22 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         } else if (fetchType == AccountFetchType.Rated) {
             pass = fetchRated;
         } else {
-            throw new TmdbException(TMDB_CODE_PAGE_RELATED, "Invalid fetch type");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "Invalid fetch type");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         // Check userid / passwd
         if (session == null || StringUtils.isBlank(session)) {
-            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (accountId < 1) {
-            throw new TmdbException(TMDB_CODE_ACCOUNT_RELATED, "Invalid TMDb account");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_ACCOUNT_RELATED, "Invalid TMDb account");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         MovieResultsPage movieFull = this.obtainAccountMovieInfoPages(pass, tmdb, session, accountId, sortBy, language);
@@ -313,25 +323,20 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
                 // result not success, retry - it can't hurt
                 retry = true;
                 retryTime = 2;
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -364,7 +369,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -388,15 +393,21 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (movieId < 1) {
-            throw new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if ((session == null || StringUtils.isBlank(session) && (guestSessionId == null || StringUtils.isBlank(guestSessionId)))) {
-            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         AccountState accountState = this.obtainAccountMovieInfoDetail(tmdb, movieId, session, guestSessionId);
@@ -432,25 +443,20 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
                 // result not success, retry - it can't hurt
                 retry = true;
                 retryTime = 2;
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -480,7 +486,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -504,33 +510,49 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         // Check userid / passwd
         if (session == null || StringUtils.isBlank(session)) {
-            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (accountId < 1) {
-            throw new TmdbException(TMDB_CODE_ACCOUNT_RELATED, "Invalid TMDb account id");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_ACCOUNT_RELATED, "Invalid TMDb account id");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (favorite == null) {
             throw new NullPointerException("AccountFavorite is null");
         } else {
             if (favorite.getMediaType() == null || StringUtils.isBlank(favorite.getMediaType())) {
-                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite media type");
+                TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite media type");
+                tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                throw tmdbException;
             } else if (!(favorite.getMediaType().equals(MediaType.MOVIE.toString()) || favorite.getMediaType().equals(MediaType.TV.toString()))) {
-                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Favorite media type must be either " + MediaType.MOVIE.toString() + " or " + MediaType.TV.toString());
+                TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Favorite media type must be either " + MediaType.MOVIE.toString() + " or " + MediaType.TV.toString());
+                tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                throw tmdbException;
             }
             if (favorite.getId() == null) {
-                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite media id");
+                TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite media id");
+                tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                throw tmdbException;
             } else if (favorite.getId() < 1) {
-                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Invalid favorite media id");
+                TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Invalid favorite media id");
+                tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                throw tmdbException;
             }
             if (favorite.getFavorite() == null) {
-                throw new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite setting");
+                TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite setting");
+                tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                throw tmdbException;
             }
         }
 
@@ -567,25 +589,20 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
                 // result not success, retry - it can't hurt
                 retry = true;
                 retryTime = 2;
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -615,7 +632,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -640,22 +657,30 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (movieId < 1) {
-            throw new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if ((session == null || StringUtils.isBlank(session) && (guestSessionId == null || StringUtils.isBlank(guestSessionId)))) {
-            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (ratingValue == null) {
             throw new NullPointerException("RatingValue is null");
         } else {
             if (ratingValue.getValue() < 0.5 || ratingValue.getValue() > 10) {
-                throw new TmdbException(TMDB_CODE_RATING_RELATED, "The rating value is expected to be between 0.5 and 10.0.");
+                TmdbException tmdbException = new TmdbException(TMDB_CODE_RATING_RELATED, "The rating value is expected to be between 0.5 and 10.0.");
+                tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                throw tmdbException;
             }
         }
 
@@ -693,25 +718,20 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
                 // result not success, retry - it can't hurt
                 retry = true;
                 retryTime = 2;
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -742,7 +762,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -766,15 +786,21 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if (movieId < 1) {
-            throw new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         if ((session == null || StringUtils.isBlank(session) && (guestSessionId == null || StringUtils.isBlank(guestSessionId)))) {
-            throw new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         Status status = this.detachMovieRating(tmdb, movieId, session, guestSessionId);
@@ -810,25 +836,20 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
                 // result not success, retry - it can't hurt
                 retry = true;
                 retryTime = 2;
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -858,13 +879,11 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
         }
     }
-
-
 
 }

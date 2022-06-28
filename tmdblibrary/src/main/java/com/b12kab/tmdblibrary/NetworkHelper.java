@@ -1,13 +1,13 @@
 package com.b12kab.tmdblibrary;
 
-import android.os.NetworkOnMainThreadException;
-
 import com.b12kab.tmdblibrary.entities.Status;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
+import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,7 +51,7 @@ public abstract class NetworkHelper {
      * Process a non-good error result
      *
      * @param response Response<?>
-     * @throws TmdbException
+     * @throws TmdbException or TmdbNetworkException - IOException
      */
     public void ProcessError(@NonNull Response<?> response) throws IOException {
         TmdbException tmdbException = new TmdbException();
@@ -70,13 +70,15 @@ public abstract class NetworkHelper {
             this.CheckRetryTime(response.headers().toMultimap(), tmdbException);
         }
 
-        if (!hasBody) {
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.Other);
-            tmdbException.setMessage("Unknown Error");
-            tmdbException.setCode(-1);
+        if (hasBody) {
+            throw tmdbException;
         }
 
-        throw tmdbException;
+        if (StringUtils.isBlank(response.message())) {
+            throw new TmdbNetworkException(httpStatus);
+        } else {
+            throw new TmdbNetworkException(httpStatus, response.message());
+        }
     }
 
     /***
@@ -98,7 +100,7 @@ public abstract class NetworkHelper {
                     case 429:
                         Integer retryValue = tmdbException.getRetryTime();
                         if (retryValue != null) {
-                            checkReturn.retryTime = retryValue.intValue();
+                            checkReturn.retryTime = retryValue;
                             checkReturn.retry = true;
                         }
                         break;
@@ -124,7 +126,7 @@ public abstract class NetworkHelper {
      *
      * @param headers okhttp3 Headers
      * @param tmdbException TmdbException
-     * @throws TmdbException
+     * @throws TmdbException TmdbException
      */
     public void CheckRetryTime(@NonNull Map<String, List<String>> headers, TmdbException tmdbException) throws TmdbException {
         Integer retryTime = null;
@@ -161,10 +163,11 @@ public abstract class NetworkHelper {
 
     /**
      * Get json string from TMDb response
-     * @param errorBody
-     * @return
-     * @throws IOException
+     * @param errorBody ResponseBody
+     * @return JSON from TMDb or null
+     * @throws IOException IOException
      */
+    @Nullable
     public String ObtainResponseError(ResponseBody errorBody) throws IOException {
         if (errorBody != null) {
             return errorBody.string();
@@ -174,11 +177,12 @@ public abstract class NetworkHelper {
     }
 
     /***
-     * Try to convert the error body (hopefully Json) to a status
+     * Try to convert the error body (hopefully Json) to a TMDb status
      *
      * @param errorBody Error body
      * @return Status
      */
+    @Nullable
     public Status ConvertTmdbError(String errorBody)
     {
         if (StringUtils.isAllBlank(errorBody))
@@ -188,7 +192,7 @@ public abstract class NetworkHelper {
         Status status = null;
         try {
             status = gson.fromJson(errorBody, Status.class);
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {}
 
         return status;
     }
@@ -201,15 +205,11 @@ public abstract class NetworkHelper {
      */
     public TmdbException GetFailure(Throwable t) {
         TmdbException tmdbException = new TmdbException();
-        String errMsg = t.getCause() == null ? null : t.getCause().toString();
+        String errMsg = t.getMessage() == null ? null : t.getMessage();
 
-        if (t instanceof NetworkOnMainThreadException) {
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.NetworkOnMain);
-            if (errMsg == null) errMsg = "NetworkOnMainThreadException";
-            tmdbException.setMessage(errMsg);
-        } else if (t instanceof IOException) {
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.Timeout);
-            if (errMsg == null) errMsg = StringUtils.EMPTY;
+        if (t instanceof IOException) {
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.IOError);
+            if (errMsg == null) errMsg = "IOError";
             tmdbException.setMessage(errMsg);
         } else if (t instanceof IllegalStateException) {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.ConversionError);

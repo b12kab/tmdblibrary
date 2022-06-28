@@ -1,15 +1,19 @@
 package com.b12kab.tmdblibrary.implementation;
 
+import android.os.NetworkOnMainThreadException;
+
 import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.AppendToResponse;
 import com.b12kab.tmdblibrary.entities.MovieFull;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
+import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -46,7 +50,7 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
      * @return List<Integer>
      */
     public List<Integer> getAssocHelperNonTmdbErrorStatusCodes() {
-        return Arrays.asList(
+        return Collections.singletonList(
                 TMDB_CODE_API_KEY_INVALID
         );
     }
@@ -59,7 +63,7 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @param session <em>Optional.</em> TMDb session Id
      * @param additionalAppends <em>Optional.</em> AppendToResponse - already appends ACCT_STATES, CREDITS, IMAGES, REVIEWS, VIDEOS, RELEASE_DATES
-     * @return MovieFull
+     * @return MovieFull MovieFull
      * @throws IOException TmdbException
      */
     public MovieFull processMovieDetail(Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
@@ -68,7 +72,9 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            throw new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            throw tmdbException;
         }
 
         MovieFull movieFull = this.obtainMovieDetail(tmdb, movieId, language, session, additionalAppends);
@@ -116,25 +122,20 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
                 // result not success, retry - it can't hurt
                 retry = true;
                 retryTime = 2;
-            } catch (Exception ex) {
-                if (ex instanceof TmdbException)
-                {
-                    TmdbException tmdbException = (TmdbException) ex;
-                    NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(tmdbException);
-                    if (!checkReturn.retry)
-                        throw ex;
-
-                    retry = true;
-                    retryTime = checkReturn.retryTime;
-                } else {
+            // Note - TmdbNetworkException and any other exception are ignored and will bubble up
+            } catch (TmdbException ex) {
+                NetworkHelper.ExceptionCheckReturn checkReturn = this.CheckForNetworkRetry(ex);
+                if (!checkReturn.retry)
                     throw ex;
-                }
+
+                retry = true;
+                retryTime = checkReturn.retryTime;
             }
 
             if (retry) {
                 try {
                     Thread.sleep((int) ((retryTime + 0.5) * 1000));
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException ignored) { }
             } else {
                 break;
             }
@@ -156,7 +157,6 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
      */
     private MovieFull getMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse appendToResponse) throws IOException {
         try {
-
             Call<MovieFull> call;
             if (session != null && !StringUtils.isBlank(session)) {
                 call = tmdb.moviesService().summary(movieId, language, appendToResponse, session);
@@ -170,8 +170,9 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
             this.ProcessError(response);
             // this will never return, but the compiler wants a return
             return null;
+        // Note - TmdbNetworkException and any other exception are ignored and will bubble up
         } catch (Exception exception) {
-            if (exception instanceof TmdbException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
                 throw exception;
 
             throw this.GetFailure(exception);
