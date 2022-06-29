@@ -1,7 +1,5 @@
 package com.b12kab.tmdblibrary.implementation;
 
-import android.os.NetworkOnMainThreadException;
-
 import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.AccountFavorite;
@@ -17,7 +15,6 @@ import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,7 +48,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
 
     /***
      * This will likely only be used for unit tests
-     * @param maxPageFetch
+     * @param maxPageFetch Max page
      */
     public void setMaxPageFetch(int maxPageFetch) {
         if (maxPageFetch > 1000) {
@@ -100,10 +97,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param tmdb Tmdb
      * @param session session Key
      * @return AccountResponse
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    public AccountResponse processAccountInfo(Tmdb tmdb, String session) throws IOException {
+    public AccountResponse processAccountInfo(Tmdb tmdb, String session) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -111,6 +108,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -118,6 +116,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         if (session == null || StringUtils.isBlank(session)) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -132,10 +131,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param tmdb Tmdb
      * @param session session Key
      * @return AccountResponse
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private AccountResponse obtainAccountInfo(@NonNull Tmdb tmdb, String session) throws IOException {
+    private AccountResponse obtainAccountInfo(@NonNull Tmdb tmdb, String session) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -179,9 +178,9 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param tmdb Tmdb
      * @param session session Key
      * @return AccountResponse
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private AccountResponse getAccountInfo(@NonNull Tmdb tmdb, String session) throws IOException {
+    private AccountResponse getAccountInfo(@NonNull Tmdb tmdb, String session) throws Exception {
         try {
             Call<AccountResponse> call = tmdb.accountService().getAccountInfo(session);
             Response<AccountResponse> response = call.execute();
@@ -192,7 +191,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -209,10 +208,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param sortBy <em>Optional.</em> sort by
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    public MovieResultsPage processAccountMovieInfo(Tmdb tmdb, AccountFetchType fetchType, String session, int accountId, String sortBy, String language) throws IOException {
+    public MovieResultsPage processAccountMovieInfo(Tmdb tmdb, AccountFetchType fetchType, String session, int accountId, String sortBy, String language) throws Exception {
         GetAccountMovieInfo pass = null;
 
         if (tmdb == null) {
@@ -222,6 +221,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -232,6 +232,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         } else {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "Invalid fetch type");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -239,12 +240,14 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         if (session == null || StringUtils.isBlank(session)) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if (accountId < 1) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_ACCOUNT_RELATED, "Invalid TMDb account");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -263,10 +266,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param sortBy <em>Optional.</em> sort by
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private MovieResultsPage obtainAccountMovieInfoPages(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, String sortBy, String language) throws IOException {
+    private MovieResultsPage obtainAccountMovieInfoPages(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, String sortBy, String language) throws Exception {
         MovieResultsPage results = null;
         boolean initResults = false;
 
@@ -304,10 +307,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param sortBy <em>Optional.</em> sort by
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private MovieResultsPage obtainAccountMovieInfoPage(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, int page, String sortBy, String language) throws IOException {
+    private MovieResultsPage obtainAccountMovieInfoPage(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, int page, String sortBy, String language) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -356,9 +359,9 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param sortBy <em>Optional.</em> sort by
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return MovieResultsPage
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private MovieResultsPage getAccountMovieInfoPage(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, int page, String sortBy, String language) throws IOException {
+    private MovieResultsPage getAccountMovieInfoPage(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, int page, String sortBy, String language) throws Exception {
         try {
             Call<MovieResultsPage> call = function.initialMovies(tmdb, session, accountId, page, sortBy, language);
             Response<MovieResultsPage> response = call.execute();
@@ -369,7 +372,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -384,10 +387,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param session session Key
      * @param guestSessionId guest session
      * @return AccountState
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    public AccountState processAccountMovieInfoDetail(Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    public AccountState processAccountMovieInfoDetail(Tmdb tmdb, int movieId, String session, String guestSessionId) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -395,18 +398,21 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if (movieId < 1) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if ((session == null || StringUtils.isBlank(session) && (guestSessionId == null || StringUtils.isBlank(guestSessionId)))) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -424,10 +430,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param session session Key
      * @param guestSessionId guest session
      * @return AccountState
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private AccountState obtainAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    private AccountState obtainAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -473,9 +479,9 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param session session Key
      * @param guestSessionId guest session
      * @return AccountState
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private AccountState getAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    private AccountState getAccountMovieInfoDetail(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws Exception {
         try {
             Call<AccountState> call = tmdb.accountService().getMovieAccountState(movieId, session, guestSessionId);
             Response<AccountState> response = call.execute();
@@ -486,7 +492,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -501,10 +507,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param accountId User's account #
      * @param favorite AccountFavorite
      * @return Status Set status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    public Status processAccountFavorite(Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
+    public Status processAccountFavorite(Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -512,6 +518,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -519,12 +526,14 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         if (session == null || StringUtils.isBlank(session)) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if (accountId < 1) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_ACCOUNT_RELATED, "Invalid TMDb account id");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -534,24 +543,29 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             if (favorite.getMediaType() == null || StringUtils.isBlank(favorite.getMediaType())) {
                 TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite media type");
                 tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
                 throw tmdbException;
             } else if (!(favorite.getMediaType().equals(MediaType.MOVIE.toString()) || favorite.getMediaType().equals(MediaType.TV.toString()))) {
-                TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Favorite media type must be either " + MediaType.MOVIE.toString() + " or " + MediaType.TV.toString());
+                TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Favorite media type must be either " + MediaType.MOVIE + " or " + MediaType.TV);
                 tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
                 throw tmdbException;
             }
             if (favorite.getId() == null) {
                 TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite media id");
                 tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
                 throw tmdbException;
             } else if (favorite.getId() < 1) {
                 TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Invalid favorite media id");
                 tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
                 throw tmdbException;
             }
             if (favorite.getFavorite() == null) {
                 TmdbException tmdbException = new TmdbException(TMDB_CODE_FAVORITE_RELATED, "Empty favorite setting");
                 tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
                 throw tmdbException;
             }
         }
@@ -570,10 +584,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param accountId User's account #
      * @param favorite AccountFavorite
      * @return Status Set status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private Status tryAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
+    private Status tryAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -619,9 +633,9 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param accountId User's account #
      * @param favorite AccountFavorite
      * @return Status Set status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private Status setAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws IOException {
+    private Status setAccountFavorite(@NonNull Tmdb tmdb, String session, int accountId, AccountFavorite favorite) throws Exception {
         try {
             Call<Status> call = tmdb.accountService().setAccountFavorite(accountId, session, favorite);
             Response<Status> response = call.execute();
@@ -632,7 +646,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -648,10 +662,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param guestSessionId guest session
      * @param ratingValue RatingValue
      * @return Status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    public Status addMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+    public Status addMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -659,18 +673,21 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if (movieId < 1) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if ((session == null || StringUtils.isBlank(session) && (guestSessionId == null || StringUtils.isBlank(guestSessionId)))) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -680,6 +697,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             if (ratingValue.getValue() < 0.5 || ratingValue.getValue() > 10) {
                 TmdbException tmdbException = new TmdbException(TMDB_CODE_RATING_RELATED, "The rating value is expected to be between 0.5 and 10.0.");
                 tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+                tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
                 throw tmdbException;
             }
         }
@@ -699,10 +717,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param guestSessionId guest session
      * @param ratingValue RatingValue
      * @return Status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private Status attachMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+    private Status attachMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -749,9 +767,9 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param guestSessionId guest session
      * @param ratingValue RatingValue
      * @return Status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private Status postMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws IOException {
+    private Status postMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId, RatingValue ratingValue) throws Exception {
         try {
             Call<Status> call = tmdb.accountService().setMovieRating(movieId, session, guestSessionId, ratingValue);
             Response<Status> response = call.execute();
@@ -762,7 +780,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -777,10 +795,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param session session Key
      * @param guestSessionId guest session
      * @return Status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    public Status removeMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    public Status removeMovieRating(Tmdb tmdb, int movieId, String session, String guestSessionId) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -788,18 +806,21 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if (movieId < 1) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_ID_RELATED, "Invalid TMDb movie id");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if ((session == null || StringUtils.isBlank(session) && (guestSessionId == null || StringUtils.isBlank(guestSessionId)))) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated session or guest session");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -817,10 +838,10 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param session session Key
      * @param guestSessionId guest session
      * @return Status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private Status detachMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    private Status detachMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -866,9 +887,9 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      * @param session session Key
      * @param guestSessionId guest session
      * @return Status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private Status deleteMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws IOException {
+    private Status deleteMovieRating(@NonNull Tmdb tmdb, int movieId, String session, String guestSessionId) throws Exception {
         try {
             Call<Status> call = tmdb.accountService().removeMovieRating(movieId, session, guestSessionId);
             Response<Status> response = call.execute();
@@ -879,7 +900,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);

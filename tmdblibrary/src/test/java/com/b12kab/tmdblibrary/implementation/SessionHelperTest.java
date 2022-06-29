@@ -78,7 +78,8 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(),funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -97,7 +98,8 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(),funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -116,7 +118,8 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(),funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -135,7 +138,8 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertFalse(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -154,7 +158,8 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_ID_OR_PASSWORD_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertFalse(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -173,7 +178,9 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(30, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.Tmdb, exception.getErrorKind(), funcName + " error kind does not match Tmdb");
+            assertEquals(30, exception.getStatus().getStatusCode(), funcName + "code doesn't match");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -192,7 +199,9 @@ public class SessionHelperTest extends BaseTestCase {
                 fail("Non TmdbException exception occurred on " + funcName + ": " + e.toString());
             }
             TmdbException exception = (TmdbException)e;
-            assertEquals(30, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.Tmdb, exception.getErrorKind(), funcName + " error kind does not match Tmdb");
+            assertEquals(30, exception.getStatus().getStatusCode(), funcName + "code doesn't match");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("user"), funcName + "message does not contain user");
             assertTrue(exception.getMessage().contains("password"), funcName + "message does not contain user");
@@ -237,7 +246,8 @@ public class SessionHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("TMDb session"), funcName + "message does not contain user");
         } catch (Exception e) {
@@ -254,7 +264,8 @@ public class SessionHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(),funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("TMDb session"), funcName + "message does not contain user");
         } catch (Exception e) {

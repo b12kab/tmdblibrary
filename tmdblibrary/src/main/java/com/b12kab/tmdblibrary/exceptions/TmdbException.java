@@ -1,15 +1,19 @@
 package com.b12kab.tmdblibrary.exceptions;
 
+import com.b12kab.tmdblibrary.entities.Status;
+
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
+
 public class TmdbException extends IOException {
-    public enum RetrofitErrorKind { Unset, NetworkOnMain, Retry, IOError, ConversionError, Other };
+    public enum RetrofitErrorKind { Unset, None, Retry, IOError, ConversionError, Tmdb }
     public enum UseMessage { Unset, Yes, No}
+
     private TmdbException.RetrofitErrorKind errorKind;
     private TmdbException.UseMessage useMessage;
-
-    private int code;
     private String message;
+    private Status status;
     private Integer httpResponseCode;
     private Integer retryTime;
 
@@ -22,21 +26,11 @@ public class TmdbException extends IOException {
         super(message);
         this.initialize();
         this.setMessage(message);
-        this.setCode(code);
     }
 
     private void initialize() {
-        this.setCode(-1);
         this.setErrorKind(RetrofitErrorKind.Unset);
         this.setUseMessage(UseMessage.Unset);
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
     }
 
     public String getMessage() {
@@ -77,5 +71,44 @@ public class TmdbException extends IOException {
 
     public void setUseMessage(UseMessage useMessage) {
         this.useMessage = useMessage;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @NonNull
+    public String toString() {
+        String result = "";
+
+        if (this.httpResponseCode != null) {
+            result += " http response code: " + this.httpResponseCode + " ";
+        }
+
+        if (this.retryTime != null) {
+            result += " retry time: " + this.retryTime + " ";
+        }
+
+        if (this.message != null) {
+            result += " message: " + this.message + " ";
+        }
+
+        if (this.status != null) {
+            if (this.status.getStatusCode() != null) {
+                result += " status code: " + this.status.getStatusCode() + " ";
+            }
+            if (this.status.getSuccess() != null) {
+                result += " status success: " + this.status.getSuccess() + " ";
+            }
+            if (this.status.getStatusMessage() != null) {
+                result += " status message: " + this.status.getStatusMessage() + " ";
+            }
+        }
+
+        return result;
     }
 }

@@ -50,7 +50,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            fail("Exception occurred on test_get_token_step_1_only: " + e.toString());
+            fail("Exception occurred on test_get_token_step_1_only: " + e);
         }
 
         assertNotNull(newToken, funcName + "newToken is null");
@@ -71,7 +71,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            fail("Exception occurred on test_associate_tmdb_id_with_invalid_pw_step_2 - create token: " + e.toString());
+            fail("Exception occurred on test_associate_tmdb_id_with_invalid_pw_step_2 - create token: " + e);
         }
 
         assertNotNull(newToken, funcName + "newToken is null");
@@ -92,7 +92,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            fail("Exception occurred on test_associate_tmdb_id_with_invalid_pw_step_2 - associate token: " + e.toString());
+            fail("Exception occurred on test_associate_tmdb_id_with_invalid_pw_step_2 - associate token: " + e);
         }
 
         assertNull(authToken, funcName + "authToken is not null");
@@ -105,7 +105,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
         }
         catch (IOException e)
         {
-            fail("Exception response error conversion: " + e.toString());
+            fail("Exception response error conversion: " + e);
         }
 
         Status status = null;
@@ -129,7 +129,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step2 - create token: " + e.toString());
+            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step2 - create token: " + e);
         }
 
         assertNotNull(newToken, funcName + "newToken is null");
@@ -151,7 +151,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step2 - associate token: " + e.toString());
+            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step2 - associate token: " + e);
         }
 
         assertNotNull(authToken, funcName + "authToken is null");
@@ -170,7 +170,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step3 - create token: " + e.toString());
+            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step3 - create token: " + e);
         }
 
         assertNotNull(newToken, funcName + "newToken is null");
@@ -187,7 +187,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
         }
         catch (Exception e)
         {
-            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step3 - associate token: " + e.toString());
+            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step3 - associate token: " + e);
         }
 
         assertNotNull(authToken, funcName + "authToken is null");
@@ -207,7 +207,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
             errorBody = response.errorBody();
 
         } catch (Exception e) {
-            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step3 - authenticateSession token: " + e.toString());
+            fail("Exception occurred on test_associate_tmdb_id_with_valid_pw_step3 - authenticateSession token: " + e);
         }
 
         assertNotNull(authSession, funcName + "authSession is null");
@@ -219,7 +219,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
     }
 
     @Test
-    public void test_tmdb_logout() throws IOException {
+    public void test_tmdb_logout() throws Exception {
         final String funcName = "test_movie_logout ";
 
         String session = sessionHelper.createTmdbSession(this.getManager(), BuildConfig.TMDB_TEST_ID, BuildConfig.TMDB_TEST_GOOD_PSWD);
@@ -236,7 +236,7 @@ public class AuthenticationServiceTest extends BaseTestCase {
             errorBody = response.errorBody();
 
         } catch (Exception e) {
-            fail("Exception occurred on test_tmdb_logout - " + e.toString());
+            fail("Exception occurred on test_tmdb_logout - " + e);
         }
 
         assertNotNull(logout, funcName + "logout is null");

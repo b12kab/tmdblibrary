@@ -1,7 +1,5 @@
 package com.b12kab.tmdblibrary.implementation;
 
-import android.os.NetworkOnMainThreadException;
-
 import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.AuthenticateSessionNewResponse;
@@ -13,7 +11,6 @@ import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,9 +59,9 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
      * @param tmdb Tmdb
      * @param session logged in TMDb session
      * @return true = worked, false = didn't work
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    public boolean destroyTmdbSession(Tmdb tmdb, String session) throws IOException {
+    public boolean destroyTmdbSession(Tmdb tmdb, String session) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -72,6 +69,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -79,6 +77,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
         if (session == null || StringUtils.isBlank(session)) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -96,10 +95,10 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
      * @param tmdb Tmdb
      * @param session logged in TMDb session
      * @return Boolean
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private Boolean obtainLogout(Tmdb tmdb, String session) throws IOException {
+    private Boolean obtainLogout(Tmdb tmdb, String session) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -148,9 +147,9 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
      * @param tmdb Tmdb
      * @param session logged in TMDb session
      * @return Status
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private Status processLogout(@NonNull Tmdb tmdb, String session) throws IOException {
+    private Status processLogout(@NonNull Tmdb tmdb, String session) throws Exception {
         try {
             Call<Status> call = tmdb.authenticationService().logoutSession(session);
             Response<Status> response = call.execute();
@@ -161,7 +160,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -170,12 +169,13 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
 
     /***
      * Get the TMDb session
+     *
      * @param tmdb Tmdb
      * @param userId user id
      * @param passwd password
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    public String createTmdbSession(Tmdb tmdb, String userId, String passwd) throws IOException {
+    public String createTmdbSession(Tmdb tmdb, String userId, String passwd) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -184,24 +184,28 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
         if ((userId == null || StringUtils.isBlank(userId)) && (passwd == null || StringUtils.isBlank(passwd))) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a username and a password.");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if (userId == null || StringUtils.isBlank(userId)) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a username.");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if (passwd == null || StringUtils.isBlank(passwd)) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_ID_OR_PASSWORD_RELATED, "You must provide a password.");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -210,6 +214,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
         {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to create a new token");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -217,6 +222,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
         if (!worked) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_TOKEN_RELATED, "Failed to associate token with userid / password");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -225,6 +231,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
         {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "Failed to create a session");
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -237,10 +244,10 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
      *
      * @param tmdb Tmdb
      * @return Token value or null
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private String obtainToken(@NonNull Tmdb tmdb) throws IOException {
+    private String obtainToken(@NonNull Tmdb tmdb) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -287,9 +294,9 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
      *
      * @param tmdb Tmdb
      * @return AuthenticateTokenNewResponse
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private CreateNewTokenResponse getToken(@NonNull Tmdb tmdb) throws IOException {
+    private CreateNewTokenResponse getToken(@NonNull Tmdb tmdb) throws Exception {
         try {
             Call<CreateNewTokenResponse> call = tmdb.authenticationService().createToken();
             Response<CreateNewTokenResponse> response = call.execute();
@@ -301,7 +308,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -317,9 +324,9 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
      * @param passwd password
      * @param token Token created in step 1
      * @return true = success; false = failure
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private boolean obtainAssociation(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws IOException {
+    private boolean obtainAssociation(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -367,10 +374,10 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
      * @param passwd password
      * @param token created token
      * @return AuthenticateTokenValidateWithLoginResponse
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private AuthenticateTokenValidateWithLoginResponse associateToken(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws IOException {
+    private AuthenticateTokenValidateWithLoginResponse associateToken(@NonNull Tmdb tmdb, String userId, String passwd, String token) throws Exception {
         try {
             Call<AuthenticateTokenValidateWithLoginResponse> call = tmdb.authenticationService().authorizeTokenWithLogin(token, userId, passwd);
             Response<AuthenticateTokenValidateWithLoginResponse> response = call.execute();
@@ -381,7 +388,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -395,10 +402,10 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
      * @param tmdb Tmdb
      * @param token Token associated in step 2
      * @return Session Id
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private String obtainSession(@NonNull Tmdb tmdb, String token) throws IOException {
+    private String obtainSession(@NonNull Tmdb tmdb, String token) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -443,10 +450,10 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
      * @param tmdb Tmdb
      * @param token Associated userid / password token from step 2 (and step 1)
      * @return AuthenticateSessionNewResponse
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private AuthenticateSessionNewResponse createSessionFromToken(@NonNull Tmdb tmdb, String token) throws IOException {
+    private AuthenticateSessionNewResponse createSessionFromToken(@NonNull Tmdb tmdb, String token) throws Exception {
         try {
             Call<AuthenticateSessionNewResponse> call = tmdb.authenticationService().createSession(token);
             Response<AuthenticateSessionNewResponse> response = call.execute();
@@ -457,7 +464,7 @@ public class SessionHelper extends NetworkHelper implements ISessionHelper {
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);

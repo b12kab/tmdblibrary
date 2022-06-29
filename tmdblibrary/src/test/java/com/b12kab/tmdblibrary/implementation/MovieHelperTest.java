@@ -65,7 +65,8 @@ public class MovieHelperTest extends BaseTestCase {
             helper.processInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains("page"), funcName + "message incorrect");
         } catch (Exception e) {
@@ -81,7 +82,8 @@ public class MovieHelperTest extends BaseTestCase {
             helper.processInitialMovies(this.getManager(), null, null, null, 1111);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_MOVIE_TYPE_RELATED, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains("Invalid fetch type"), funcName + "message incorrect");
         } catch (Exception e) {
@@ -175,7 +177,8 @@ public class MovieHelperTest extends BaseTestCase {
             helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 1);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains("greater than the start"), funcName + "message incorrect");
         } catch (Exception e) {
@@ -191,7 +194,8 @@ public class MovieHelperTest extends BaseTestCase {
             helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, -1, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains("greater than 1"), funcName + "message incorrect");
         } catch (Exception e) {
@@ -207,7 +211,8 @@ public class MovieHelperTest extends BaseTestCase {
             helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 0, 1);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_PAGE_RELATED, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains("greater than 1"), funcName + "message incorrect");
         } catch (Exception e) {
@@ -223,7 +228,8 @@ public class MovieHelperTest extends BaseTestCase {
             helper.processAdditionalMovies(this.getManager(), null, null, null, 2, 2);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_MOVIE_TYPE_RELATED, e.getCode(), funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains("Invalid type"), funcName + "message incorrect");
         } catch (Exception e) {

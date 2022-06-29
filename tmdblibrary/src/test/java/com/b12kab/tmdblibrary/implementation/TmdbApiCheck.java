@@ -48,7 +48,8 @@ public class TmdbApiCheck {
             movieHelper.processInitialMovies(tmdb, MovieFetchType.Upcoming, null, null, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -65,7 +66,8 @@ public class TmdbApiCheck {
             resultsPage = movieHelper.processAdditionalMovies(tmdb, null, null, null, 0, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -81,7 +83,8 @@ public class TmdbApiCheck {
             detailHelper.processMovieDetail(tmdbApiNull, 0, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -97,7 +100,8 @@ public class TmdbApiCheck {
             detailHelper.processMovieDetail(tmdb, 0, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -113,7 +117,8 @@ public class TmdbApiCheck {
             sessionHelper.createTmdbSession(tmdb, "blah", BuildConfig.TMDB_TEST_BAD_PSWD);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -129,7 +134,8 @@ public class TmdbApiCheck {
             sessionHelper.destroyTmdbSession(tmdb, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -145,7 +151,8 @@ public class TmdbApiCheck {
             accountHelper.processAccountMovieInfo(tmdb, null, null, 0, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -161,7 +168,8 @@ public class TmdbApiCheck {
             accountHelper.processAccountInfo(tmdb, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -177,7 +185,8 @@ public class TmdbApiCheck {
             accountHelper.processAccountMovieInfoDetail(tmdb,1,null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -193,7 +202,8 @@ public class TmdbApiCheck {
             accountHelper.processAccountFavorite(tmdb, null, -1, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -209,7 +219,8 @@ public class TmdbApiCheck {
             accountHelper.addMovieRating(tmdb, -1, null, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -225,7 +236,8 @@ public class TmdbApiCheck {
             accountHelper.removeMovieRating(tmdb, -1, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -241,7 +253,8 @@ public class TmdbApiCheck {
             configurationHelper.processConfigApi(tmdb);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
@@ -257,7 +270,8 @@ public class TmdbApiCheck {
             configurationHelper.processConfigLanguage(tmdb);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
-            assertEquals(TMDB_CODE_API_KEY_INVALID, e.getCode(),funcName + "code doesn't match");
+            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
             assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {

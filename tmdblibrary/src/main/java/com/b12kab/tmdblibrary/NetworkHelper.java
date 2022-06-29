@@ -90,7 +90,6 @@ public abstract class NetworkHelper {
     public ExceptionCheckReturn CheckForNetworkRetry(@NonNull TmdbException tmdbException) {
         ExceptionCheckReturn checkReturn = new ExceptionCheckReturn();
         Integer httpStatus = null;
-        int retryTime;
 
         if (tmdbException.getHttpResponseCode() != null) {
             httpStatus = tmdbException.getHttpResponseCode();
@@ -149,6 +148,7 @@ public abstract class NetworkHelper {
 
     /**
      * Convert the error body into TMDb's status
+     *
      * @param errorBody TMDb's error response
      * @param tmdbException TmdbException
      */
@@ -156,13 +156,15 @@ public abstract class NetworkHelper {
         Status status = this.ConvertTmdbError(errorBody);
 
         if (status != null) {
-            tmdbException.setCode(status.getStatusCode());
+            tmdbException.setStatus(status);
             tmdbException.setMessage(status.getStatusMessage());
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.Tmdb);
         }
     }
 
     /**
      * Get json string from TMDb response
+     *
      * @param errorBody ResponseBody
      * @return JSON from TMDb or null
      * @throws IOException IOException
@@ -200,10 +202,11 @@ public abstract class NetworkHelper {
     /***
      * Create ErrorRetrofitInfo when a failure occurs
      *
-     * @param t Throwable
+     * @param t Exception
      * @return ErrorRetrofitInfo
      */
-    public TmdbException GetFailure(Throwable t) {
+    public Exception GetFailure(Exception t) {
+        boolean throwTmdb = false;
         TmdbException tmdbException = new TmdbException();
         String errMsg = t.getMessage() == null ? null : t.getMessage();
 
@@ -211,16 +214,18 @@ public abstract class NetworkHelper {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.IOError);
             if (errMsg == null) errMsg = "IOError";
             tmdbException.setMessage(errMsg);
+            throwTmdb = true;
         } else if (t instanceof IllegalStateException) {
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.ConversionError);
             if (errMsg == null) errMsg = "IllegalStateException";
             tmdbException.setMessage(errMsg);
-        } else {
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.Other);
-            if (errMsg == null) errMsg = StringUtils.EMPTY;
-            tmdbException.setMessage(errMsg);
+            throwTmdb = true;
         }
 
-        return tmdbException;
+        if (throwTmdb) {
+            return tmdbException;
+        } else {
+            return t;
+        }
     }
 }

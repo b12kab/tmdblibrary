@@ -1,7 +1,5 @@
 package com.b12kab.tmdblibrary.implementation;
 
-import android.os.NetworkOnMainThreadException;
-
 import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.Configuration;
@@ -9,8 +7,6 @@ import com.b12kab.tmdblibrary.entities.ConfigurationLanguages;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
 import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,10 +46,10 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
      *
      * @param tmdb Tmdb
      * @return Configuration
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    public Configuration processConfigApi(Tmdb tmdb) throws IOException {
+    public Configuration processConfigApi(Tmdb tmdb) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -61,6 +57,7 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -74,10 +71,10 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
      *
      * @param tmdb Tmdb
      * @return Configuration
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private Configuration obtainConfigApi(@NonNull Tmdb tmdb) throws IOException {
+    private Configuration obtainConfigApi(@NonNull Tmdb tmdb) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -119,9 +116,9 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
      *
      * @param tmdb Tmdb
      * @return Configuration
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private Configuration getConfigApi(@NonNull Tmdb tmdb) throws IOException {
+    private Configuration getConfigApi(@NonNull Tmdb tmdb) throws Exception {
         try {
 
             Call<Configuration> call = tmdb.configurationService().configuration();
@@ -133,7 +130,7 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);
@@ -145,10 +142,10 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
      *
      * @param tmdb Tmdb
      * @return ConfigurationLanguages
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    public ConfigurationLanguages processConfigLanguage(Tmdb tmdb) throws IOException {
+    public ConfigurationLanguages processConfigLanguage(Tmdb tmdb) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -156,6 +153,7 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -169,10 +167,10 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
      *
      * @param tmdb Tmdb
      * @return ConfigurationLanguages
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private ConfigurationLanguages obtainConfigLanguage(@NonNull Tmdb tmdb) throws IOException {
+    private ConfigurationLanguages obtainConfigLanguage(@NonNull Tmdb tmdb) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -215,9 +213,9 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
      *
      * @param tmdb Tmdb
      * @return ConfigurationLanguages
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private ConfigurationLanguages getConfigLanguages(@NonNull Tmdb tmdb) throws IOException {
+    private ConfigurationLanguages getConfigLanguages(@NonNull Tmdb tmdb) throws Exception {
         try {
 
             Call<ConfigurationLanguages> call = tmdb.configurationService().languages();
@@ -229,7 +227,7 @@ public class ConfigurationHelper extends NetworkHelper implements IConfiguration
             // this will never return, but the compiler wants a return
             return null;
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);

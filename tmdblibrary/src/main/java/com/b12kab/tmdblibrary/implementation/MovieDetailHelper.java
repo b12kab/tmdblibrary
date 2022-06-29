@@ -1,7 +1,5 @@
 package com.b12kab.tmdblibrary.implementation;
 
-import android.os.NetworkOnMainThreadException;
-
 import com.b12kab.tmdblibrary.NetworkHelper;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.AppendToResponse;
@@ -11,7 +9,6 @@ import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -64,9 +61,9 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
      * @param session <em>Optional.</em> TMDb session Id
      * @param additionalAppends <em>Optional.</em> AppendToResponse - already appends ACCT_STATES, CREDITS, IMAGES, REVIEWS, VIDEOS, RELEASE_DATES
      * @return MovieFull MovieFull
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    public MovieFull processMovieDetail(Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
+    public MovieFull processMovieDetail(Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws Exception {
         if (tmdb == null) {
             throw new NullPointerException("Tmdb is null");
         }
@@ -74,6 +71,7 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
             TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
@@ -92,10 +90,10 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
      * @param session <em>Optional.</em> TMDb session Id
      * @param additionalAppends AppendToResponse - additional AppendToResponseItems to be merged
      * @return MovieFull
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
     @Nullable
-    private MovieFull obtainMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws IOException {
+    private MovieFull obtainMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse additionalAppends) throws Exception {
         boolean retry;
         int retryTime = 0;
 
@@ -153,9 +151,9 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
      * @param session TMDb session Id
      * @param appendToResponse AppendToResponse - merged appendResponse
      * @return MovieFull
-     * @throws IOException TmdbException
+     * @throws Exception Exception
      */
-    private MovieFull getMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse appendToResponse) throws IOException {
+    private MovieFull getMovieDetail(@NonNull Tmdb tmdb, int movieId, String language, String session, AppendToResponse appendToResponse) throws Exception {
         try {
             Call<MovieFull> call;
             if (session != null && !StringUtils.isBlank(session)) {
@@ -172,7 +170,7 @@ public class MovieDetailHelper extends NetworkHelper implements IMovieDetailHelp
             return null;
         // Note - TmdbNetworkException and any other exception are ignored and will bubble up
         } catch (Exception exception) {
-            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException || exception instanceof NetworkOnMainThreadException)
+            if (exception instanceof TmdbException || exception instanceof TmdbNetworkException)
                 throw exception;
 
             throw this.GetFailure(exception);

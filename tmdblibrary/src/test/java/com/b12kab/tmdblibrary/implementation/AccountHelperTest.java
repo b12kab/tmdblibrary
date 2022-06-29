@@ -48,7 +48,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_tmdb_error_status_cd ";
 
         List<Integer> codes = helper.getAssocHelperTmdbErrorStatusCodes();
-        assertNotNull(codes, funcName + "codes is null");
+        assertNotNull(codes, funcName + " codes is null");
         assertNotEquals(0, codes.size(), "codes size = 0");
     }
 
@@ -57,7 +57,7 @@ public class AccountHelperTest extends BaseTestCase {
         final String funcName = "test_account_non_tmdb_error_status_cd ";
 
         List<Integer> codes = helper.getAssocHelperNonTmdbErrorStatusCodes();
-        assertNotNull(codes, funcName + "codes is null");
+        assertNotNull(codes, funcName + " codes is null");
         assertNotEquals(0, codes.size(), "codes size = 0");
     }
 
@@ -83,9 +83,8 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_PAGE_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("fetch"), funcName + "message does not contain user");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("fetch"), funcName + " message does not contain user");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -100,9 +99,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("TMDb session"), funcName + "message does not contain user");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("TMDb session"), funcName + " message does not contain user");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -117,9 +117,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_ACCOUNT_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("TMDb account"), funcName + "message does not contain user");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("TMDb account"), funcName + " message does not contain user");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -208,9 +209,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("TMDb session"), funcName + "message does not contain user");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("TMDb session"), funcName + " message does not contain user");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -226,8 +228,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(3, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.Tmdb, exception.getErrorKind(), funcName + " error kind does not match Tmdb");
+            assertEquals(3, exception.getStatus().getStatusCode(), funcName + " code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -247,8 +251,8 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception occurred on " + funcName + ": " + e);
         }
 
-        assertNotNull(accountResponse, funcName + "response is null");
-        assertNotNull(accountResponse.getId(), funcName + "response id is null");
+        assertNotNull(accountResponse, funcName + " response is null");
+        assertNotNull(accountResponse.getId(), funcName + " response id is null");
     }
 
     @Test
@@ -273,9 +277,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_MOVIE_ID_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("movie id"), funcName + "message does not contain user");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("movie id"), funcName + " message does not contain user");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -290,9 +295,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("session"), funcName + "message does not contain user");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("session"), funcName + " message does not contain user");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -308,8 +314,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(3, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.Tmdb, exception.getErrorKind(), funcName + " error kind does not match Tmdb");
+            assertEquals(3, exception.getStatus().getStatusCode(), funcName + " code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -329,12 +337,12 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception occurred on " + funcName + ": " + e);
         }
 
-        assertNotNull(accountState, funcName + "response is null");
-        assertNotNull(accountState.getId(), funcName + "response id is null");
-        assertEquals(TestData.MOVIE_ID, accountState.getId(), funcName + "response id != requested movie id");
-        assertNotNull(accountState.getRated(), funcName + "response rating is null");
-        assertTrue(accountState.getRated() > 0, funcName + "response rating is 0");
-        assertTrue(accountState.isFavorite(), funcName + "response favorite is false");
+        assertNotNull(accountState, funcName + " response is null");
+        assertNotNull(accountState.getId(), funcName + " response id is null");
+        assertEquals(TestData.MOVIE_ID, accountState.getId(), funcName + " response id != requested movie id");
+        assertNotNull(accountState.getRated(), funcName + " response rating is null");
+        assertTrue(accountState.getRated() > 0, funcName + " response rating is 0");
+        assertTrue(accountState.isFavorite(), funcName + " response favorite is false");
     }
 
     @Test
@@ -359,9 +367,8 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("session"), funcName + "message does not contain user");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("session"), funcName + " message does not contain user");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -379,9 +386,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_ACCOUNT_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("account id"), funcName + "message does not contain account id");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("account id"), funcName + " message does not contain account id");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -419,9 +427,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_FAVORITE_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("Empty favorite media type"), funcName + "message does not contain account id");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("Empty favorite media type"), funcName + " message does not contain account id");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -442,9 +451,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_FAVORITE_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("Empty favorite media type"), funcName + "message does not contain account id");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("Empty favorite media type"), funcName + " message does not contain account id");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -465,9 +475,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_FAVORITE_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("Favorite media type must be either"), funcName + "message does not contain account id");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("Favorite media type must be either"), funcName + " message does not contain account id");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -488,9 +499,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_FAVORITE_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("Empty favorite media id"), funcName + "message does not contain account id");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("Empty favorite media id"), funcName + " message does not contain account id");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -512,9 +524,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_FAVORITE_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("Invalid favorite media id"), funcName + "message does not contain account id");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("Invalid favorite media id"), funcName + " message does not contain account id");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -536,9 +549,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_FAVORITE_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("Empty favorite setting"), funcName + "message does not contain account id");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("Empty favorite setting"), funcName + " message does not contain account id");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -558,8 +572,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(3, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.Tmdb, exception.getErrorKind(), funcName + " error kind does not match Tmdb");
+            assertEquals(3, exception.getStatus().getStatusCode(), funcName + " code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -583,11 +599,11 @@ public class AccountHelperTest extends BaseTestCase {
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
-        assertNotNull(status, funcName + "status is null");
-        assertNotNull(status.getStatusCode(), funcName + "status status code is null");
-        assertTrue(status.getSuccess(), funcName + "status success is false");
-        assertNotNull(status.getStatusMessage(), funcName + "status status message is null");
-        assertEquals(13, status.getStatusCode(), funcName + "status status code is not 12");
+        assertNotNull(status, funcName + " status is null");
+        assertNotNull(status.getStatusCode(), funcName + " status status code is null");
+        assertTrue(status.getSuccess(), funcName + " status success is false");
+        assertNotNull(status.getStatusMessage(), funcName + " status status message is null");
+        assertEquals(13, status.getStatusCode(), funcName + " status status code is not 12");
     }
 
     @Test
@@ -612,8 +628,9 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_MOVIE_ID_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
             assertTrue(exception.getMessage().contains("movie id"), funcName + "message does not contain user");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
@@ -629,8 +646,9 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
             assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + "message does not contain session");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
@@ -646,7 +664,8 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + "message does not contain session");
         } catch (Exception e) {
@@ -678,7 +697,8 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_RATING_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("expected to be between 0.5 and 10.0"), funcName + "message does not contain 'expected to be between 0.5 and 10.0'");
         } catch (Exception e) {
@@ -698,7 +718,8 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_RATING_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("expected to be between 0.5 and 10.0"), funcName + "message does not contain 'expected to be between 0.5 and 10.0'");
         } catch (Exception e) {
@@ -719,7 +740,9 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(3, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.Tmdb, exception.getErrorKind(), funcName + " error kind does not match Tmdb");
+            assertEquals(3, exception.getStatus().getStatusCode(), funcName + "code doesn't match");
             assertNotNull(exception.getMessage(), funcName + "message is null");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
@@ -786,7 +809,8 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_MOVIE_ID_RELATED, exception.getCode(), funcName + "code doesn't match");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(exception.getMessage(), funcName + "message is null");
             assertTrue(exception.getMessage().contains("movie id"), funcName + "message does not contain user");
         } catch (Exception e) {
@@ -803,9 +827,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + "message does not contain session");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + " message does not contain session");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -820,9 +845,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(TMDB_CODE_SESSION_RELATED, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
-            assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + "message does not contain session");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.None, exception.getErrorKind(), funcName + " error kind does not match None");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
+            assertTrue(exception.getMessage().contains("populated session or guest session"), funcName + " message does not contain session");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -838,8 +864,10 @@ public class AccountHelperTest extends BaseTestCase {
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             TmdbException exception = (TmdbException)e;
-            assertEquals(3, exception.getCode(), funcName + "code doesn't match");
-            assertNotNull(exception.getMessage(), funcName + "message is null");
+            assertNotNull(exception.getErrorKind(), funcName + " error kind is null");
+            assertEquals(TmdbException.RetrofitErrorKind.Tmdb, exception.getErrorKind(), funcName + " error kind does not match Tmdb");
+            assertEquals(3, exception.getStatus().getStatusCode(), funcName + " code doesn't match");
+            assertNotNull(exception.getMessage(), funcName + " message is null");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
