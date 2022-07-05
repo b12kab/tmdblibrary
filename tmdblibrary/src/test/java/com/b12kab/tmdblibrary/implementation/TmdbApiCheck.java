@@ -3,12 +3,10 @@ package com.b12kab.tmdblibrary.implementation;
 import com.b12kab.tmdblibrary.BuildConfig;
 import com.b12kab.tmdblibrary.Tmdb;
 import com.b12kab.tmdblibrary.entities.MovieResultsPage;
-import com.b12kab.tmdblibrary.enumerations.MovieFetchType;
 import com.b12kab.tmdblibrary.exceptions.TmdbException;
 
 import static com.b12kab.tmdblibrary.BuildConfig.DEBUG;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_API_ERR_MSG;
-import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_INVALID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,29 +39,12 @@ public class TmdbApiCheck {
     }
 
     @Test
-    public void test_movie_initial_invalid_api_key() {
-        final String funcName = "test_movie_initial_invalid_api_key ";
-
-        try {
-            movieHelper.processInitialMovies(tmdb, MovieFetchType.Upcoming, null, null, 0);
-            fail("Exception did not occur on " + funcName);
-        } catch (TmdbException e) {
-            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
-            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
-            assertNotNull(e.getMessage(), funcName + "message is null");
-            assertTrue(e.getMessage().contains(TMDB_API_ERR_MSG), funcName + "message incorrect");
-        } catch (Exception e) {
-            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
-        }
-    }
-
-    @Test
     public void test_movie_additional_invalid_api_key() {
         final String funcName = "test_movie_additional_invalid_api_key ";
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = movieHelper.processAdditionalMovies(tmdb, null, null, null, 0, 0);
+            resultsPage = movieHelper.processMoviePage(tmdb, null, null, null, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertNotNull(e.getErrorKind(), funcName + " error kind is null");
@@ -148,7 +129,7 @@ public class TmdbApiCheck {
         final String funcName = "test_account_movie_info_invalid_api_key ";
 
         try {
-            accountHelper.processAccountMovieInfo(tmdb, null, null, 0, null, null);
+            accountHelper.processAccountMovieInfo(tmdb, null, null, 0, 1, null, null);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertNotNull(e.getErrorKind(), funcName + " error kind is null");

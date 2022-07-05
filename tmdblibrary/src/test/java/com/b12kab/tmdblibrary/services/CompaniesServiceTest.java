@@ -112,7 +112,7 @@ public class CompaniesServiceTest extends BaseTestCase {
 
     public static void assertMovieResultsPage(MovieResultsPage movieResultsPage) {
         assertBaseResultsPage(movieResultsPage);
-        for (MovieAbbreviated baseMovie : movieResultsPage.results) {
+        for (MovieAbbreviated baseMovie : movieResultsPage.getResults()) {
             assertBaseMovie(baseMovie);
         }
     }

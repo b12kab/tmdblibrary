@@ -76,8 +76,8 @@ public class DiscoverServiceTest extends BaseTestCase {
         }
 
         assertResultsPage(results);
-        assertNotNull(results.results, "results is null" );
-        assertTrue(results.results.size() > 0, "results size < 1");
+        assertNotNull(results.getResults(), "results is null" );
+        assertTrue(results.getResults().size() > 0, "results size < 1");
     }
 
     @Test

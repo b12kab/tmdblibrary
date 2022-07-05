@@ -650,21 +650,21 @@ public class MoviesServiceTest extends BaseTestCase {
         assertTrue(results.total_pages > 0, funcName + "results total_pages < 1");
         assertNotNull(results.total_results, funcName + "results total_results is null");
         assertTrue(results.total_results > 0, funcName + "results total_results < 1");
-        assertNotNull(results.results, funcName + "results results is null");
-        assertTrue(results.results.size() > 0, funcName + "results results List size < 1");
-        assertNotNull(results.results.get(0), funcName + "results results get(0) is null");
-        assertFalse(results.results.get(0).isAdult(), funcName + "results adult != false ");
-        assertNotNull(results.results.get(0).getBackdrop_path(), funcName + "results backdrop_path is null");
-        assertTrue(results.results.get(0).getId() > 0, funcName + "results id < 1");
-        assertNotNull(results.results.get(0).getOriginal_title(), funcName + "results original_title is null");
-        assertNotNull(results.results.get(0).getRelease_date(), funcName + "results release_date is null");
-        assertNotNull(results.results.get(0).getPoster_path(), funcName + "results poster_path is null");
-        assertNotNull(results.results.get(0).getPopularity(), funcName + "results popularity is null");
-        assertTrue(results.results.get(0).getPopularity() > 0, funcName + "results popularity < 1");
-        assertNotNull(results.results.get(0).getTitle(), funcName + "results title is null");
-        assertNotNull(results.results.get(0).getVote_average(), funcName + "results vote_average is null");
-        assertTrue(results.results.get(0).getVote_average() > 0, funcName + "results vote_average < 1");
-        assertTrue(results.results.get(0).getVote_count() > 0, funcName + "results vote_count < 1");
+        assertNotNull(results.getResults(), funcName + "results results is null");
+        assertTrue(results.getResults().size() > 0, funcName + "results results List size < 1");
+        assertNotNull(results.getResults().get(0), funcName + "results results get(0) is null");
+        assertFalse(results.getResults().get(0).isAdult(), funcName + "results adult != false ");
+        assertNotNull(results.getResults().get(0).getBackdrop_path(), funcName + "results backdrop_path is null");
+        assertTrue(results.getResults().get(0).getId() > 0, funcName + "results id < 1");
+        assertNotNull(results.getResults().get(0).getOriginal_title(), funcName + "results original_title is null");
+        assertNotNull(results.getResults().get(0).getRelease_date(), funcName + "results release_date is null");
+        assertNotNull(results.getResults().get(0).getPoster_path(), funcName + "results poster_path is null");
+        assertNotNull(results.getResults().get(0).getPopularity(), funcName + "results popularity is null");
+        assertTrue(results.getResults().get(0).getPopularity() > 0, funcName + "results popularity < 1");
+        assertNotNull(results.getResults().get(0).getTitle(), funcName + "results title is null");
+        assertNotNull(results.getResults().get(0).getVote_average(), funcName + "results vote_average is null");
+        assertTrue(results.getResults().get(0).getVote_average() > 0, funcName + "results vote_average < 1");
+        assertTrue(results.getResults().get(0).getVote_count() > 0, funcName + "results vote_count < 1");
     }
 
     @Test

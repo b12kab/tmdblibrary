@@ -24,7 +24,7 @@ import androidx.annotation.NonNull;
 
 public class MovieResultsPage extends BaseResultsPage {
 
-    public List<MovieAbbreviated> results;
+    private List<MovieAbbreviated> results;
 
     public List<MovieAbbreviated> getResults() {
         return results;

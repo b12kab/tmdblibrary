@@ -216,8 +216,8 @@ public class MovieAsserts {
             assertNotNull(movie.similar.page, funcName + "movie similar page is null");
             assertNotNull(movie.similar.total_pages, funcName + "movie similar total pages is null");
             assertNotNull(movie.similar.total_results, funcName + "movie similar total results is null");
-            assertNotNull(movie.similar.results, funcName + "movie similar results list is null");
-            assertTrue(movie.similar.results.size() > 0, funcName + "movie similar results list is 0");
+            assertNotNull(movie.similar.getResults(), funcName + "movie similar results list is null");
+            assertTrue(movie.similar.getResults().size() > 0, funcName + "movie similar results list is 0");
         } else {
             assertNull(movie.similar, funcName + "movie similar is not null");
         }

@@ -10,6 +10,7 @@ import com.b12kab.tmdblibrary.exceptions.TmdbException;
 import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -18,9 +19,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_API_ERR_MSG;
-import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_INVALID;
-import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_MOVIE_TYPE_RELATED;
-import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELATED;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_LOWER_PAGE_ERR_MSG;
 
 public class MovieHelper extends NetworkHelper implements IMovieHelper {
     private static final String TAG = MovieHelper.class.getSimpleName();
@@ -53,104 +52,7 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
      * @return List<Integer>
      */
     public List<Integer> getAssocHelperNonTmdbErrorStatusCodes() {
-        return Arrays.asList(
-                TMDB_CODE_API_KEY_INVALID,
-                TMDB_CODE_PAGE_RELATED,
-                TMDB_CODE_MOVIE_TYPE_RELATED
-        );
-    }
-
-    /***
-     * Perform the initial fetch movies pages
-     *
-     * @param tmdb Tmdb
-     * @param fetchType Movie type to fetch
-     * @param language <em>Optional.</em> ISO 639-1 code.
-     * @param region <em>Optional.</em> ISO 3166-1 code; must be uppercase
-     * @param initialFetchPages number of pages to fetch
-     * @return MovieResultsPage
-     * @throws Exception Exception
-     */
-    public MovieResultsPage processInitialMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int initialFetchPages) throws Exception {
-        GetInitialMovieType pass = null;
-
-        if (tmdb == null) {
-            throw new NullPointerException("Tmdb is null");
-        }
-
-        if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
-            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
-            throw tmdbException;
-        }
-
-        if (initialFetchPages < 1) {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "You must have at least 1 initial page");
-            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
-            throw tmdbException;
-        }
-
-        // all pages max out at 1000
-        if (initialFetchPages > 1000)
-            initialFetchPages = 1000;
-
-        if (fetchType == MovieFetchType.NowPlaying) {
-            pass = nowPlaying;
-        } else if (fetchType == MovieFetchType.Popular) {
-            pass = popular;
-        } else if (fetchType == MovieFetchType.TopRated) {
-            pass = topRated;
-        } else if (fetchType == MovieFetchType.Upcoming) {
-            pass = upcoming;
-        } else {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_TYPE_RELATED, "Invalid fetch type");
-            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
-            throw tmdbException;
-        }
-
-        MovieResultsPage movieFull = this.obtainInitialMoviePages(pass, tmdb, language, region, initialFetchPages);
-
-        return movieFull;
-    }
-
-    /***
-     * Loop thru pages to fetch
-     *
-     * @param function Method to call
-     * @param tmdb Tmdb
-     * @param language <em>Optional.</em> ISO 639-1 code.
-     * @param region <em>Optional.</em> ISO 3166-1 code; must be uppercase
-     * @param initialFetchPages number of pages to fetch
-     * @return MovieResultsPage
-     * @throws Exception Exception
-     */
-    private MovieResultsPage obtainInitialMoviePages(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int initialFetchPages) throws Exception {
-        MovieResultsPage results = MovieResultsPage.build();
-        boolean initResults = false;
-
-        // TMDb pages start at 1
-        for (int pageCount = 1; pageCount <= initialFetchPages; pageCount++) {
-            MovieResultsPage resultsPage = this.obtainMoviePage(function, tmdb, language, region, pageCount);
-
-            if (resultsPage != null && resultsPage.results != null && resultsPage.results.size() > 0) {
-                if (!initResults) {
-                    results = resultsPage;
-                    initResults = true;
-                } else {
-                    results.results.addAll(resultsPage.results);
-                    results.page = pageCount;
-                }
-
-                if (pageCount >= results.total_pages) {
-                    break;
-                }
-            }
-        }
-
-        return results;
+        return Collections.emptyList();
     }
 
     /***
@@ -242,12 +144,11 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
      * @param fetchType Movie type to fetch
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @param region <em>Optional.</em> ISO 3166-1 code; must be uppercase
-     * @param startPage TMDb movie start page
-     * @param endPage TMDb movie end page
-     * @return MovieResultsPage
+     * @param page TMDb movie start page
+     * @return List<MovieResultsPage>
      * @throws Exception Exception
      */
-    public MovieResultsPage processAdditionalMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int startPage, int endPage) throws Exception {
+    public MovieResultsPage processMoviePage(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int page) throws Exception {
         GetInitialMovieType pass = null;
 
         if (tmdb == null) {
@@ -255,87 +156,48 @@ public class MovieHelper extends NetworkHelper implements IMovieHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
-        if (endPage < startPage) {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "End page (" + endPage + ") must equal or be greater than the start page (" + startPage + ")");
+        if (page < 1) {
+            TmdbException tmdbException = new TmdbException(TMDB_LOWER_PAGE_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
-        if (endPage < 1) {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "End page (" + endPage + ") must equal or be greater than 1");
-            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
-            throw tmdbException;
-        }
+        pass = this.assignServiceEndpoint(fetchType);
 
-        if (startPage < 1) {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "Start page (" + startPage + ") must equal or be greater than 1");
-            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
-            throw tmdbException;
-        }
+        MovieResultsPage resultsPage = this.obtainMoviePage(pass, tmdb, language, region, page);
 
-        if (fetchType == MovieFetchType.NowPlaying) {
-            pass = nowPlaying;
-        } else if (fetchType == MovieFetchType.Popular) {
-            pass = popular;
-        } else if (fetchType == MovieFetchType.TopRated) {
-            pass = topRated;
-        } else if (fetchType == MovieFetchType.Upcoming) {
-            pass = upcoming;
-        } else {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_MOVIE_TYPE_RELATED, "Invalid type");
-            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
-            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
-            throw tmdbException;
-        }
-
-        MovieResultsPage movieFull = this.obtainAdditionalMovies(pass, tmdb, language, region, startPage, endPage);
-
-        return movieFull;
+        return resultsPage;
     }
 
     /***
-     * Loop thru start and end pages to fetch
+     * Assign the service endpoint to use
      *
-     * @param function Method to call
-     * @param tmdb Tmdb
-     * @param language <em>Optional.</em> ISO 639-1 code.
-     * @param region <em>Optional.</em> ISO 3166-1 code; must be uppercase
-     * @param startPage TMDb movie start page
-     * @param endPage TMDb movie end page
-     * @return MovieResultsPage
-     * @throws Exception Exception
+     * @param fetchType Movie type to fetch
+     * @return GetInitialMovieType
+     * @throws TmdbException Exception
      */
-    private MovieResultsPage obtainAdditionalMovies(GetInitialMovieType function, @NonNull Tmdb tmdb, String language, String region, int startPage, int endPage) throws Exception {
-        MovieResultsPage results = MovieResultsPage.build();
-        boolean initResults = false;
+    private GetInitialMovieType assignServiceEndpoint(MovieFetchType fetchType) throws TmdbException {
 
-        for (int pageCount = startPage; pageCount <= endPage; pageCount++) {
-            MovieResultsPage resultsPage = this.obtainMoviePage(function, tmdb, language, region, pageCount);
-
-            if (resultsPage != null && resultsPage.results != null && resultsPage.results.size() > 0) {
-                if (!initResults) {
-                    results = resultsPage;
-                    initResults = true;
-                } else {
-                    results.results.addAll(resultsPage.results);
-                    results.page = pageCount;
-                }
-
-                if (pageCount >= results.total_pages) {
-                    break;
-                }
-            }
+        if (fetchType == MovieFetchType.NowPlaying) {
+            return nowPlaying;
+        } else if (fetchType == MovieFetchType.Popular) {
+            return popular;
+        } else if (fetchType == MovieFetchType.TopRated) {
+            return topRated;
+        } else if (fetchType == MovieFetchType.Upcoming) {
+            return upcoming;
+        } else {
+            TmdbException tmdbException = new TmdbException("Invalid fetch type");
+            tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
+            tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
+            throw tmdbException;
         }
-
-        return results;
     }
 }

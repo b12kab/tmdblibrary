@@ -22,6 +22,12 @@ public class TmdbException extends IOException {
         this.initialize();
     }
 
+    public TmdbException(String message) {
+        super(message);
+        this.initialize();
+        this.setMessage(message);
+    }
+
     public TmdbException(int code, String message) {
         super(message);
         this.initialize();

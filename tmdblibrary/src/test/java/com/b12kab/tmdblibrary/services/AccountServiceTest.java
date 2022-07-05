@@ -127,7 +127,7 @@ public class AccountServiceTest extends BaseTestCase {
         assertNotNull(movieResultsPage.page, funcName + "page is null");
         assertNotNull(movieResultsPage.total_results, funcName + "total results is null");
         assertNotNull(movieResultsPage.total_pages, funcName + "total pages is null");
-        assertNotNull(movieResultsPage.results, funcName + "results is null");
+        assertNotNull(movieResultsPage.getResults(), funcName + "results is null");
     }
 
     @Test
@@ -157,7 +157,7 @@ public class AccountServiceTest extends BaseTestCase {
         assertNotNull(movieResultsPage.page, funcName + "page is null");
         assertNotNull(movieResultsPage.total_results, funcName + "total results is null");
         assertNotNull(movieResultsPage.total_pages, funcName + "total pages is null");
-        assertNotNull(movieResultsPage.results, funcName + "results is null");
+        assertNotNull(movieResultsPage.getResults(), funcName + "results is null");
     }
 
     @Test

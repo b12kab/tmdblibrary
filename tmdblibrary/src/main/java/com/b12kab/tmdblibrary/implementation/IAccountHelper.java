@@ -18,7 +18,7 @@ public interface IAccountHelper {
 
     AccountResponse processAccountInfo(Tmdb tmdb, String session) throws Exception;
 
-    MovieResultsPage processAccountMovieInfo(Tmdb tmdb, AccountFetchType fetchType, String session, int accountId, String sortBy, String language) throws Exception;
+    MovieResultsPage processAccountMovieInfo(Tmdb tmdb, AccountFetchType fetchType, String session, int accountId, int page, String sortBy, String language) throws Exception;
 
     AccountState processAccountMovieInfoDetail(Tmdb tmdb, int movieId, String session, String guestSessionId) throws Exception;
 

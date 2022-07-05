@@ -45,6 +45,10 @@ public abstract class NetworkHelper {
         public static int TMDB_CODE_EXCEPTION_UNKNOWN_CAUSE = 799;
 
         public static String TMDB_API_ERR_MSG = "API key was not set, call setApiKey() prior to this.";
+        public static String TMDB_LOWER_PAGE_ERR_MSG = "Initial page must be at least 1";
+        public static String TMDB_INVALID_TYPE_ERR_MSG = "Invalid fetch type";
+        public static String TMDB_BAD_SESSION_ERR_MSG = "Populated TMDb session is required";
+        public static String TMDB_INVALID_ACCOUNT_ERR_MSG = "Invalid TMDb account";
     }
 
     /***
@@ -205,7 +209,7 @@ public abstract class NetworkHelper {
      * @param t Exception
      * @return ErrorRetrofitInfo
      */
-    public Exception GetFailure(Exception t) {
+    public Exception GetFailure(@NonNull Exception t) {
         boolean throwTmdb = false;
         TmdbException tmdbException = new TmdbException();
         String errMsg = t.getMessage() == null ? null : t.getMessage();

@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_MOVIE_TYPE_RELATED;
-import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELATED;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_INVALID_TYPE_ERR_MSG;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_LOWER_PAGE_ERR_MSG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -41,119 +41,7 @@ public class MovieHelperTest extends BaseTestCase {
 
         List<Integer> codes = helper.getAssocHelperNonTmdbErrorStatusCodes();
         assertNotNull(codes, funcName + "codes is null");
-        assertNotEquals(0, codes.size(), "codes size = 0");
-    }
-
-    @Test
-    public void test_movie_tmdb_is_null() {
-        final String funcName = "test_movie_tmdb_is_null ";
-
-        try {
-            helper.processInitialMovies(null, MovieFetchType.Upcoming, null, null, 0);
-            fail("Exception did not occur on " + funcName);
-        } catch (NullPointerException ignored) {
-        } catch (Exception e) {
-            fail("Non NullPointerException exception occurred on " + funcName + ": " + e);
-        }
-    }
-
-    @Test
-    public void test_movie_initial_page_is_too_low() {
-        final String funcName = "test_movie_initial_page_is_too_low ";
-
-        try {
-            helper.processInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 0);
-            fail("Exception did not occur on " + funcName);
-        } catch (TmdbException e) {
-            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
-            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
-            assertNotNull(e.getMessage(), funcName + "message is null");
-            assertTrue(e.getMessage().contains("page"), funcName + "message incorrect");
-        } catch (Exception e) {
-            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
-        }
-    }
-
-    @Test
-    public void test_movie_initial_null_movie_type() {
-        final String funcName = "test_movie_initial_null_movie_type ";
-
-        try {
-            helper.processInitialMovies(this.getManager(), null, null, null, 1111);
-            fail("Exception did not occur on " + funcName);
-        } catch (TmdbException e) {
-            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
-            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
-            assertNotNull(e.getMessage(), funcName + "message is null");
-            assertTrue(e.getMessage().contains("Invalid fetch type"), funcName + "message incorrect");
-        } catch (Exception e) {
-            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
-        }
-    }
-
-    @Test
-    public void test_movie_initial_upcoming_page_1() {
-        final String funcName = "test_movie_initial_upcoming_page_1 ";
-        MovieResultsPage resultsPage = null;
-
-        try {
-            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 1);
-        } catch (Exception e) {
-            fail("Exception occurred on " + funcName + ": " + e);
-        }
-        MovieAsserts.assertMovieResultsPage(resultsPage, true, false);
-    }
-
-    @Test
-    public void test_movie_initial_upcoming_page_18() {
-        final String funcName = "test_movie_initial_upcoming_page_18 ";
-        MovieResultsPage resultsPage = null;
-
-        try {
-            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 18);
-        } catch (Exception e) {
-            fail("Exception occurred on " + funcName + ": " + e);
-        }
-        MovieAsserts.assertMovieResultsPage(resultsPage, true, false);
-    }
-
-    @Test
-    public void test_movie_initial_popular_page_2() {
-        final String funcName = "test_movie_initial_popular_page_2 ";
-        MovieResultsPage resultsPage = null;
-
-        try {
-            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.Popular, null, null, 2);
-        } catch (Exception e) {
-            fail("Exception occurred on " + funcName + ": " + e);
-        }
-        MovieAsserts.assertMovieResultsPage(resultsPage, false, false);
-    }
-
-    @Test
-    public void test_movie_initial_now_playing_page_2() {
-        final String funcName = "test_movie_initial_now_playing_page_2 ";
-        MovieResultsPage resultsPage = null;
-
-        try {
-            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.NowPlaying, null, null, 2);
-        } catch (Exception e) {
-            fail("Exception occurred on " + funcName + ": " + e);
-        }
-        MovieAsserts.assertMovieResultsPage(resultsPage, true, false);
-    }
-
-    @Test
-    public void test_movie_initial_now_top_rated_page_2() {
-        final String funcName = "test_movie_initial_now_playing_page_2 ";
-        MovieResultsPage resultsPage = null;
-
-        try {
-            resultsPage = helper.processInitialMovies(this.getManager(), MovieFetchType.TopRated, null, null, 2);
-        } catch (Exception e) {
-            fail("Exception occurred on " + funcName + ": " + e);
-        }
-        MovieAsserts.assertMovieResultsPage(resultsPage, false, false);
+        assertEquals(0, codes.size(), "codes size = 0");
     }
 
     @Test
@@ -162,7 +50,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.processAdditionalMovies(null, null, null, null, 0, 0);
+            resultsPage = helper.processMoviePage(null, null, null, null, 0);
         } catch (NullPointerException ignored) {
         } catch (Exception e) {
             fail("Non NullPointerException exception occurred on " + funcName + ": " + e);
@@ -170,51 +58,34 @@ public class MovieHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_movie_additional_start_page_greater_than_end_page() {
-        final String funcName = "test_movie_additional_start_page_greater_than_end_page ";
+    public void test_movie_additional_start_page_is_minus_1() {
+        final String funcName = "test_movie_additional_start_page_is_minus ";
 
         try {
-            helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 1);
+            helper.processMoviePage(this.getManager(), MovieFetchType.Upcoming, null, null, -1);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertNotNull(e.getErrorKind(), funcName + " error kind is null");
             assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
-            assertTrue(e.getMessage().contains("greater than the start"), funcName + "message incorrect");
+            assertTrue(e.getMessage().contains(TMDB_LOWER_PAGE_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
     }
 
     @Test
-    public void test_movie_additional_start_page_is_minus_1_end_page_0() {
-        final String funcName = "test_movie_additional_start_page_is_minus_1_end_page_0 ";
+    public void test_movie_additional_start_page_0() {
+        final String funcName = "test_movie_additional_start_page_is_0 ";
 
         try {
-            helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, -1, 0);
+            helper.processMoviePage(this.getManager(), MovieFetchType.Upcoming, null, null, 0);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertNotNull(e.getErrorKind(), funcName + " error kind is null");
             assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
-            assertTrue(e.getMessage().contains("greater than 1"), funcName + "message incorrect");
-        } catch (Exception e) {
-            fail("Non TmdbException exception occurred on " + funcName + ": " + e);
-        }
-    }
-
-    @Test
-    public void test_movie_additional_start_page_0_end_page_1() {
-        final String funcName = "test_movie_additional_start_page_is_minus_1_end_page_0 ";
-
-        try {
-            helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 0, 1);
-            fail("Exception did not occur on " + funcName);
-        } catch (TmdbException e) {
-            assertNotNull(e.getErrorKind(), funcName + " error kind is null");
-            assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
-            assertNotNull(e.getMessage(), funcName + "message is null");
-            assertTrue(e.getMessage().contains("greater than 1"), funcName + "message incorrect");
+            assertTrue(e.getMessage().contains(TMDB_LOWER_PAGE_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -222,16 +93,16 @@ public class MovieHelperTest extends BaseTestCase {
 
     @Test
     public void test_movie_additional_type_is_null() {
-        final String funcName = "test_movie_additional_start_page_is_minus_1_end_page_0 ";
+        final String funcName = "test_movie_additional_type_is_null ";
 
         try {
-            helper.processAdditionalMovies(this.getManager(), null, null, null, 2, 2);
+            helper.processMoviePage(this.getManager(), null, null, null, 2);
             fail("Exception did not occur on " + funcName);
         } catch (TmdbException e) {
             assertNotNull(e.getErrorKind(), funcName + " error kind is null");
             assertEquals(TmdbException.RetrofitErrorKind.None, e.getErrorKind(), funcName + " error kind does not match None");
             assertNotNull(e.getMessage(), funcName + "message is null");
-            assertTrue(e.getMessage().contains("Invalid type"), funcName + "message incorrect");
+            assertTrue(e.getMessage().contains(TMDB_INVALID_TYPE_ERR_MSG), funcName + "message incorrect");
         } catch (Exception e) {
             fail("Non TmdbException exception occurred on " + funcName + ": " + e);
         }
@@ -247,7 +118,7 @@ public class MovieHelperTest extends BaseTestCase {
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 2);
+            resultsPage = helper.processMoviePage(this.getManager(), MovieFetchType.Upcoming, null, null, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -270,18 +141,18 @@ public class MovieHelperTest extends BaseTestCase {
     }
 
     @Test
-    public void test_movie_additional_upcoming_start_page_2_end_page_4() {
-        final String funcName = "test_movie_additional_upcoming_start_page_2_end_page_4 ";
+    public void test_movie_additional_upcoming_start_page_2() {
+        final String funcName = "test_movie_additional_upcoming_start_page_2 ";
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.Upcoming, null, null, 2, 4);
+            resultsPage = helper.processMoviePage(this.getManager(), MovieFetchType.Upcoming, null, null, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
 
         assertNotNull(resultsPage.page, funcName + "results page page is null");
-        assertEquals(4, resultsPage.page, funcName + "results page page not 2");
+        assertEquals(2, resultsPage.page, funcName + "results page page not 2");
 
         assertNotNull(resultsPage.total_pages, funcName + "results page total_pages is null");
         assertTrue(resultsPage.total_pages > 4, funcName + "results page pages <= 4");
@@ -291,8 +162,6 @@ public class MovieHelperTest extends BaseTestCase {
 
         assertNotNull(resultsPage.getResults(), funcName + "results page results is null");
         assertTrue(resultsPage.getResults().size() > 0, funcName + "results page results size = 0");
-        // 2 -> 4 = 3 pages * 20 = 60
-        assertEquals(60, resultsPage.getResults().size(), funcName + "results page results size != 240");
         for (MovieAbbreviated movie: resultsPage.getResults()) {
             MovieAsserts.assertMovieAbbr(movie, true, false);
         }
@@ -303,12 +172,12 @@ public class MovieHelperTest extends BaseTestCase {
     /*****************/
 
     @Test
-    public void test_movie_additional_nowplaying_start_page_2_end_page_2() {
-        final String funcName = "test_movie_additional_nowplaying_start_page_2_end_page_2 ";
+    public void test_movie_additional_nowplaying_start_page_2() {
+        final String funcName = "test_movie_additional_nowplaying_start_page_2 ";
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.NowPlaying, null, null, 2, 2);
+            resultsPage = helper.processMoviePage(this.getManager(), MovieFetchType.NowPlaying, null, null, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -325,35 +194,6 @@ public class MovieHelperTest extends BaseTestCase {
         assertNotNull(resultsPage.getResults(), funcName + "results page results is null");
         assertTrue(resultsPage.getResults().size() > 0, funcName + "results page results size = 0");
         assertEquals(20, resultsPage.getResults().size(), funcName + "results page results size != 20");
-        for (MovieAbbreviated movie: resultsPage.getResults()) {
-            MovieAsserts.assertMovieAbbr(movie, true, false);
-        }
-    }
-
-    @Test
-    public void test_movie_additional_nowplaying_start_page_2_end_page_4() {
-        final String funcName = "test_movie_additional_nowplaying_start_page_2_end_page_4 ";
-        MovieResultsPage resultsPage = null;
-
-        try {
-            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.NowPlaying, null, null, 2, 4);
-        } catch (Exception e) {
-            fail("Exception occurred on " + funcName + ": " + e);
-        }
-
-        assertNotNull(resultsPage.page, funcName + "results page page is null");
-        assertEquals(4, resultsPage.page, funcName + "results page page not 2");
-
-        assertNotNull(resultsPage.total_pages, funcName + "results page total_pages is null");
-        assertTrue(resultsPage.total_pages > 4, funcName + "results page pages <= 4");
-
-        assertNotNull(resultsPage.total_results, funcName + "results page total_results is null");
-        assertTrue(resultsPage.total_results > 60, funcName + "results page pages <= 60");
-
-        assertNotNull(resultsPage.getResults(), funcName + "results page results is null");
-        assertTrue(resultsPage.getResults().size() > 0, funcName + "results page results size = 0");
-        // 2 -> 4 = 3 pages * 20 = 60
-        assertEquals(60, resultsPage.getResults().size(), funcName + "results page results size != 240");
         for (MovieAbbreviated movie: resultsPage.getResults()) {
             MovieAsserts.assertMovieAbbr(movie, true, false);
         }
@@ -365,12 +205,12 @@ public class MovieHelperTest extends BaseTestCase {
     /*****************/
 
     @Test
-    public void test_movie_additional_popular_start_page_2_end_page_2() {
-        final String funcName = "test_movie_additional_popular_start_page_2_end_page_2 ";
+    public void test_movie_additional_popular_start_page_2() {
+        final String funcName = "test_movie_additional_popular_start_page_2 ";
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.Popular, null, null, 2, 2);
+            resultsPage = helper.processMoviePage(this.getManager(), MovieFetchType.Popular, null, null, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -392,47 +232,17 @@ public class MovieHelperTest extends BaseTestCase {
         }
     }
 
-    @Test
-    public void test_movie_additional_popular_start_page_2_end_page_4() {
-        final String funcName = "test_movie_additional_popular_start_page_2_end_page_4 ";
-        MovieResultsPage resultsPage = null;
-
-        try {
-            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.Popular, null, null, 2, 4);
-        } catch (Exception e) {
-            fail("Exception occurred on " + funcName + ": " + e);
-        }
-
-        assertNotNull(resultsPage.page, funcName + "results page page is null");
-        assertEquals(4, resultsPage.page, funcName + "results page page not 2");
-
-        assertNotNull(resultsPage.total_pages, funcName + "results page total_pages is null");
-        assertTrue(resultsPage.total_pages > 4, funcName + "results page pages <= 4");
-
-        assertNotNull(resultsPage.total_results, funcName + "results page total_results is null");
-        assertTrue(resultsPage.total_results > 60, funcName + "results page pages <= 60");
-
-        assertNotNull(resultsPage.getResults(), funcName + "results page results is null");
-        assertTrue(resultsPage.getResults().size() > 0, funcName + "results page results size = 0");
-        // 2 -> 4 = 3 pages * 20 = 60
-        assertEquals(60, resultsPage.getResults().size(), funcName + "results page results size != 240");
-        for (MovieAbbreviated movie: resultsPage.getResults()) {
-            MovieAsserts.assertMovieAbbr(movie, true, true);
-        }
-    }
-
-
     /*****************/
     /* top rated     */
     /*****************/
 
     @Test
-    public void test_movie_additional_toprated_start_page_2_end_page_2() {
-        final String funcName = "test_movie_additional_toprated_start_page_2_end_page_2 ";
+    public void test_top_rated_movie_additional_toprated_start_page_2() {
+        final String funcName = "test_top_rated_movie_additional_toprated_start_page_2 ";
         MovieResultsPage resultsPage = null;
 
         try {
-            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.TopRated, null, null, 2, 2);
+            resultsPage = helper.processMoviePage(this.getManager(), MovieFetchType.TopRated, null, null, 2);
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e);
         }
@@ -449,35 +259,6 @@ public class MovieHelperTest extends BaseTestCase {
         assertNotNull(resultsPage.getResults(), funcName + "results page results is null");
         assertTrue(resultsPage.getResults().size() > 0, funcName + "results page results size = 0");
         assertEquals(20, resultsPage.getResults().size(), funcName + "results page results size != 20");
-        for (MovieAbbreviated movie: resultsPage.getResults()) {
-            MovieAsserts.assertMovieAbbr(movie, false, false);
-        }
-    }
-
-    @Test
-    public void test_movie_additional_toprated_start_page_2_end_page_4() {
-        final String funcName = "test_movie_additional_toprated_start_page_2_end_page_4 ";
-        MovieResultsPage resultsPage = null;
-
-        try {
-            resultsPage = helper.processAdditionalMovies(this.getManager(), MovieFetchType.TopRated, null, null, 2, 4);
-        } catch (Exception e) {
-            fail("Exception occurred on " + funcName + ": " + e);
-        }
-
-        assertNotNull(resultsPage.page, funcName + "results page page is null");
-        assertEquals(4, resultsPage.page, funcName + "results page page not 2");
-
-        assertNotNull(resultsPage.total_pages, funcName + "results page total_pages is null");
-        assertTrue(resultsPage.total_pages > 4, funcName + "results page pages <= 4");
-
-        assertNotNull(resultsPage.total_results, funcName + "results page total_results is null");
-        assertTrue(resultsPage.total_results > 60, funcName + "results page pages <= 60");
-
-        assertNotNull(resultsPage.getResults(), funcName + "results page results is null");
-        assertTrue(resultsPage.getResults().size() > 0, funcName + "results page results size = 0");
-        // 2 -> 4 = 3 pages * 20 = 60
-        assertEquals(60, resultsPage.getResults().size(), funcName + "results page results size != 240");
         for (MovieAbbreviated movie: resultsPage.getResults()) {
             MovieAsserts.assertMovieAbbr(movie, false, false);
         }

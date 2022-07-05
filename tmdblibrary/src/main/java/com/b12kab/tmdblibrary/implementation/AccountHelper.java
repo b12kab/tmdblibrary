@@ -15,6 +15,7 @@ import com.b12kab.tmdblibrary.exceptions.TmdbNetworkException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_API_ERR_MSG;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_BAD_SESSION_ERR_MSG;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_ACCOUNT_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_API_KEY_INVALID;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_FAVORITE_RELATED;
@@ -31,6 +33,8 @@ import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_MOVIE_ID_
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_PAGE_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_RATING_RELATED;
 import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_CODE_SESSION_RELATED;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_INVALID_ACCOUNT_ERR_MSG;
+import static com.b12kab.tmdblibrary.NetworkHelper.TmdbCodes.TMDB_INVALID_TYPE_ERR_MSG;
 
 public class AccountHelper extends NetworkHelper implements IAccountHelper {
     @FunctionalInterface
@@ -203,15 +207,16 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
      *
      * @param tmdb Tmdb
      * @param fetchType Account data type to fetch
-     * @param accountId User's account #
      * @param session session Key
+     * @param accountId User's account #
+     * @param page tmdb page #
      * @param sortBy <em>Optional.</em> sort by
      * @param language <em>Optional.</em> ISO 639-1 code.
      * @return MovieResultsPage
      * @throws Exception Exception
      */
     @Nullable
-    public MovieResultsPage processAccountMovieInfo(Tmdb tmdb, AccountFetchType fetchType, String session, int accountId, String sortBy, String language) throws Exception {
+    public MovieResultsPage processAccountMovieInfo(Tmdb tmdb, AccountFetchType fetchType, String session, int accountId, int page, String sortBy, String language) throws Exception {
         GetAccountMovieInfo pass = null;
 
         if (tmdb == null) {
@@ -219,7 +224,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         }
 
         if (!tmdb.checkTmdbAPIKeyPopulated()) {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_API_KEY_INVALID, TMDB_API_ERR_MSG);
+            TmdbException tmdbException = new TmdbException(TMDB_API_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
@@ -230,7 +235,7 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
         } else if (fetchType == AccountFetchType.Rated) {
             pass = fetchRated;
         } else {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_PAGE_RELATED, "Invalid fetch type");
+            TmdbException tmdbException = new TmdbException(TMDB_INVALID_TYPE_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
@@ -238,61 +243,22 @@ public class AccountHelper extends NetworkHelper implements IAccountHelper {
 
         // Check userid / passwd
         if (session == null || StringUtils.isBlank(session)) {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_SESSION_RELATED, "You must provide a populated TMDb session");
+            TmdbException tmdbException = new TmdbException(TMDB_BAD_SESSION_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
         if (accountId < 1) {
-            TmdbException tmdbException = new TmdbException(TMDB_CODE_ACCOUNT_RELATED, "Invalid TMDb account");
+            TmdbException tmdbException = new TmdbException(TMDB_INVALID_ACCOUNT_ERR_MSG);
             tmdbException.setUseMessage(TmdbException.UseMessage.Yes);
             tmdbException.setErrorKind(TmdbException.RetrofitErrorKind.None);
             throw tmdbException;
         }
 
-        MovieResultsPage movieFull = this.obtainAccountMovieInfoPages(pass, tmdb, session, accountId, sortBy, language);
+        MovieResultsPage resultsPage = this.obtainAccountMovieInfoPage(pass, tmdb, session, accountId, page, sortBy, language);
 
-        return movieFull;
-    }
-
-    /***
-     * Loop thru pages to fetch
-     *
-     * @param function Method to call
-     * @param tmdb Tmdb
-     * @param session session Key
-     * @param accountId User's account #
-     * @param sortBy <em>Optional.</em> sort by
-     * @param language <em>Optional.</em> ISO 639-1 code.
-     * @return MovieResultsPage
-     * @throws Exception Exception
-     */
-    @Nullable
-    private MovieResultsPage obtainAccountMovieInfoPages(GetAccountMovieInfo function, @NonNull Tmdb tmdb, String session, int accountId, String sortBy, String language) throws Exception {
-        MovieResultsPage results = null;
-        boolean initResults = false;
-
-        // TMDb pages start at 1
-        for (int pageCount = 1; pageCount <= this.getMaxPageFetch(); pageCount++) {
-            MovieResultsPage resultsPage = this.obtainAccountMovieInfoPage(function, tmdb, session, accountId, pageCount, sortBy, language);
-
-            if (resultsPage != null && resultsPage.results != null && resultsPage.results.size() > 0) {
-                if (!initResults) {
-                    results = resultsPage;
-                    initResults = true;
-                } else {
-                    results.results.addAll(resultsPage.results);
-                    results.page = pageCount;
-                }
-
-                if (pageCount >= results.total_pages) {
-                    break;
-                }
-            }
-        }
-
-        return results;
+        return resultsPage;
     }
 
     /***

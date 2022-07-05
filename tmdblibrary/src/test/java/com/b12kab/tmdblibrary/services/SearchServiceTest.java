@@ -118,8 +118,8 @@ public class SearchServiceTest extends BaseTestCase {
         }
 
         assertResultsPage(funcName, movieResults);
-        assertNotNull(movieResults.results, funcName + "movieResults results is null");
-        assertTrue( movieResults.results.size() > 0, funcName + "movieResults results is < 1");
+        assertNotNull(movieResults.getResults(), funcName + "movieResults results is null");
+        assertTrue( movieResults.getResults().size() > 0, funcName + "movieResults results is < 1");
     }
     
     @Test

@@ -9,6 +9,5 @@ import java.util.List;
 public interface IMovieHelper {
     List<Integer> getAssocHelperTmdbErrorStatusCodes();
     List<Integer> getAssocHelperNonTmdbErrorStatusCodes();
-    MovieResultsPage processInitialMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int initialFetchPages) throws Exception;
-    MovieResultsPage processAdditionalMovies(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int startPage, int endPage) throws Exception;
+    MovieResultsPage processMoviePage(Tmdb tmdb, MovieFetchType fetchType, String language, String region, int page) throws Exception;
 }
