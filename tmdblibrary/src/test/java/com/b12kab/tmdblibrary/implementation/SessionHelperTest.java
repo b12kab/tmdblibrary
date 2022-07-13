@@ -280,11 +280,19 @@ public class SessionHelperTest extends BaseTestCase {
 
         try {
             status = sessionHelper.destroyTmdbSession(this.getManager(), "badsession");
+        } catch (TmdbException e) {
+            if (e.getStatus() != null && e.getStatus().getSuccess() != null && e.getStatus().getStatusCode() != null) {
+                if (!e.getStatus().getSuccess() && e.getStatus().getStatusCode() == 34) {
+                    /* empty */
+                } else {
+                    fail("TmdbException occurred on " + funcName + ": " + e.toString());
+                }
+            } else {
+                fail("TmdbException occurred on " + funcName + ": " + e.toString());
+            }
         } catch (Exception e) {
             fail("Exception occurred on " + funcName + ": " + e.toString());
         }
-
-        assertFalse(status, funcName + "status success is false");
     }
 
     @Test
